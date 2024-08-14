@@ -1,4 +1,6 @@
 using Avalonia.Controls;
+using ExcelFileReader.ViewModels;
+using System.Linq;
 
 namespace ExcelFileReader.Views
 {
@@ -7,6 +9,7 @@ namespace ExcelFileReader.Views
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = new MainWindowViewModel(this);
         }
     }
 }

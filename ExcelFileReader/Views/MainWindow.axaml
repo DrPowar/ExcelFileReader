@@ -3,18 +3,46 @@
         xmlns:vm="using:ExcelFileReader.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d" Width="1000" Height="650" WindowStartupLocation="CenterScreen" CanResize="False"
         x:Class="ExcelFileReader.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="ExcelFileReader">
 
-    <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:MainWindowViewModel/>
-    </Design.DataContext>
+	<Window.Styles>
+		<Style Selector="TextBlock">
+			<Setter Property="FontFamily" Value="Arial"/>
+			<Setter Property="FontSize" Value="18"/>
+		</Style>
+		<StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+		<Style Selector="Button">
+			<Setter Property="FontFamily" Value="Arial"/>
+			<Setter Property="FontSize" Value="10"/>
+		</Style>
+	</Window.Styles>
+
+	<DockPanel>
+		<StackPanel Width="270" DockPanel.Dock="Left" Background="Azure">
+			<Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="30" Command="{Binding OpenFileButton_Clicked}">
+				<TextBlock>Upload File</TextBlock>
+			</Button>
+			<ListBox Height="535" Margin="10" BorderThickness="1" BorderBrush="Gray" ItemsSource="{Binding Files}">
+
+			</ListBox>
+		</StackPanel>
+			
+		<StackPanel DockPanel.Dock="Right" Background="DarkSlateGray">
+			<DataGrid Width="700" Height="630" Margin="10" ItemsSource="{Binding Errors}"
+					IsReadOnly="True"
+					GridLinesVisibility="All"
+					BorderThickness="1" BorderBrush="Black" Background="Snow">
+				<DataGrid.Columns>
+					<DataGridTextColumn Header="Error Id" Binding="{Binding Id}"/>
+					<DataGridTextColumn Header="Error Message" Binding="{Binding ErrorMessage}" />
+				</DataGrid.Columns>
+			</DataGrid>
+		</StackPanel>
+	</DockPanel>
 
 </Window>

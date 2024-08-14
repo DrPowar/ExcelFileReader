@@ -19,7 +19,6 @@ namespace ExcelFileReader
             {
                 desktop.MainWindow = new MainWindow
                 {
-                    DataContext = new MainWindowViewModel(),
                 };
             }
 

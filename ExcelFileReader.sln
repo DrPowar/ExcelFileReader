@@ -5,6 +5,8 @@ VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelFileReader", "ExcelFileReader\ExcelFileReader.csproj", "{79E55A6F-8489-459C-8696-5042AAA16B83}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csproj", "{5FC2A972-F7E9-4976-8DD1-7DB86CB9D446}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{79E55A6F-8489-459C-8696-5042AAA16B83}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{79E55A6F-8489-459C-8696-5042AAA16B83}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{79E55A6F-8489-459C-8696-5042AAA16B83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5FC2A972-F7E9-4976-8DD1-7DB86CB9D446}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FC2A972-F7E9-4976-8DD1-7DB86CB9D446}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FC2A972-F7E9-4976-8DD1-7DB86CB9D446}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FC2A972-F7E9-4976-8DD1-7DB86CB9D446}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
