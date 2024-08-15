@@ -1,5 +1,8 @@
 ﻿using IronXL;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Server.DB;
+using Server.Models;
 using Server.Parser;
 
 namespace Server.Controllers
@@ -8,30 +11,41 @@ namespace Server.Controllers
     [Route("[controller]")]
     public class FileManagementController : Controller
     {
-        private List<WorkBook> _books = new List<WorkBook>();
+        ExcelDBContext _dbContext;
+        public FileManagementController(ExcelDBContext dBContext) 
+        {
+            _dbContext = dBContext;
+        }
 
         [HttpPost("UploadFile")]
-        public IActionResult UploadFile([FromBody] FileUploadRequest fileUploadRequest)
+        public async Task<IActionResult> UploadFile([FromBody] FileUploadRequest fileUploadRequest)
         {
             if (fileUploadRequest.FileContent == null)
             {
                 return BadRequest(new ParsingResult(Guid.NewGuid(), false, fileUploadRequest.FileName, ParsingResultMessages.EmptyFile));
             }
 
-            WorkBook book = new WorkBook();
+            WorkBook book;
 
             ParsingResult parsingResult = XLSXFileParser.TryParseBook(fileUploadRequest, out book);
 
-            if(parsingResult.IsValid)
+            if(parsingResult.IsValid && !IsFileInDB(parsingResult.FileName))
             {
-                _books.Add(book);
+                _dbContext.Files.Add(new ExcelFile(parsingResult.Id, parsingResult.FileName, fileUploadRequest.FileContent));
+                await _dbContext.SaveChangesAsync();
                 return Created("", parsingResult);
+            }
+            else if(IsFileInDB(parsingResult.FileName) && parsingResult.IsValid)
+            {
+                return Created("", new ParsingResult(parsingResult.Id, true, parsingResult.FileName, ParsingResultMessages.FileInDatabase));
             }
             else
             {
                 return BadRequest(parsingResult);
             }
         }
-    }
 
+        private bool IsFileInDB(string name) =>
+            _dbContext.Files.Any(file => file.Name == name);
+    }
 }

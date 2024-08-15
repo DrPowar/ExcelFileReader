@@ -23,7 +23,16 @@ namespace ExcelFileReader.DataTransfer
 
                 HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"http://localhost:{ServerData.ServerPort}/FileManagement/UploadFile", fileUploadRequest);
 
-                return await response.Content.ReadFromJsonAsync<FileParsingResponse>();
+                FileParsingResponse? fileParsingResponse = await response.Content.ReadFromJsonAsync<FileParsingResponse>();
+                    
+                if(fileParsingResponse != null)
+                {
+                    return fileParsingResponse;
+                }
+                else
+                {
+                    return new FileParsingResponse(Guid.NewGuid(), false, fileName, ParsingResultMessages.ServerReturnInvalidData);
+                }
             }
             catch
             {

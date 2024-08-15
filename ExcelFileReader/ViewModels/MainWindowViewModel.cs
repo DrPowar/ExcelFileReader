@@ -9,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ExcelFileReader.ViewModels
@@ -37,16 +36,9 @@ namespace ExcelFileReader.ViewModels
         public MainWindowViewModel(Window window)
         {
             _client = new Client();
-            ExcelFilesResponses = new ObservableCollection<ExcelFileResponse>();
+            _excelFilesResponses = new ObservableCollection<ExcelFileResponse>();
+            _files = new ObservableCollection<string>();
 
-            Files = new ObservableCollection<string>
-            {
-                "xml",
-                "json",
-                "txt",
-                "xlsl",
-                "docx"
-            };
 
             OpenFilePicker = new DelegateCommand(OpenFileButton_Clicked);
             _window = window;
