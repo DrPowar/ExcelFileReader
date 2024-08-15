@@ -1,5 +1,4 @@
 ﻿using IronXL;
-using IronXL.Options;
 using Microsoft.AspNetCore.Mvc;
 using Server.Parser;
 
@@ -9,21 +8,29 @@ namespace Server.Controllers
     [Route("[controller]")]
     public class FileManagementController : Controller
     {
-        private List<byte[]> files = new List<byte[]>();
+        private List<WorkBook> _books = new List<WorkBook>();
 
         [HttpPost("UploadFile")]
-        public IActionResult UploadFile([FromBody] byte[] file)
+        public IActionResult UploadFile([FromBody] FileUploadRequest fileUploadRequest)
         {
-            if (file == null)
+            if (fileUploadRequest.FileContent == null)
             {
-                return BadRequest("Invalid file data.");
+                return BadRequest(new ParsingResult(Guid.NewGuid(), false, fileUploadRequest.FileName, ParsingResultMessages.EmptyFile));
             }
 
-            files.Add(file);
+            WorkBook book = new WorkBook();
 
-            XLSXFileParser.ParseBook(file);
+            ParsingResult parsingResult = XLSXFileParser.TryParseBook(fileUploadRequest, out book);
 
-            return Created("", file);
+            if(parsingResult.IsValid)
+            {
+                _books.Add(book);
+                return Created("", parsingResult);
+            }
+            else
+            {
+                return BadRequest(parsingResult);
+            }
         }
     }
 

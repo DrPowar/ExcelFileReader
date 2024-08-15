@@ -1,23 +1,22 @@
-﻿using IronXL.Options;
-using IronXL;
+﻿using IronXL;
 
 namespace Server.Parser
 {
     public static class XLSXFileParser
     {
-        public static string ParseBook(byte[] file)
+        public static ParsingResult TryParseBook(FileUploadRequest fileUploadRequest, out WorkBook workBook)
         {
-            string tempFilePath = "C:\\Users\\User\\Desktop\\Files\\ExcelParser\\TestFiles\\serverFile";
-
             try
             {
-                File.WriteAllBytes(tempFilePath, file);
+                WorkBook workbook = new WorkBook(fileUploadRequest.FileContent);
+                workBook = workbook;
+                return new ParsingResult(Guid.NewGuid(), true, fileUploadRequest.FileName, ParsingResultMessages.Success);
             }
-            finally
+            catch (Exception ex)
             {
+                workBook = null;
+                return new ParsingResult(Guid.NewGuid(), false, fileUploadRequest.FileName, ex.Message);
             }
-
-            return "dsgf";
         }
 
     }

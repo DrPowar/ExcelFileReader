@@ -3,8 +3,9 @@
         xmlns:vm="using:ExcelFileReader.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" Width="1000" Height="650" WindowStartupLocation="CenterScreen" CanResize="False"
+        mc:Ignorable="d" Width="1400" Height="850" WindowStartupLocation="CenterScreen" CanResize="False"
         x:Class="ExcelFileReader.Views.MainWindow"
+		xmlns:converters="clr-namespace:ExcelFileReader.InterfaceConverters;assembly=ExcelFileReader"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="ExcelFileReader">
@@ -20,6 +21,7 @@
 			<Setter Property="FontFamily" Value="Arial"/>
 			<Setter Property="FontSize" Value="10"/>
 		</Style>
+		
 	</Window.Styles>
 
 	<DockPanel>
@@ -27,22 +29,29 @@
 			<Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="30" Command="{Binding OpenFileButton_Clicked}">
 				<TextBlock>Upload File</TextBlock>
 			</Button>
-			<ListBox Height="535" Margin="10" BorderThickness="1" BorderBrush="Gray" ItemsSource="{Binding Files}">
+			<ListBox Height="735" Margin="10" BorderThickness="1" BorderBrush="Gray" ItemsSource="{Binding Files}">
 
 			</ListBox>
 		</StackPanel>
-			
+
 		<StackPanel DockPanel.Dock="Right" Background="DarkSlateGray">
-			<DataGrid Width="700" Height="630" Margin="10" ItemsSource="{Binding Errors}"
-					IsReadOnly="True"
-					GridLinesVisibility="All"
-					BorderThickness="1" BorderBrush="Black" Background="Snow">
+			<DataGrid Width="1100" Height="830" Margin="10" ItemsSource="{Binding ExcelFilesResponses}"
+						IsReadOnly="True"
+						CanUserReorderColumns="True"
+						CanUserResizeColumns="True"
+						CanUserSortColumns="True"
+						GridLinesVisibility="All"
+						BorderThickness="1" BorderBrush="Black" Background="Snow">
 				<DataGrid.Columns>
-					<DataGridTextColumn Header="Error Id" Binding="{Binding Id}"/>
-					<DataGridTextColumn Header="Error Message" Binding="{Binding ErrorMessage}" />
+					<DataGridTextColumn Header="File Id" Binding="{Binding Id}"/>
+					<DataGridTextColumn Header="File Name" Binding="{Binding FileName}"/>
+					<DataGridTextColumn Header="Message" Binding="{Binding Message}" />
+					<DataGridTextColumn Header="Valid" Binding="{Binding IsValid}">
+					</DataGridTextColumn>
 				</DataGrid.Columns>
 			</DataGrid>
 		</StackPanel>
+
 	</DockPanel>
 
 </Window>

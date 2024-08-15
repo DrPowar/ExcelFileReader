@@ -1,9 +1,8 @@
 ﻿using ExcelFileReader.Constants;
+using System;
 using System.Net.Http;
 using System.Net.Http.Json;
-using System.Text;
 using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace ExcelFileReader.DataTransfer
 {
@@ -16,20 +15,19 @@ namespace ExcelFileReader.DataTransfer
             _httpClient = new HttpClient();
         }
 
-        internal async Task<bool> SendFile(string fileContent)
+        internal async Task<FileParsingResponse> SendFile(byte[] fileContent, string fileName)
         {
             try
             {
-                byte[] byteArray = Encoding.UTF8.GetBytes(fileContent);
+                FileUploadRequest fileUploadRequest = new FileUploadRequest(fileName, fileContent);
 
-                HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"http://localhost:{ServerData.ServerPort}/FileManagement/UploadFile", byteArray);
-                string a = response.StatusCode.ToString();
+                HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"http://localhost:{ServerData.ServerPort}/FileManagement/UploadFile", fileUploadRequest);
 
-                return response.IsSuccessStatusCode;
+                return await response.Content.ReadFromJsonAsync<FileParsingResponse>();
             }
             catch
             {
-                return false;
+                return new FileParsingResponse(Guid.NewGuid(), false, fileName, ParsingResultMessages.SendingFileError);
             }
         }
     }
