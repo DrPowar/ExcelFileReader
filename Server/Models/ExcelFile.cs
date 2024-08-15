@@ -2,7 +2,7 @@
 
 namespace Server.Models
 {
-    public sealed class ExcelFile
+    internal sealed class ExcelFile
     {
         [Key]
         public Guid Id { get; set; }

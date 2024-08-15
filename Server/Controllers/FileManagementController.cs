@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Server.DB;
 using Server.Models;
 using Server.Parser;
+using Server.Parser.Validation;
 
 namespace Server.Controllers
 {
@@ -29,23 +30,16 @@ namespace Server.Controllers
 
             ParsingResult parsingResult = XLSXFileParser.TryParseBook(fileUploadRequest, out book);
 
-            if(parsingResult.IsValid && !IsFileInDB(parsingResult.FileName))
+            ValidationResult validationResult = ExcelValidator.ValidateFile(book);
+
+            if (validationResult.Result)
             {
-                _dbContext.Files.Add(new ExcelFile(parsingResult.Id, parsingResult.FileName, fileUploadRequest.FileContent));
-                await _dbContext.SaveChangesAsync();
-                return Created("", parsingResult);
-            }
-            else if(IsFileInDB(parsingResult.FileName) && parsingResult.IsValid)
-            {
-                return Created("", new ParsingResult(parsingResult.Id, true, parsingResult.FileName, ParsingResultMessages.FileInDatabase));
+                return Created("", validationResult.Persons);
             }
             else
             {
                 return BadRequest(parsingResult);
             }
         }
-
-        private bool IsFileInDB(string name) =>
-            _dbContext.Files.Any(file => file.Name == name);
     }
 }

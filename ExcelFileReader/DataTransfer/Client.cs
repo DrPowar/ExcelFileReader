@@ -12,7 +12,7 @@ namespace ExcelFileReader.DataTransfer
 
         internal Client()
         {
-            _httpClient = new HttpClient();
+            _httpClient = HttpClientFactory.Create();
         }
 
         internal async Task<FileParsingResponse> SendFile(byte[] fileContent, string fileName)

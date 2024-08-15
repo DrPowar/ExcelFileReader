@@ -8,8 +8,7 @@ namespace Server.Parser
         {
             try
             {
-                WorkBook workbook = new WorkBook(fileUploadRequest.FileContent);
-                workBook = workbook;
+                workBook = new WorkBook(fileUploadRequest.FileContent);
                 return new ParsingResult(Guid.NewGuid(), true, fileUploadRequest.FileName, ParsingResultMessages.Success);
             }
             catch (Exception ex)
@@ -18,6 +17,5 @@ namespace Server.Parser
                 return new ParsingResult(Guid.NewGuid(), false, fileUploadRequest.FileName, ex.Message);
             }
         }
-
     }
 }

@@ -17,14 +17,22 @@ namespace ExcelFileReader.ViewModels
     {
         private readonly Client _client;
         private readonly Window _window;
-        private ObservableCollection<ExcelFileResponse> _excelFilesResponses;
-        private ObservableCollection<string> _files;
+        private ObservableCollection<ExcelFileResponse> _excelFilesResponses = new();
+        private ObservableCollection<Person> _persons = new();
+        private ObservableCollection<string> _files = new();
 
         public ObservableCollection<string> Files
         {
             get => _files;
             set => this.RaiseAndSetIfChanged(ref _files, value);
         }
+
+        internal ObservableCollection<Person> Persons
+        {
+            get => _persons;
+            set => this.RaiseAndSetIfChanged(ref _persons, value);
+        }
+
         public ObservableCollection<ExcelFileResponse> ExcelFilesResponses
         {
             get => _excelFilesResponses;
@@ -36,9 +44,6 @@ namespace ExcelFileReader.ViewModels
         public MainWindowViewModel(Window window)
         {
             _client = new Client();
-            _excelFilesResponses = new ObservableCollection<ExcelFileResponse>();
-            _files = new ObservableCollection<string>();
-
 
             OpenFilePicker = new DelegateCommand(OpenFileButton_Clicked);
             _window = window;
