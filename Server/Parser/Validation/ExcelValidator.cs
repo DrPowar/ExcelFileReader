@@ -1,5 +1,10 @@
 ﻿using IronXL;
+using Microsoft.AspNetCore.Http;
+using Microsoft.SqlServer.Server;
 using Server.Models;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Globalization;
+using Server.Constants;
 
 namespace Server.Parser.Validation
 {
@@ -19,19 +24,30 @@ namespace Server.Parser.Validation
                         (uint)cells[$"H{i}"].Int32Value,
                         cells[$"B{i}"].ToString(),
                         cells[$"C{i}"].ToString(),
-                        (Gender)cells[$"D{i}"].Int32Value,
-                        cells[$"E{i}"].ToString(),
-                        (byte)cells[$"F{i}"].Int32Value,
-                        cells[$"G{i}"].DateTimeValue ?? DateTime.MinValue
+                    (Gender)cells[$"D{i}"].Int32Value,
+                    cells[$"E{i}"].ToString(),
+                    (byte)cells[$"F{i}"].Int32Value,
+                    ParseDate(cells[$"G{i}"].ToString())
                     ));
-
                 }
 
-                return new ValidationResult(true, people);
+                return new ValidationResult(true, people, ParsingResultMessages.Success);
             }
             catch (Exception ex)
             {
-                return new ValidationResult(false, null);
+                return new ValidationResult(false, null, ParsingResultMessages.ParsingError);
+            }
+        }
+
+        private static DateTime ParseDate(string stringDate)
+        {
+            if(DateTime.TryParseExact(stringDate, DataFormats.DataTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date))
+            {
+                return date;
+            }
+            else
+            {
+                return DateTime.MinValue;
             }
         }
     }

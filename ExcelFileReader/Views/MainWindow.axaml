@@ -6,6 +6,7 @@
         mc:Ignorable="d" Width="1400" Height="850" WindowStartupLocation="CenterScreen" CanResize="False"
         x:Class="ExcelFileReader.Views.MainWindow"
 		xmlns:converters="clr-namespace:ExcelFileReader.InterfaceConverters;assembly=ExcelFileReader"
+		xmlns:models="clr-namespace:ExcelFileReader.Models;assembly=ExcelFileReader"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="ExcelFileReader">
@@ -21,8 +22,13 @@
 			<Setter Property="FontFamily" Value="Arial"/>
 			<Setter Property="FontSize" Value="10"/>
 		</Style>
-		
 	</Window.Styles>
+
+	<Window.Resources>
+		<converters:BoolToColorConverter x:Key="BoolToColorConverter"/>
+		<models:Person x:Key="Person"/>
+	</Window.Resources>
+	
 
 	<DockPanel>
 		<StackPanel Width="270" DockPanel.Dock="Left" Background="Azure">
@@ -35,21 +41,26 @@
 		</StackPanel>
 
 		<StackPanel DockPanel.Dock="Right" Background="DarkSlateGray">
-			<DataGrid Width="1100" Height="830" Margin="10" ItemsSource="{Binding ExcelFilesResponses}"
-						IsReadOnly="True"
-						CanUserReorderColumns="True"
-						CanUserResizeColumns="True"
-						CanUserSortColumns="True"
-						GridLinesVisibility="All"
-						BorderThickness="1" BorderBrush="Black" Background="Snow">
+			<DataGrid Name="DataRoot" Width="1100" Height="830" Margin="10" ItemsSource="{Binding Persons}"
+					  IsReadOnly="False"
+					  CanUserReorderColumns="True"
+					  CanUserResizeColumns="True"
+					  CanUserSortColumns="True"
+					  GridLinesVisibility="All"
+					  BorderThickness="1" BorderBrush="Black" Background="Snow" LoadingRow="RowsDataGrid_LoadingRow" >
+				
+
 				<DataGrid.Columns>
-					<DataGridTextColumn Header="File Id" Binding="{Binding Id}"/>
-					<DataGridTextColumn Header="File Name" Binding="{Binding FileName}"/>
-					<DataGridTextColumn Header="Message" Binding="{Binding Message}" />
-					<DataGridTextColumn Header="Valid" Binding="{Binding IsValid}">
-					</DataGridTextColumn>
+					<DataGridTextColumn Header="Id" Binding="{Binding Id}"/>
+					<DataGridTextColumn Header="First Name" Binding="{Binding FirstName}"/>
+					<DataGridTextColumn Header="Last Name" Binding="{Binding LastName}" />
+					<DataGridTextColumn Header="Gender" Binding="{Binding Gender}"/>
+					<DataGridTextColumn Header="Country" Binding="{Binding Country}"/>
+					<DataGridTextColumn Header="Age" Binding="{Binding Age}"/>
+					<DataGridTextColumn Header="Birthday" Binding="{Binding Birthday}"/>
 				</DataGrid.Columns>
 			</DataGrid>
+
 		</StackPanel>
 
 	</DockPanel>

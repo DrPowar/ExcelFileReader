@@ -1,6 +1,10 @@
-﻿using Avalonia.Controls;
+﻿using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Data;
 using Avalonia.Platform.Storage;
+using DynamicData;
 using ExcelFileReader.DataTransfer;
+using ExcelFileReader.InterfaceConverters;
 using ExcelFileReader.Models;
 using Prism.Commands;
 using ReactiveUI;
@@ -9,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ExcelFileReader.ViewModels
@@ -17,7 +22,6 @@ namespace ExcelFileReader.ViewModels
     {
         private readonly Client _client;
         private readonly Window _window;
-        private ObservableCollection<ExcelFileResponse> _excelFilesResponses = new();
         private ObservableCollection<Person> _persons = new();
         private ObservableCollection<string> _files = new();
 
@@ -31,12 +35,6 @@ namespace ExcelFileReader.ViewModels
         {
             get => _persons;
             set => this.RaiseAndSetIfChanged(ref _persons, value);
-        }
-
-        public ObservableCollection<ExcelFileResponse> ExcelFilesResponses
-        {
-            get => _excelFilesResponses;
-            set => this.RaiseAndSetIfChanged(ref _excelFilesResponses, value);
         }
 
         public DelegateCommand OpenFilePicker { get; init; }
@@ -53,26 +51,30 @@ namespace ExcelFileReader.ViewModels
         {
             TopLevel topLevel = TopLevel.GetTopLevel(_window);
 
-            IReadOnlyList<IStorageFile> files = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+            IReadOnlyCollection<IStorageFile> files = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
             {
                 Title = "Open Text File",
-                AllowMultiple = true,
+                AllowMultiple = false,
             });
 
-            List<FileUploadRequest> filesRequests = await GetMultipleFilesContent(files);
+            FileUploadRequest filesRequests = await GetSingleFileContent(files.First());
 
             if (filesRequests != null)
             {
-                foreach(FileUploadRequest file in filesRequests)
-                {
-                    FileParsingResponse response = await _client.SendFile(file.FileContent, file.FileName);
+                ParsingResponse response = await _client.SendFile(filesRequests.FileContent, filesRequests.FileName);
 
-                    ExcelFilesResponses.Add(new ExcelFileResponse(response.Id, response.Message, response.FileName, response.IsValid));
+                if (response.IsValid)
+                {
+                    Persons.AddRange(response.Persons);
+                }
+                else
+                {
+                   //Show message on interface
                 }
             }
         }
 
-        private async Task<byte[]> GetSingleFileContent(IStorageFile file)
+        private async Task<FileUploadRequest> GetSingleFileContent(IStorageFile file)
         {
             byte[] fileContent = Array.Empty<byte>();
 
@@ -84,7 +86,7 @@ namespace ExcelFileReader.ViewModels
                 fileContent = memoryStream.ToArray();
             }
 
-            return fileContent;
+            return new FileUploadRequest(file.Name, fileContent);
         }
 
         private async Task<List<FileUploadRequest>> GetMultipleFilesContent(IReadOnlyCollection<IStorageFile> files)

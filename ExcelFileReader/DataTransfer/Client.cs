@@ -1,5 +1,6 @@
 ﻿using ExcelFileReader.Constants;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -15,7 +16,7 @@ namespace ExcelFileReader.DataTransfer
             _httpClient = HttpClientFactory.Create();
         }
 
-        internal async Task<FileParsingResponse> SendFile(byte[] fileContent, string fileName)
+        internal async Task<ParsingResponse> SendFile(byte[] fileContent, string fileName)
         {
             try
             {
@@ -23,7 +24,7 @@ namespace ExcelFileReader.DataTransfer
 
                 HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"http://localhost:{ServerData.ServerPort}/FileManagement/UploadFile", fileUploadRequest);
 
-                FileParsingResponse? fileParsingResponse = await response.Content.ReadFromJsonAsync<FileParsingResponse>();
+                ParsingResponse? fileParsingResponse = await response.Content.ReadFromJsonAsync<ParsingResponse>();
                     
                 if(fileParsingResponse != null)
                 {
@@ -31,12 +32,12 @@ namespace ExcelFileReader.DataTransfer
                 }
                 else
                 {
-                    return new FileParsingResponse(Guid.NewGuid(), false, fileName, ParsingResultMessages.ServerReturnInvalidData);
+                    return new ParsingResponse(new List<Models.Person>(), false, ParsingResultMessages.ServerReturnInvalidData);
                 }
             }
             catch
             {
-                return new FileParsingResponse(Guid.NewGuid(), false, fileName, ParsingResultMessages.SendingFileError);
+                return new ParsingResponse(new List<Models.Person>(), false, ParsingResultMessages.SendingFileError);
             }
         }
     }

@@ -32,13 +32,13 @@ namespace Server.Controllers
 
             ValidationResult validationResult = ExcelValidator.ValidateFile(book);
 
-            if (validationResult.Result)
+            if (validationResult.IsValid)
             {
-                return Created("", validationResult.Persons);
+                return Created("", validationResult);
             }
             else
             {
-                return BadRequest(parsingResult);
+                return BadRequest(ParsingResultMessages.InvalidFile);
             }
         }
     }
