@@ -3,7 +3,8 @@
         xmlns:vm="using:ExcelFileReader.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" Width="1400" Height="850" WindowStartupLocation="CenterScreen" CanResize="False"
+		xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        mc:Ignorable="d" Width="1400" Height="850" WindowStartupLocation="CenterScreen" CanResize="True"
         x:Class="ExcelFileReader.Views.MainWindow"
 		xmlns:converters="clr-namespace:ExcelFileReader.InterfaceConverters;assembly=ExcelFileReader"
 		xmlns:models="clr-namespace:ExcelFileReader.Models;assembly=ExcelFileReader"
@@ -32,22 +33,34 @@
 
 	<DockPanel>
 		<StackPanel Width="270" DockPanel.Dock="Left" Background="Azure">
-			<Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="30" Command="{Binding OpenFileButton_Clicked}">
+			<Button HorizontalAlignment="Center" IsEnabled="{Binding CanUploadFile}" VerticalAlignment="Top" Margin="30" Command="{Binding OpenFileButton_Clicked}">
 				<TextBlock>Upload File</TextBlock>
 			</Button>
-			<ListBox Height="735" Margin="10" BorderThickness="1" BorderBrush="Gray" ItemsSource="{Binding Files}">
+			<TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" MaxWidth="250" FontSize="22" Text="{Binding UploadingStatus}">
 
-			</ListBox>
+			</TextBlock>
 		</StackPanel>
 
-		<StackPanel DockPanel.Dock="Right" Background="DarkSlateGray">
-			<DataGrid Name="DataRoot" Width="1100" Height="830" Margin="10" ItemsSource="{Binding Persons}"
+		<Grid DockPanel.Dock="Right" Background="DarkSlateGray">
+
+			<Grid.RowDefinitions>
+				<RowDefinition Height="*"/>
+				<RowDefinition Height="Auto"/>
+			</Grid.RowDefinitions>
+			
+			<DataGrid Name="DataRoot"
+					  Width="1100"
+					  Height="830"
+					  Margin="10"
+					  ItemsSource="{Binding Persons}"
 					  IsReadOnly="False"
-					  CanUserReorderColumns="True"
-					  CanUserResizeColumns="True"
 					  CanUserSortColumns="True"
 					  GridLinesVisibility="All"
-					  BorderThickness="1" BorderBrush="Black" Background="Snow" LoadingRow="RowsDataGrid_LoadingRow" >
+					  BorderThickness="1"
+					  BorderBrush="Black"
+					  Background="Snow"
+					  LoadingRow="RowsDataGrid_LoadingRow"
+					  RowEditEnded="RowDataGrid_EditingRow">
 				
 
 				<DataGrid.Columns>
@@ -61,7 +74,37 @@
 				</DataGrid.Columns>
 			</DataGrid>
 
-		</StackPanel>
+			<StackPanel Grid.Row="1" Margin="0,10" Orientation="Horizontal"
+                  HorizontalAlignment="Center">
+				<Button Command="{Binding FirstPageCommand}"
+						Content="A">
+				</Button>
+				<RepeatButton Margin="12,0,0,0"
+							  Command="{Binding PreviousPageCommand}"
+							  Content="A">
+				</RepeatButton>
+				<TextBlock Margin="8,0" VerticalAlignment="Center">
+					<TextBlock.Text>
+						<MultiBinding StringFormat="Page {0} of {1}">
+							<Binding Path="CurrentPage" />
+							<Binding Path="TotalPages" />
+						</MultiBinding>
+					</TextBlock.Text>
+				</TextBlock>
+				<RepeatButton Command="{Binding NextPageCommand}"
+							  Content="A">
+				</RepeatButton>
+				<Button Margin="12,0,0,0"
+						Command="{Binding LastPageCommand}"
+						Content="A">
+				</Button>
+			</StackPanel>
+
+			<TextBlock Grid.Row="1" Margin="0,0,15,0"
+						HorizontalAlignment="Right" VerticalAlignment="Center"
+						Text="{Binding TotalItems, StringFormat={}{0} items}"/>
+
+		</Grid>
 
 	</DockPanel>
 
