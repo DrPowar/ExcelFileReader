@@ -9,13 +9,18 @@ namespace Server.DB
             : base(options)
         {
         }
-        internal virtual DbSet<ExcelFile> Files { get; set; }
         internal virtual DbSet<Person> Persons { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ExcelFile>(entity => entity.HasKey(k => k.Id));
+            modelBuilder.Entity<Person>(entity =>
+            {
+                entity.HasKey(k => k.Number);
+                entity.Property(k => k.Number)
+                        .ValueGeneratedNever();
 
-            modelBuilder.Entity<Person>(entity => entity.HasKey(k => k.Id));
+                entity.Property(k => k.Id)
+                        .ValueGeneratedNever();
+            });
 
             OnModelCreatingPartial(modelBuilder);
         }

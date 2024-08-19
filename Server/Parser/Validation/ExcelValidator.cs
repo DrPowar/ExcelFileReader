@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.SqlServer.Server;
 using Server.Models;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Globalization;
 using Server.Constants;
 
@@ -21,9 +20,10 @@ namespace Server.Parser.Validation
                 for (int i = 2; i < cells.RowCount + 1; i++)
                 {
                     people.Add(new Person(
-                        (uint)cells[$"H{i}"].Int32Value,
-                        cells[$"B{i}"].ToString(),
-                        cells[$"C{i}"].ToString(),
+                    (uint)cells[$"A{i}"].Int32Value,
+                    (uint)cells[$"H{i}"].Int32Value,
+                    cells[$"B{i}"].ToString(),
+                    cells[$"C{i}"].ToString(),
                     (Gender)cells[$"D{i}"].Int32Value,
                     cells[$"E{i}"].ToString(),
                     (byte)cells[$"F{i}"].Int32Value,

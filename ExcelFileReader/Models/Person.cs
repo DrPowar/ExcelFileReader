@@ -5,6 +5,7 @@ namespace ExcelFileReader.Models
 {
     internal class Person
     {
+        public uint Number { get; set; }
         public uint Id { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }

@@ -1,6 +1,7 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using DynamicData;
+using DynamicData.Binding;
 using DynamicData.Operators;
 using ExcelFileReader.Constants;
 using ExcelFileReader.DataTransfer;
@@ -12,6 +13,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
 
@@ -19,20 +21,22 @@ namespace ExcelFileReader.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        private const int PageSize = 25;
+        private const int PageSize = 100;
         private const int FirstPage = 1;
         private readonly ISubject<PageRequest> _pager;
-
-
         private readonly Client _client;
         private readonly Window _window;
-        private ObservableCollection<Person> _persons = new();
-        private ObservableCollection<string> _files = new();
+        private readonly ISourceCache<Person, int> _personCache;
+        private ObservableCollectionExtended<Person> _pagedPersons;
+        private ObservableCollection<Person> _selecetdPersons;
         private bool _canUploadFile = true;
+        private bool _canSaveData;
         private string _uploadingStatus = UploadingStatusMessages.UploadingAllowed;
         private int _currentPage;
         private int _totalItems;
         private int _totalPages;
+
+        internal ObservableCollection<Gender> GenderOptions { get; } = new ObservableCollection<Gender> { Gender.Male, Gender.Female};
 
         internal int TotalItems
         {
@@ -64,28 +68,37 @@ namespace ExcelFileReader.ViewModels
             set => this.RaiseAndSetIfChanged(ref _canUploadFile, value);
         }
 
-        internal ObservableCollection<string> Files
+        internal bool CanSaveData
         {
-            get => _files;
-            set => this.RaiseAndSetIfChanged(ref _files, value);
+            get => _canSaveData;
+            set => this.RaiseAndSetIfChanged(ref _canSaveData, value);
         }
 
-        internal ObservableCollection<Person> Persons
+        internal ObservableCollection<Person> SelectedPersons
         {
-            get => _persons;
-            set => this.RaiseAndSetIfChanged(ref _persons, value);
+            get => _selecetdPersons;
+            set => this.RaiseAndSetIfChanged(ref _selecetdPersons, value);
         }
 
-        public DelegateCommand OpenFilePicker { get; init; }
-        public DelegateCommand FirstPageCommand { get; init; }
-        public DelegateCommand PreviousPageCommand { get; init; }
-        public DelegateCommand NextPageCommand { get; init; }
-        public DelegateCommand LastPageCommand { get; init; }
-
-        public MainWindowViewModel(Window window)
+        internal ObservableCollectionExtended<Person> Persons
         {
+            get => _pagedPersons;
+            set => this.RaiseAndSetIfChanged(ref _pagedPersons, value);
+        }
+
+        internal DelegateCommand OpenFilePicker { get; init; }
+        internal DelegateCommand FirstPageCommand { get; init; }
+        internal DelegateCommand PreviousPageCommand { get; init; }
+        internal DelegateCommand NextPageCommand { get; init; }
+        internal DelegateCommand LastPageCommand { get; init; }
+        internal DelegateCommand SaveDataCommand { get; init; }
+
+        internal MainWindowViewModel(Window window)
+        {
+            _selecetdPersons = new ObservableCollection<Person>();
             _pager = new BehaviorSubject<PageRequest>(new PageRequest(FirstPage, PageSize));
-
+            _pagedPersons = new ObservableCollectionExtended<Person>();
+            _personCache = PersonCacheInit(_pager, _pagedPersons);
             _client = new Client();
 
             OpenFilePicker = new DelegateCommand(OpenFileButton_Clicked);
@@ -93,6 +106,7 @@ namespace ExcelFileReader.ViewModels
             PreviousPageCommand = new DelegateCommand(MoveToPreviousPage);
             NextPageCommand = new DelegateCommand(MoveToNextPage);
             LastPageCommand = new DelegateCommand(MoveToLastPage);
+            SaveDataCommand = new DelegateCommand(SaveDataButton_Click);
             _window = window;
         }
 
@@ -116,14 +130,39 @@ namespace ExcelFileReader.ViewModels
                 UploadingStatus = UploadingStatusMessages.WaitingForDataGridUpdating;
                 if (response.IsValid)
                 {
-                    Persons.AddRange(response.Persons);
-                    CanUploadFile = false;
+                    _personCache.AddOrUpdate(response.Persons);
+
+                    CanSaveData = true;
+                    CanUploadFile = true;
                     UploadingStatus = UploadingStatusMessages.UploadingAllowed;
                 }
                 else
                 {
                     //Show message on interface
                 }
+            }
+        }
+
+        internal async void SaveDataButton_Click()
+        {
+            UploadingStatus = UploadingStatusMessages.WaitingForServerResponse;
+            if(_selecetdPersons.Count > 0 && _selecetdPersons.All(p => p.IsValid))
+            {
+                SavingDataResponse response = await _client.SaveDataOnServer(_selecetdPersons.ToList());
+
+                if (response.IsValid)
+                {
+                    UploadingStatus = UploadingStatusMessages.DataSaveSuccess;
+                    Persons.RemoveMany(_selecetdPersons);
+                }
+                else
+                {
+                    UploadingStatus = response.Message;
+                }
+            }
+            else
+            {
+                UploadingStatus = UploadingStatusMessages.SelectValidData;
             }
         }
 
@@ -136,6 +175,22 @@ namespace ExcelFileReader.ViewModels
             }
             return person.IsValid;
         }
+
+        private ISourceCache<Person, int> PersonCacheInit(ISubject<PageRequest> subject, ObservableCollectionExtended<Person> persons)
+        {
+            SourceCache<Person, int> cache = new SourceCache<Person, int>(person => (int)person.Number);
+
+            cache.Connect()
+                .Sort(SortExpressionComparer<Person>.Ascending(e => e.Number))
+                .Page(subject)
+                .Do(change => PagingUpdate(change.Response))
+                .Bind(persons)
+                .Subscribe();
+
+            return cache;
+        }
+
+        private IObservable<IChangeSet<Person, int>> PersonsConnection() => _personCache.Connect();
 
         private void PagingUpdate(IPageResponse response)
         {

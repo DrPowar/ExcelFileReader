@@ -1,4 +1,5 @@
 ﻿using IronXL;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server.DB;
@@ -39,6 +40,31 @@ namespace Server.Controllers
             else
             {
                 return BadRequest(ParsingResultMessages.InvalidFile);
+            }
+        }
+
+        [HttpPost("SaveDataToDB")]
+        public async Task<IActionResult> SaveDataToDB([FromBody] List<Person> persons)
+        {
+            if(persons == null)
+            {
+                return BadRequest(new SavingDataResult(false, SavingResultMessages.NullData));
+            }
+
+            try
+            {
+                await _dbContext.Persons.AddRangeAsync(persons);
+                await _dbContext.SaveChangesAsync();
+
+                return Ok(new SavingDataResult(true, SavingResultMessages.Success));
+            }
+            catch (OperationCanceledException ex)
+            {
+                return BadRequest(new SavingDataResult(false, ex.Message));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new SavingDataResult(false, ex.Message));
             }
         }
     }

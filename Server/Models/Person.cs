@@ -3,9 +3,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Server.Models
 {
-    internal class Person
+    public class Person
     {
-        [Key]
+        public uint Number { get; init; }
         public uint Id { get; init; }
         public string? FirstName { get; init; }
         public string? LastName { get; init; }
@@ -16,8 +16,9 @@ namespace Server.Models
         [NotMapped]
         public bool IsValid { get; init; }
 
-        public Person(uint id, string firstName, string lastName, Gender gender, string country, byte age, DateTime birthday)
+        public Person(uint number, uint id, string firstName, string lastName, Gender gender, string country, byte age, DateTime birthday)
         {
+            Number = number;
             Id = id;
             FirstName = firstName;
             LastName = lastName;

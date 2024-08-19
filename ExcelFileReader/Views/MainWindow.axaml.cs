@@ -2,10 +2,15 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Media;
+using Avalonia.Platform.Storage;
+using DynamicData;
 using ExcelFileReader.Constants;
+using ExcelFileReader.DataTransfer;
 using ExcelFileReader.InterfaceConverters;
 using ExcelFileReader.Models;
 using ExcelFileReader.ViewModels;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ExcelFileReader.Views
 {
@@ -14,9 +19,9 @@ namespace ExcelFileReader.Views
         private MainWindowViewModel _viewModel;
         public MainWindow()
         {
-            InitializeComponent();
             _viewModel = new MainWindowViewModel(this);
             DataContext = _viewModel;
+            InitializeComponent();
         }
 
         public void RowsDataGrid_LoadingRow(object? sender, DataGridRowEventArgs e)
@@ -42,6 +47,20 @@ namespace ExcelFileReader.Views
                     e.Row.Background = RGBBrush.GetBrushFromRGB(RGBColors.RGBFailureRed, RGBColors.RGBFailureGreen, RGBColors.RGBFailureBlue);
                 }
             }
+        }
+
+        internal void OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
+        {
+            DataGrid? dataGrid = sender as DataGrid;
+            _viewModel.SelectedPersons.Clear();
+            foreach(Person person in dataGrid!.SelectedItems)
+            {
+                _viewModel.SelectedPersons.Add(person);
+            }
+        }
+
+        private void Binding(object? sender, Avalonia.Controls.SelectionChangedEventArgs e)
+        {
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using ExcelFileReader.Constants;
+using ExcelFileReader.Models;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -32,12 +33,28 @@ namespace ExcelFileReader.DataTransfer
                 }
                 else
                 {
-                    return new ParsingResponse(new List<Models.Person>(), false, ParsingResultMessages.ServerReturnInvalidData);
+                    return new ParsingResponse(new List<Person>(), false, ResponseMessages.ServerReturnInvalidData);
                 }
             }
             catch
             {
-                return new ParsingResponse(new List<Models.Person>(), false, ParsingResultMessages.SendingFileError);
+                return new ParsingResponse(new List<Person>(), false, ResponseMessages.SendingFileError);
+            }
+        }
+
+        internal async Task<SavingDataResponse> SaveDataOnServer(IEnumerable<Person> persons)
+        {
+            HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"http://localhost:{ServerData.ServerPort}/FileManagement/SaveDataToDB", persons);
+
+            SavingDataResponse? savingDataResponse = await response.Content.ReadFromJsonAsync<SavingDataResponse>();
+
+            if (savingDataResponse != null)
+            {
+                return savingDataResponse;
+            }
+            else
+            {
+                return new SavingDataResponse(false, ResponseMessages.SendingFileError);
             }
         }
     }

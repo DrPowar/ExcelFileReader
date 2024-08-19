@@ -3,11 +3,11 @@
         xmlns:vm="using:ExcelFileReader.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-		xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
         mc:Ignorable="d" Width="1400" Height="850" WindowStartupLocation="CenterScreen" CanResize="True"
         x:Class="ExcelFileReader.Views.MainWindow"
-		xmlns:converters="clr-namespace:ExcelFileReader.InterfaceConverters;assembly=ExcelFileReader"
-		xmlns:models="clr-namespace:ExcelFileReader.Models;assembly=ExcelFileReader"
+        xmlns:converters="clr-namespace:ExcelFileReader.InterfaceConverters;assembly=ExcelFileReader"
+        xmlns:models="clr-namespace:ExcelFileReader.Models;assembly=ExcelFileReader"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="ExcelFileReader">
@@ -29,17 +29,27 @@
 		<converters:BoolToColorConverter x:Key="BoolToColorConverter"/>
 		<models:Person x:Key="Person"/>
 	</Window.Resources>
+
+	<Design.DataContext>
+		<vm:MainWindowViewModel/>
+	</Design.DataContext>
 	
 
-	<DockPanel>
-		<StackPanel Width="270" DockPanel.Dock="Left" Background="Azure">
-			<Button HorizontalAlignment="Center" IsEnabled="{Binding CanUploadFile}" VerticalAlignment="Top" Margin="30" Command="{Binding OpenFileButton_Clicked}">
-				<TextBlock>Upload File</TextBlock>
-			</Button>
-			<TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" MaxWidth="250" FontSize="22" Text="{Binding UploadingStatus}">
+	<DockPanel Name="Root">
+		<Grid>
+			<StackPanel Width="270" DockPanel.Dock="Left" Background="Azure">
+				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,20">
+					<Button IsEnabled="{Binding CanUploadFile}" Command="{Binding OpenFileButton_Clicked}" Margin="0,0,10,0">
+						<TextBlock>Select File</TextBlock>
+					</Button>
+					<Button IsEnabled="{Binding CanSaveData}" Command="{Binding SaveDataButton_Click}">
+						<TextBlock>Save Data</TextBlock>
+					</Button>
+				</StackPanel>
+				<TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" MaxWidth="250" FontSize="22" Text="{Binding UploadingStatus}"/>
+			</StackPanel>
+		</Grid>
 
-			</TextBlock>
-		</StackPanel>
 
 		<Grid DockPanel.Dock="Right" Background="DarkSlateGray">
 
@@ -48,9 +58,8 @@
 				<RowDefinition Height="Auto"/>
 			</Grid.RowDefinitions>
 			
-			<DataGrid Name="DataRoot"
-					  Width="1100"
-					  Height="830"
+			<DataGrid
+					  Name="PersonsGrid"
 					  Margin="10"
 					  ItemsSource="{Binding Persons}"
 					  IsReadOnly="False"
@@ -60,28 +69,47 @@
 					  BorderBrush="Black"
 					  Background="Snow"
 					  LoadingRow="RowsDataGrid_LoadingRow"
-					  RowEditEnded="RowDataGrid_EditingRow">
+					  RowEditEnded="RowDataGrid_EditingRow"
+					  VerticalAlignment="Stretch"
+					  HorizontalAlignment="Stretch"
+					  SelectionChanged="OnSelectionChanged">
 				
 
 				<DataGrid.Columns>
 					<DataGridTextColumn Header="Id" Binding="{Binding Id}"/>
 					<DataGridTextColumn Header="First Name" Binding="{Binding FirstName}"/>
 					<DataGridTextColumn Header="Last Name" Binding="{Binding LastName}" />
-					<DataGridTextColumn Header="Gender" Binding="{Binding Gender}"/>
+					<DataGridTemplateColumn Header="Gender">
+						<DataGridTemplateColumn.CellTemplate>
+							<DataTemplate>
+								<ComboBox SelectedItem="{Binding Gender}"
+										  ItemsSource="{Binding #Root.((vm:MainWindowViewModel)DataContext).GenderOptions}"
+										  BorderThickness="0"
+										  HorizontalAlignment="Center"
+										  Background="Transparent"
+										  CornerRadius="0"
+										  Width="120">
+								</ComboBox>
+							</DataTemplate>
+						</DataGridTemplateColumn.CellTemplate>
+					</DataGridTemplateColumn>
 					<DataGridTextColumn Header="Country" Binding="{Binding Country}"/>
 					<DataGridTextColumn Header="Age" Binding="{Binding Age}"/>
 					<DataGridTextColumn Header="Birthday" Binding="{Binding Birthday}"/>
 				</DataGrid.Columns>
 			</DataGrid>
 
-			<StackPanel Grid.Row="1" Margin="0,10" Orientation="Horizontal"
-                  HorizontalAlignment="Center">
-				<Button Command="{Binding FirstPageCommand}"
-						Content="A">
+			<Border Grid.Row="1" Margin="0,10,0,20" HorizontalAlignment="Center"
+				Background="Snow" CornerRadius="10">
+			
+			<StackPanel Orientation="Horizontal">
+				<Button Command="{Binding FirstPageCommand}" Margin="10,10,0,10">
+					&lt;
+					&lt;
 				</Button>
 				<RepeatButton Margin="12,0,0,0"
-							  Command="{Binding PreviousPageCommand}"
-							  Content="A">
+							  Command="{Binding PreviousPageCommand}">
+					&lt;
 				</RepeatButton>
 				<TextBlock Margin="8,0" VerticalAlignment="Center">
 					<TextBlock.Text>
@@ -91,18 +119,28 @@
 						</MultiBinding>
 					</TextBlock.Text>
 				</TextBlock>
-				<RepeatButton Command="{Binding NextPageCommand}"
-							  Content="A">
+				<RepeatButton Command="{Binding NextPageCommand}">
+					&gt;
 				</RepeatButton>
-				<Button Margin="12,0,0,0"
-						Command="{Binding LastPageCommand}"
-						Content="A">
+				<Button Margin="12,10,10,10"
+						Command="{Binding LastPageCommand}">
+					&gt;
+					&gt;
 				</Button>
 			</StackPanel>
+			</Border>
 
-			<TextBlock Grid.Row="1" Margin="0,0,15,0"
-						HorizontalAlignment="Right" VerticalAlignment="Center"
-						Text="{Binding TotalItems, StringFormat={}{0} items}"/>
+			<Border 
+							Grid.Row="1" 
+							Margin="0,0,15,0"
+							HorizontalAlignment="Right"
+							VerticalAlignment="Center"
+							Background="Snow"
+							CornerRadius="5"
+				>
+				<TextBlock Margin="5"
+							Text="{Binding TotalItems, StringFormat={}{0} items}"/>
+			</Border>
 
 		</Grid>
 

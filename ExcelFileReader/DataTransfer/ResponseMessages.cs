@@ -1,6 +1,6 @@
 ﻿namespace ExcelFileReader.DataTransfer
 {
-    public static class ParsingResultMessages
+    public static class ResponseMessages
     {
         public const string Success = "Success.";
         public const string EmptyFile = "File is empty.";

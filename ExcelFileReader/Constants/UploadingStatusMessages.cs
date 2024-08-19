@@ -11,5 +11,7 @@ namespace ExcelFileReader.Constants
         internal const string UploadingAllowed = "Select a file.";
         internal const string WaitingForServerResponse = "Waiting for server response.";
         internal const string WaitingForDataGridUpdating = "Waiting for the data grid to update.";
+        internal const string DataSaveSuccess = "Data saved successfully.";
+        internal const string SelectValidData = "Please, select valid data.";
     }
 }
