@@ -1,25 +1,21 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
-using Avalonia.Media;
-using Avalonia.Platform.Storage;
 using DynamicData;
 using ExcelFileReader.Constants;
-using ExcelFileReader.DataTransfer;
 using ExcelFileReader.InterfaceConverters;
 using ExcelFileReader.Models;
 using ExcelFileReader.ViewModels;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace ExcelFileReader.Views
 {
     public partial class MainWindow : Window
-    {   
+    {
         private MainWindowViewModel _viewModel;
         public MainWindow()
         {
-            _viewModel = new MainWindowViewModel(this);
+            TopLevel topLevel = GetTopLevel(this);
+            _viewModel = new MainWindowViewModel(topLevel);
             DataContext = _viewModel;
             InitializeComponent();
         }
@@ -35,7 +31,7 @@ namespace ExcelFileReader.Views
 
         public void RowDataGrid_EditingRow(object? sender, DataGridRowEditEndedEventArgs e)
         {
-            if(e.Row.DataContext is Person)
+            if (e.Row.DataContext is Person)
             {
                 bool isValidPerson = _viewModel.UpdatePerson(e.Row.DataContext as Person);
                 if (isValidPerson)
@@ -52,15 +48,12 @@ namespace ExcelFileReader.Views
         internal void OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
             DataGrid? dataGrid = sender as DataGrid;
-            _viewModel.SelectedPersons.Clear();
-            foreach(Person person in dataGrid!.SelectedItems)
+            _viewModel.SelectedPeople.Clear();
+            foreach (Person person in dataGrid!.SelectedItems)
             {
-                _viewModel.SelectedPersons.Add(person);
+                _viewModel.SelectedPeople.Add(person);
             }
-        }
-
-        private void Binding(object? sender, Avalonia.Controls.SelectionChangedEventArgs e)
-        {
+            _viewModel.UpdateItemsCountFields();
         }
     }
 }

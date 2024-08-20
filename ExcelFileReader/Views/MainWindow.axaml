@@ -61,7 +61,7 @@
 			<DataGrid
 					  Name="PersonsGrid"
 					  Margin="10"
-					  ItemsSource="{Binding Persons}"
+					  ItemsSource="{Binding People}"
 					  IsReadOnly="False"
 					  CanUserSortColumns="True"
 					  GridLinesVisibility="All"
@@ -103,7 +103,8 @@
 				Background="Snow" CornerRadius="10">
 			
 			<StackPanel Orientation="Horizontal">
-				<Button Command="{Binding FirstPageCommand}" Margin="10,10,0,10">
+				<Button Command="{Binding FirstPageCommand}"
+						Margin="10,10,0,10">
 					&lt;
 					&lt;
 				</Button>
@@ -130,17 +131,46 @@
 			</StackPanel>
 			</Border>
 
-			<Border 
-							Grid.Row="1" 
-							Margin="0,0,15,0"
-							HorizontalAlignment="Right"
-							VerticalAlignment="Center"
-							Background="Snow"
-							CornerRadius="5"
-				>
-				<TextBlock Margin="5"
-							Text="{Binding TotalItems, StringFormat={}{0} items}"/>
-			</Border>
+			<Grid Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+				</Grid.ColumnDefinitions>
+
+				<Border
+					Grid.Column="0"
+					Margin="0,10,15,20"
+					Background="Snow"
+					CornerRadius="5">
+					<TextBlock Margin="5"
+							   Text="{Binding TotalItems, StringFormat={}{0} items}"
+							   FontSize="16"/>
+				</Border>
+
+				<Border
+					Grid.Column="1"
+					Margin="0,10,15,20"
+					Background="Snow"
+					CornerRadius="5">
+					<TextBlock Margin="5"
+							   Text="{Binding ValidItems, StringFormat={}{0} valid items}"
+							   Foreground="#49c46e"
+							   FontSize="16"/>
+				</Border>
+
+				<Border
+					Grid.Column="2"
+					Margin="0,10,15,20"
+					Background="Snow"
+					CornerRadius="5">
+					<TextBlock Margin="5"
+							   Text="{Binding InValidItems, StringFormat={}{0} invalid items}"
+							   Foreground="#ff8a8a"
+							   FontSize="16"/>
+				</Border>
+			</Grid>
+
 
 		</Grid>
 

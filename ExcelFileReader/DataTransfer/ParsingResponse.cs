@@ -4,5 +4,5 @@ using System.Collections.Generic;
 
 namespace ExcelFileReader.DataTransfer
 {
-    internal record ParsingResponse(List<Person> Persons, bool IsValid, string Message);
+    internal record ParsingResponse(List<Person> People, bool IsValid, string Message);
 }
