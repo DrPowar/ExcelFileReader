@@ -28,7 +28,7 @@ namespace ExcelFileReader.ViewModels
         private readonly TopLevel _topLevel;
         private readonly PeopleService _peopleService;
         private ObservableCollectionExtended<Person> _pagedPeople;
-        private ObservableCollection<Person> _selecetdPeople;
+        private ObservableCollection<Person> _selectedPeople;
         private bool _canUploadFile = true;
         private bool _canSaveData;
         private string _uploadingStatus = UploadingStatusMessages.UploadingAllowed;
@@ -90,8 +90,8 @@ namespace ExcelFileReader.ViewModels
 
         internal ObservableCollection<Person> SelectedPeople
         {
-            get => _selecetdPeople;
-            set => this.RaiseAndSetIfChanged(ref _selecetdPeople, value);
+            get => _selectedPeople;
+            set => this.RaiseAndSetIfChanged(ref _selectedPeople, value);
         }
 
         internal ObservableCollectionExtended<Person> People
@@ -109,7 +109,7 @@ namespace ExcelFileReader.ViewModels
 
         internal MainWindowViewModel(TopLevel topLevel)
         {
-            _selecetdPeople = new ObservableCollection<Person>();
+            _selectedPeople = new ObservableCollection<Person>();
             _pager = new BehaviorSubject<PageRequest>(new PageRequest(FirstPage, PageSize));
             _pagedPeople = new ObservableCollectionExtended<Person>();
             _peopleService = new PeopleService();
@@ -170,15 +170,15 @@ namespace ExcelFileReader.ViewModels
         internal async void SaveDataButton_Click()
         {
             UploadingStatus = UploadingStatusMessages.WaitingForServerResponse;
-            if(_selecetdPeople.Count > 0 && _selecetdPeople.All(p => p.IsValid))
+            if(_selectedPeople.Count > 0 && _selectedPeople.All(p => p.IsValid))
             {
-                SavingDataResponse response = await _client.SaveDataOnServer(_selecetdPeople.ToList());
+                SavingDataResponse response = await _client.SaveDataOnServer(_selectedPeople.ToList());
 
                 if (response.IsValid)
                 {
                     UploadingStatus = UploadingStatusMessages.DataSaveSuccess;
 
-                    _peopleService.UpdateData(_selecetdPeople);
+                    _peopleService.UpdateData(_selectedPeople);
 
                     UpdateItemsCountFields();
                 }

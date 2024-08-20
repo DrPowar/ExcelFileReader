@@ -1,4 +1,4 @@
-﻿namespace Server.Parser
+﻿namespace Server.Constants
 {
     public static class ParsingResultMessages
     {
