@@ -30,9 +30,6 @@
 		<models:Person x:Key="Person"/>
 	</Window.Resources>
 
-	<Design.DataContext>
-		<vm:MainWindowViewModel/>
-	</Design.DataContext>
 	
 
 	<DockPanel Name="Root">

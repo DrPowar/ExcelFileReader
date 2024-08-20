@@ -1,6 +1,11 @@
 
+using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Server.Commands;
 using Server.DB;
+using Server.Handlers;
+using Server.Repositories;
+using Server.Services;
 
 namespace Server
 {
@@ -11,6 +16,13 @@ namespace Server
             var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddControllers();
 
+            builder.Services.AddMediatR(options =>
+            {
+                options.RegisterServicesFromAssemblies(typeof(Program).Assembly);
+            });
+
+            builder.Services.AddSingleton<IAddPeopleService, AddPeopleService>();
+            builder.Services.AddSingleton<IAddPersonService, AddPersonService>();
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();

@@ -1,7 +1,9 @@
 ﻿using IronXL;
+using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Server.Commands;
 using Server.Constants;
 using Server.DB;
 using Server.Models;
@@ -14,10 +16,10 @@ namespace Server.Controllers
     [Route("[controller]")]
     public class FileManagementController : Controller
     {
-        ExcelDBContext _dbContext;
-        public FileManagementController(ExcelDBContext dBContext) 
+        private readonly IMediator _mediator;
+        public FileManagementController(IMediator mediator) 
         {
-            _dbContext = dBContext;
+            _mediator = mediator;
         }
 
         [HttpPost("UploadFile")]
@@ -54,8 +56,8 @@ namespace Server.Controllers
 
             try
             {
-                await _dbContext.Persons.AddRangeAsync(persons);
-                await _dbContext.SaveChangesAsync();
+                AddPeopleCommand addPeopleCommand = new AddPeopleCommand(persons);
+                await _mediator.Send(addPeopleCommand);
 
                 return Ok(new SavingDataResult(true, SavingResultMessages.Success));
             }

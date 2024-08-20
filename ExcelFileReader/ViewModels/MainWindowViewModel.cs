@@ -113,7 +113,7 @@ namespace ExcelFileReader.ViewModels
             _pager = new BehaviorSubject<PageRequest>(new PageRequest(FirstPage, PageSize));
             _pagedPeople = new ObservableCollectionExtended<Person>();
             _peopleService = new PeopleService();
-            PersonCacheInit(_peopleService);
+            PeopleCacheInit(_peopleService);
             _client = new Client();
 
             FirstPageCommand = new DelegateCommand(MoveToFirstPage, CanMoveToFirstPage)
@@ -225,7 +225,7 @@ namespace ExcelFileReader.ViewModels
             });
         }
 
-        private void PersonCacheInit(PeopleService peopleService)
+        private void PeopleCacheInit(PeopleService peopleService)
         {
             peopleService.PeopleConnection()
                 .Sort(SortExpressionComparer<Person>.Ascending(e => e.Number))
