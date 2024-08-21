@@ -112,7 +112,7 @@
 				
 
 				<DataGrid.Columns>
-					<DataGridTextColumn Header="Id" Binding="{Binding Id}"/>
+					<DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True"/>
 					<DataGridTextColumn Header="First Name" Binding="{Binding FirstName}"/>
 					<DataGridTextColumn Header="Last Name" Binding="{Binding LastName}" />
 					<DataGridTemplateColumn Header="Gender">
