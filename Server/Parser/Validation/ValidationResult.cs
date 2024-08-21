@@ -1,6 +1,6 @@
-﻿using Server.Models;
+﻿using Server.Models.Person;
 
 namespace Server.Parser.Validation
 {
-    internal record ValidationResult(bool IsValid, List<Person>? People, string Message);
+    public record ValidationResult(bool IsValid, List<Person>? People, string Message);
 }

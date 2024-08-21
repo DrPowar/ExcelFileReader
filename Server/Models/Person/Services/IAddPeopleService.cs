@@ -1,7 +1,7 @@
-﻿using Server.Commands;
-using Server.Models;
+﻿using Server.Models.Person;
+using Server.Models.Person.Commands;
 
-namespace Server.Services
+namespace Server.Models.Person.Services
 {
     public interface IAddPeopleService
     {

@@ -11,10 +11,12 @@ using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace ExcelFileReader.ViewModels
@@ -37,6 +39,7 @@ namespace ExcelFileReader.ViewModels
         private int _validItems;
         private int _inValidItems;
         private int _totalPages;
+        private string _searchField;
 
         internal ObservableCollection<Gender> GenderOptions { get; } = new ObservableCollection<Gender> { Gender.Male, Gender.Female};
 
@@ -44,6 +47,12 @@ namespace ExcelFileReader.ViewModels
         {
             get => _totalItems;
             set => this.RaiseAndSetIfChanged(ref _totalItems, value);
+        }
+
+        internal string SearchField
+        {
+            get => _searchField;
+            set => this.RaiseAndSetIfChanged(ref _searchField, value);
         }
 
         internal int ValidItems
@@ -106,6 +115,7 @@ namespace ExcelFileReader.ViewModels
         internal DelegateCommand NextPageCommand { get; init; }
         internal DelegateCommand LastPageCommand { get; init; }
         internal DelegateCommand SaveDataCommand { get; init; }
+        internal DelegateCommand<string> SearchDataCommand { get; init; }
 
         internal MainWindowViewModel(TopLevel topLevel)
         {
@@ -131,12 +141,27 @@ namespace ExcelFileReader.ViewModels
                 .ObservesProperty(() => TotalPages);
 
 
-            OpenFilePicker = new DelegateCommand(OpenFileButton_Clicked);
+            OpenFilePicker = new DelegateCommand(OpenFileButton_Click);
             SaveDataCommand = new DelegateCommand(SaveDataButton_Click);
+            SearchDataCommand = new DelegateCommand<string>(SearchDataButton_Click);
             _topLevel = topLevel;
         }
 
-        internal async void OpenFileButton_Clicked()
+        internal void SearchDataButton_Click(string query)
+        {
+            if(string.IsNullOrWhiteSpace(query))
+            {
+                _peopleService.RestorePeopleFromTemp();
+            }
+            else
+            {
+                _peopleService.SavePeopleToTemp();
+                _peopleService.ClearData();
+                _peopleService.LoadData(SearchData(_peopleService.GetTempPeople(), query));
+            }
+        }
+
+        internal async void OpenFileButton_Click()
         {
             IReadOnlyCollection<IStorageFile> files = await GetFiles(_topLevel);
 
@@ -170,6 +195,8 @@ namespace ExcelFileReader.ViewModels
         internal async void SaveDataButton_Click()
         {
             UploadingStatus = UploadingStatusMessages.WaitingForServerResponse;
+            CanSaveData = false;
+            CanUploadFile = false;
             if(_selectedPeople.Count > 0 && _selectedPeople.All(p => p.IsValid))
             {
                 SavingDataResponse response = await _client.SaveDataOnServer(_selectedPeople.ToList());
@@ -181,6 +208,8 @@ namespace ExcelFileReader.ViewModels
                     _peopleService.UpdateData(_selectedPeople);
 
                     UpdateItemsCountFields();
+                    CanSaveData = true;
+                    CanUploadFile= true;
                 }
                 else
                 {
@@ -223,6 +252,50 @@ namespace ExcelFileReader.ViewModels
                 Title = "Open Text File",
                 AllowMultiple = false,
             });
+        }
+
+        private IEnumerable<Person> SearchData(IEnumerable<Person> people, string query)
+        {
+            HashSet<Person> results = new HashSet<Person>();
+            foreach (Person person in people)
+            {
+                if(person.Id.ToString().Contains(query))
+                {
+                    results.Add(person);
+                }
+
+                if(person.FirstName.Contains(query))
+                {
+                    results.Add(person);
+                }
+
+                if(person.LastName.Contains(query))
+                {
+                    results.Add(person);
+                }
+
+                if(person.Country.Contains(query))
+                {
+                    results.Add(person);
+                }
+
+                if(person.Age.ToString().Contains(query))
+                {
+                    results.Add(person);
+                }
+
+                if(person.Birthday.ToString().Contains(query))
+                {
+                    results.Add(person);
+                }
+
+                if(person.Gender.ToString().Contains(query))
+                {
+                    results.Add(person);
+                }
+            }
+
+            return results.ToList();
         }
 
         private void PeopleCacheInit(PeopleService peopleService)

@@ -1,14 +1,14 @@
 ﻿using MediatR;
-using Server.Commands;
-using Server.Services;
+using Server.Models.Person.Commands;
+using Server.Models.Person.Services;
 
-namespace Server.Handlers
+namespace Server.Models.Person.Handlers
 {
     public class AddPeopleCommandHandler : IRequestHandler<AddPeopleCommand, SavePeopleResult>
     {
-        private readonly AddPeopleService _addPeopleService;
+        private readonly IAddPeopleService _addPeopleService;
 
-        public AddPeopleCommandHandler(AddPeopleService addPeopleService)
+        public AddPeopleCommandHandler(IAddPeopleService addPeopleService)
         {
             _addPeopleService = addPeopleService;
         }

@@ -1,11 +1,15 @@
 
+using BenchmarkDotNet.Running;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Server.Commands;
 using Server.DB;
-using Server.Handlers;
-using Server.Repositories;
-using Server.Services;
+using Server.Models.Person.Repositories;
+using Server.Models.Person.Services;
+using System.Reflection;
+
+//BenchmarkSwitcher
+//    .FromAssembly(Assembly.GetExecutingAssembly())
+//    .Run(args);
 
 namespace Server
 {
@@ -21,8 +25,8 @@ namespace Server
                 options.RegisterServicesFromAssemblies(typeof(Program).Assembly);
             });
 
-            builder.Services.AddSingleton<IAddPeopleService, AddPeopleService>();
-            builder.Services.AddSingleton<IAddPersonService, AddPersonService>();
+            builder.Services.AddScoped<IPeopleRepository, PeopleRepository>();
+            builder.Services.AddScoped<IAddPeopleService, PeopleService>();
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();

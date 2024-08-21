@@ -30,13 +30,11 @@
 		<models:Person x:Key="Person"/>
 	</Window.Resources>
 
-	
-
 	<DockPanel Name="Root">
 		<Grid>
 			<StackPanel Width="270" DockPanel.Dock="Left" Background="Azure">
 				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,20">
-					<Button IsEnabled="{Binding CanUploadFile}" Command="{Binding OpenFileButton_Clicked}" Margin="0,0,10,0">
+					<Button IsEnabled="{Binding CanUploadFile}" Command="{Binding OpenFileButton_Click}" Margin="0,0,10,0">
 						<TextBlock>Select File</TextBlock>
 					</Button>
 					<Button IsEnabled="{Binding CanSaveData}" Command="{Binding SaveDataButton_Click}">
@@ -49,15 +47,43 @@
 
 
 		<Grid DockPanel.Dock="Right" Background="DarkSlateGray">
-
+			
 			<Grid.RowDefinitions>
 				<RowDefinition Height="*"/>
 				<RowDefinition Height="Auto"/>
 			</Grid.RowDefinitions>
+
+			<Grid 
+				Width="450" 
+				HorizontalAlignment="Center" 
+				VerticalAlignment="Top" 
+				Margin="7">
+
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="450"/>
+					<ColumnDefinition Width="100"/>
+				</Grid.ColumnDefinitions>
+				
+				<TextBox Grid.Column="0" Text="{Binding SearchField}"></TextBox>
+				<Border Grid.Column="1"
+						Width="35"
+						Height="35"
+						Background="Gray"
+						CornerRadius="5">
+					<Button
+							Width="35"
+							Height="35"
+							Background="Snow"
+							Command="{Binding SearchDataCommand}"
+							CommandParameter="{Binding SearchField}">
+						<Image Source="/Assets/3844432_magnifier_search_zoom_icon.png"/>
+					</Button>
+				</Border>
+			</Grid>
 			
 			<DataGrid
 					  Name="PersonsGrid"
-					  Margin="10"
+					  Margin="10, 50, 10, 10"
 					  ItemsSource="{Binding People}"
 					  IsReadOnly="False"
 					  CanUserSortColumns="True"

@@ -19,8 +19,11 @@ namespace Server.Parser.Validation
         public static string GetLastName(int index, WorkSheet cells) =>
             cells[$"C{index}"].ToString();
 
-        public static Gender GetGender(int index, WorkSheet cells) =>
-            (Gender)cells[$"D{index}"].Int32Value;
+        public static Gender GetGender(int index, WorkSheet cells)
+        {
+            string gender = cells[$"D{index}"].ToString();
+            return gender == "Female" ? Gender.Female : Gender.Male;
+        }
 
         public static string GetCountry(int index, WorkSheet cells) =>
             cells[$"E{index}"].ToString();

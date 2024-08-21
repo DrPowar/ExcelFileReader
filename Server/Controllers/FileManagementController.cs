@@ -3,10 +3,10 @@ using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Server.Commands;
 using Server.Constants;
 using Server.DB;
-using Server.Models;
+using Server.Models.Person;
+using Server.Models.Person.Commands;
 using Server.Parser;
 using Server.Parser.Validation;
 

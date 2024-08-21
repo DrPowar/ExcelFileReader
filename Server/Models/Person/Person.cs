@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Server.Models
+namespace Server.Models.Person
 {
     public class Person
     {
@@ -35,7 +35,7 @@ namespace Server.Models
                       !string.IsNullOrWhiteSpace(LastName) &&
                       !string.IsNullOrWhiteSpace(Country) &&
                       Age > 0 &&
-                      Birthday != default(DateTime);
+                      Birthday != default;
         }
     }
 }

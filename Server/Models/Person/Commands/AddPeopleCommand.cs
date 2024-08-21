@@ -1,7 +1,7 @@
 ﻿using MediatR;
-using Server.Models;
+using Server.Models.Person;
 
-namespace Server.Commands
+namespace Server.Models.Person.Commands
 {
     public class AddPeopleCommand : IRequest<SavePeopleResult>
     {
