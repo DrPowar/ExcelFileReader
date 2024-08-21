@@ -22,11 +22,13 @@ namespace ExcelFileReader.Models
         public void LoadData(IEnumerable<Person> people) =>
             _people.AddOrUpdate(people);
 
-        public void UpdateData(IEnumerable<Person> people) =>
+        public void UpdateData(IEnumerable<Person> people)
+        {
+            _tempPeople.Remove(people);
             _people.Remove(people);
+        }
 
-
-        public void ClearData() =>
+        public void ClearPeople() =>
             _people.Clear();
 
         public List<Person> GetPeople() =>

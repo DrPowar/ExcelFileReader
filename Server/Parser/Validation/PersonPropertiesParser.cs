@@ -8,32 +8,32 @@ namespace Server.Parser.Validation
     public static class PersonPropertiesParser
     {
         public static uint GetNumber(int index, WorkSheet cells) =>
-            (uint)cells[$"A{index}"].Int32Value;
+            (uint)cells[ColumnToPropertiesConst.Number + index.ToString()].Int32Value;
 
         public static uint GetId(int index, WorkSheet cells) =>
-            (uint)cells[$"H{index}"].Int32Value;
+            (uint)cells[ColumnToPropertiesConst.Id + index.ToString()].Int32Value;
 
         public static string GetFirstName(int index, WorkSheet cells) =>
-            cells[$"B{index}"].ToString();
+            cells[ColumnToPropertiesConst.FistName + index.ToString()].ToString();
 
         public static string GetLastName(int index, WorkSheet cells) =>
-            cells[$"C{index}"].ToString();
+            cells[ColumnToPropertiesConst.LastName + index.ToString()].ToString();
 
         public static Gender GetGender(int index, WorkSheet cells)
         {
-            string gender = cells[$"D{index}"].ToString();
+            string gender = cells[ColumnToPropertiesConst.Gender + index.ToString()].ToString();
             return gender == "Female" ? Gender.Female : Gender.Male;
         }
 
         public static string GetCountry(int index, WorkSheet cells) =>
-            cells[$"E{index}"].ToString();
+            cells[ColumnToPropertiesConst.Country + index.ToString()].ToString();
 
         public static byte GetAge(int index, WorkSheet cells) =>
-            (byte)cells[$"F{index}"].Int32Value;
+            (byte)cells[ColumnToPropertiesConst.Age + index.ToString()].Int32Value;
 
         public static DateTime GetDate(int index, WorkSheet cells)
         {
-            string stringDate = cells[$"G{index}"].ToString();
+            string stringDate = cells[ColumnToPropertiesConst.Date + index.ToString()].ToString();
             if (DateTime.TryParseExact(stringDate, DataFormats.DataTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date))
             {
                 return date;

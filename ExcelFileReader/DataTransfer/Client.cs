@@ -57,5 +57,14 @@ namespace ExcelFileReader.DataTransfer
                 return new SavingDataResponse(false, ResponseMessages.SendingFileError);
             }
         }
+
+        internal async Task<GetAllDataResponse> GetAllDataFromDB()
+        {
+            HttpResponseMessage response = await _httpClient.GetAsync($"http://localhost:{ServerData.ServerPort}/FileManagement/GetAllDataFromDB");
+
+            GetAllDataResponse? getAllDataResponse = await response.Content.ReadFromJsonAsync<GetAllDataResponse>();
+
+            return getAllDataResponse;
+        }
     }
 }

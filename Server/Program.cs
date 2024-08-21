@@ -1,15 +1,8 @@
-
-using BenchmarkDotNet.Running;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Server.DB;
 using Server.Models.Person.Repositories;
 using Server.Models.Person.Services;
-using System.Reflection;
-
-//BenchmarkSwitcher
-//    .FromAssembly(Assembly.GetExecutingAssembly())
-//    .Run(args);
 
 namespace Server
 {
@@ -26,7 +19,7 @@ namespace Server
             });
 
             builder.Services.AddScoped<IPeopleRepository, PeopleRepository>();
-            builder.Services.AddScoped<IAddPeopleService, PeopleService>();
+            builder.Services.AddScoped<IPeopleService, PeopleService>();
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();

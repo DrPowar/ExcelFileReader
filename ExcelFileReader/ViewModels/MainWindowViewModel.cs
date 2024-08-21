@@ -11,12 +11,10 @@ using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace ExcelFileReader.ViewModels
@@ -41,7 +39,7 @@ namespace ExcelFileReader.ViewModels
         private int _totalPages;
         private string _searchField;
 
-        internal ObservableCollection<Gender> GenderOptions { get; } = new ObservableCollection<Gender> { Gender.Male, Gender.Female};
+        internal ObservableCollection<Gender> GenderOptions { get; } = new ObservableCollection<Gender> { Gender.Male, Gender.Female };
 
         internal int TotalItems
         {
@@ -116,6 +114,7 @@ namespace ExcelFileReader.ViewModels
         internal DelegateCommand LastPageCommand { get; init; }
         internal DelegateCommand SaveDataCommand { get; init; }
         internal DelegateCommand<string> SearchDataCommand { get; init; }
+        internal DelegateCommand GetAllDataFromDBCommand { get; init; } 
 
         internal MainWindowViewModel(TopLevel topLevel)
         {
@@ -144,19 +143,40 @@ namespace ExcelFileReader.ViewModels
             OpenFilePicker = new DelegateCommand(OpenFileButton_Click);
             SaveDataCommand = new DelegateCommand(SaveDataButton_Click);
             SearchDataCommand = new DelegateCommand<string>(SearchDataButton_Click);
+            GetAllDataFromDBCommand = new DelegateCommand(GetAllDataFromDBButton_Click);
             _topLevel = topLevel;
+        }
+
+        internal async void GetAllDataFromDBButton_Click()
+        {
+            GetAllDataResponse getAllDataResponse = await _client.GetAllDataFromDB();
+            if(getAllDataResponse.Result)
+            {
+                _peopleService.ClearPeople();
+                _peopleService.LoadData(getAllDataResponse.People);
+
+                UpdateItemsCountFields();
+
+                CanSaveData = true;
+                CanUploadFile = true;
+                UploadingStatus = UploadingStatusMessages.UploadingAllowed;
+            }
+            else
+            {
+                UploadingStatus = UploadingStatusMessages.UploadingAllowed;
+            }
         }
 
         internal void SearchDataButton_Click(string query)
         {
-            if(string.IsNullOrWhiteSpace(query))
+            if (string.IsNullOrWhiteSpace(query))
             {
                 _peopleService.RestorePeopleFromTemp();
             }
             else
             {
                 _peopleService.SavePeopleToTemp();
-                _peopleService.ClearData();
+                _peopleService.ClearPeople();
                 _peopleService.LoadData(SearchData(_peopleService.GetTempPeople(), query));
             }
         }
@@ -164,6 +184,10 @@ namespace ExcelFileReader.ViewModels
         internal async void OpenFileButton_Click()
         {
             IReadOnlyCollection<IStorageFile> files = await GetFiles(_topLevel);
+            if (files.Count == 0)
+            {
+                return;
+            }
 
             CanUploadFile = false;
             UploadingStatus = UploadingStatusMessages.WaitingForServerResponse;
@@ -176,7 +200,7 @@ namespace ExcelFileReader.ViewModels
                 UploadingStatus = UploadingStatusMessages.WaitingForDataGridUpdating;
                 if (response.IsValid)
                 {
-                    _peopleService.ClearData();
+                    _peopleService.ClearPeople();
                     _peopleService.LoadData(response.People);
 
                     UpdateItemsCountFields();
@@ -197,7 +221,7 @@ namespace ExcelFileReader.ViewModels
             UploadingStatus = UploadingStatusMessages.WaitingForServerResponse;
             CanSaveData = false;
             CanUploadFile = false;
-            if(_selectedPeople.Count > 0 && _selectedPeople.All(p => p.IsValid))
+            if (_selectedPeople.Count > 0 && _selectedPeople.All(p => p.IsValid))
             {
                 SavingDataResponse response = await _client.SaveDataOnServer(_selectedPeople.ToList());
 
@@ -209,7 +233,7 @@ namespace ExcelFileReader.ViewModels
 
                     UpdateItemsCountFields();
                     CanSaveData = true;
-                    CanUploadFile= true;
+                    CanUploadFile = true;
                 }
                 else
                 {
@@ -256,46 +280,10 @@ namespace ExcelFileReader.ViewModels
 
         private IEnumerable<Person> SearchData(IEnumerable<Person> people, string query)
         {
-            HashSet<Person> results = new HashSet<Person>();
-            foreach (Person person in people)
-            {
-                if(person.Id.ToString().Contains(query))
-                {
-                    results.Add(person);
-                }
-
-                if(person.FirstName.Contains(query))
-                {
-                    results.Add(person);
-                }
-
-                if(person.LastName.Contains(query))
-                {
-                    results.Add(person);
-                }
-
-                if(person.Country.Contains(query))
-                {
-                    results.Add(person);
-                }
-
-                if(person.Age.ToString().Contains(query))
-                {
-                    results.Add(person);
-                }
-
-                if(person.Birthday.ToString().Contains(query))
-                {
-                    results.Add(person);
-                }
-
-                if(person.Gender.ToString().Contains(query))
-                {
-                    results.Add(person);
-                }
-            }
-
-            return results.ToList();
+            return people.Where(person =>
+                person.GetType().GetProperties()
+                .Any(prop => prop.GetValue(person)?.ToString().Contains(query) == true)
+            ).ToList();
         }
 
         private void PeopleCacheInit(PeopleService peopleService)

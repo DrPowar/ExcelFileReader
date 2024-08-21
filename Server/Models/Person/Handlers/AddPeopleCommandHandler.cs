@@ -6,9 +6,9 @@ namespace Server.Models.Person.Handlers
 {
     public class AddPeopleCommandHandler : IRequestHandler<AddPeopleCommand, SavePeopleResult>
     {
-        private readonly IAddPeopleService _addPeopleService;
+        private readonly IPeopleService _addPeopleService;
 
-        public AddPeopleCommandHandler(IAddPeopleService addPeopleService)
+        public AddPeopleCommandHandler(IPeopleService addPeopleService)
         {
             _addPeopleService = addPeopleService;
         }

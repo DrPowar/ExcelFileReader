@@ -7,6 +7,7 @@ using Server.Constants;
 using Server.DB;
 using Server.Models.Person;
 using Server.Models.Person.Commands;
+using Server.Models.Person.Queries;
 using Server.Parser;
 using Server.Parser.Validation;
 
@@ -56,8 +57,7 @@ namespace Server.Controllers
 
             try
             {
-                AddPeopleCommand addPeopleCommand = new AddPeopleCommand(persons);
-                await _mediator.Send(addPeopleCommand);
+                await _mediator.Send(new AddPeopleCommand(persons));
 
                 return Ok(new SavingDataResult(true, SavingResultMessages.Success));
             }
@@ -69,6 +69,19 @@ namespace Server.Controllers
             {
                 return BadRequest(new SavingDataResult(false, ex.Message));
             }
+        }
+
+        [HttpGet("GetAllDataFromDB")]
+        public async Task<IActionResult> GetAllDataFromDb()
+        {
+            GetPeopleResult response = await _mediator.Send(new GetAllPeopleQuery());
+
+            if (response.Result)
+            {
+                return Ok(response);
+            }
+
+            return BadRequest(response);
         }
     }
 }
