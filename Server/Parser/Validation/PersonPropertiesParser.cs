@@ -31,16 +31,16 @@ namespace Server.Parser.Validation
         public static byte GetAge(int index, WorkSheet cells) =>
             (byte)cells[ColumnToPropertiesConst.Age + index.ToString()].Int32Value;
 
-        public static DateTime GetDate(int index, WorkSheet cells)
+        public static DateTimeOffset GetDate(int index, WorkSheet cells)
         {
             string stringDate = cells[ColumnToPropertiesConst.Date + index.ToString()].ToString();
-            if (DateTime.TryParseExact(stringDate, DataFormats.DataTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date))
+            if (DateTimeOffset.TryParseExact(stringDate, DataFormats.DataTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTimeOffset date))
             {
                 return date;
             }
             else
             {
-                return DateTime.MinValue;
+                return DateTimeOffset.MinValue;
             }
         }
     }

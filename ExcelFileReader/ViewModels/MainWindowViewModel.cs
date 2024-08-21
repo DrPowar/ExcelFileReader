@@ -37,7 +37,7 @@ namespace ExcelFileReader.ViewModels
         private int _validItems;
         private int _inValidItems;
         private int _totalPages;
-        private string _searchField;
+        private string _searchField = string.Empty;
 
         internal ObservableCollection<Gender> GenderOptions { get; } = new ObservableCollection<Gender> { Gender.Male, Gender.Female };
 
@@ -248,12 +248,12 @@ namespace ExcelFileReader.ViewModels
 
         internal bool UpdatePerson(Person updatedPerson)
         {
-            Person person = People.FirstOrDefault(p => p.Id == updatedPerson.Id);
+            Person? person = People.FirstOrDefault(p => p.Id == updatedPerson.Id);
             if (person != null)
             {
                 person.UpdateIsValidProperty();
             }
-            return person.IsValid;
+            return person!.IsValid;
         }
 
         internal void UpdateItemsCountFields()
@@ -315,7 +315,7 @@ namespace ExcelFileReader.ViewModels
                 fileContent = memoryStream.ToArray();
             }
 
-            return new FileUploadRequest(file.Name, fileContent);
+            return new FileUploadRequest(file!.Name, fileContent);
         }
 
         private async Task<List<FileUploadRequest>> GetMultipleFilesContent(IReadOnlyCollection<IStorageFile> files)

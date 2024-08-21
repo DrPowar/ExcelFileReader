@@ -43,7 +43,7 @@ namespace Server.Models.Person.Repositories
             }
             catch(Exception ex)
             {
-                return new GetPeopleResult(null, SavingResultMessages.Success, false);
+                return new GetPeopleResult(null!, SavingResultMessages.Success, false);
             }
         }
     }

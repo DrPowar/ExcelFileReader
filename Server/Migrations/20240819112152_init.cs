@@ -22,7 +22,7 @@ namespace Server.Migrations
                     Gender = table.Column<int>(type: "int", nullable: false),
                     Country = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Age = table.Column<byte>(type: "tinyint", nullable: false),
-                    Birthday = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Birthday = table.Column<DateTimeOffset>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {

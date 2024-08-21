@@ -12,7 +12,7 @@ namespace ExcelFileReader.Models
         public Gender Gender { get; set; }
         public string? Country { get; set; }
         public byte Age { get; set; }
-        public DateTime Birthday { get; set; }
+        public DateTimeOffset Birthday { get; set; }
         public bool IsValid { get; set; }
 
         public void UpdateIsValidProperty()
@@ -26,7 +26,7 @@ namespace ExcelFileReader.Models
                       !string.IsNullOrWhiteSpace(LastName) &&
                       !string.IsNullOrWhiteSpace(Country) &&
                       Age > 0 &&
-                      Birthday != default(DateTime);
+                      Birthday != default(DateTimeOffset);
         }
     }
 }

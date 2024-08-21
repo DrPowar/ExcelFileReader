@@ -27,6 +27,7 @@
 
 	<Window.Resources>
 		<converters:BoolToColorConverter x:Key="BoolToColorConverter"/>
+		<converters:DateOnlyConverter x:Key="DateOnlyConverter" />
 		<models:Person x:Key="Person"/>
 	</Window.Resources>
 
@@ -99,6 +100,7 @@
 					  IsReadOnly="False"
 					  CanUserSortColumns="True"
 					  GridLinesVisibility="All"
+					  CanUserResizeColumns="True"
 					  BorderThickness="1"
 					  BorderBrush="Black"
 					  Background="Snow"
@@ -129,7 +131,20 @@
 					</DataGridTemplateColumn>
 					<DataGridTextColumn Header="Country" Binding="{Binding Country}"/>
 					<DataGridTextColumn Header="Age" Binding="{Binding Age}"/>
-					<DataGridTextColumn Header="Birthday" Binding="{Binding Birthday}"/>
+					<DataGridTemplateColumn Header="Birthday">
+						<DataGridTemplateColumn.CellTemplate>
+							<DataTemplate>
+								<DatePicker SelectedDate="{Binding Birthday, Converter={StaticResource DateOnlyConverter}}"
+											BorderThickness="0"
+											HorizontalAlignment="Center"
+											Background="Transparent"
+											CornerRadius="0"
+											FontSize="18"/>
+								
+							</DataTemplate>
+						</DataGridTemplateColumn.CellTemplate>
+					</DataGridTemplateColumn>
+
 				</DataGrid.Columns>
 			</DataGrid>
 

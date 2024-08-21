@@ -12,11 +12,11 @@ namespace Server.Models.Person
         public Gender Gender { get; init; }
         public string? Country { get; init; }
         public byte Age { get; init; }
-        public DateTime Birthday { get; init; }
+        public DateTimeOffset Birthday { get; init; }
         [NotMapped]
         public bool IsValid { get; init; }
 
-        public Person(uint number, uint id, string firstName, string lastName, Gender gender, string country, byte age, DateTime birthday)
+        public Person(uint number, uint id, string firstName, string lastName, Gender gender, string country, byte age, DateTimeOffset birthday)
         {
             Number = number;
             Id = id;

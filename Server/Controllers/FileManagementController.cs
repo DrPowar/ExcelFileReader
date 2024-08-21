@@ -1,10 +1,7 @@
 ﻿using IronXL;
 using MediatR;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Server.Constants;
-using Server.DB;
 using Server.Models.Person;
 using Server.Models.Person.Commands;
 using Server.Models.Person.Queries;
@@ -18,7 +15,7 @@ namespace Server.Controllers
     public class FileManagementController : Controller
     {
         private readonly IMediator _mediator;
-        public FileManagementController(IMediator mediator) 
+        public FileManagementController(IMediator mediator)
         {
             _mediator = mediator;
         }
@@ -50,7 +47,7 @@ namespace Server.Controllers
         [HttpPost("SaveDataToDB")]
         public async Task<IActionResult> SaveDataToDB([FromBody] List<Person> persons)
         {
-            if(persons == null)
+            if (persons == null)
             {
                 return BadRequest(new SavingDataResult(false, SavingResultMessages.NullData));
             }
