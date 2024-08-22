@@ -149,6 +149,7 @@ namespace ExcelFileReader.ViewModels
 
         internal async void GetAllDataFromDBButton_Click()
         {
+            CanSaveData = false;
             GetAllDataResponse getAllDataResponse = await _client.GetAllDataFromDB();
             if(getAllDataResponse.Result)
             {
@@ -157,12 +158,12 @@ namespace ExcelFileReader.ViewModels
 
                 UpdateItemsCountFields();
 
-                CanSaveData = true;
                 CanUploadFile = true;
                 UploadingStatus = UploadingStatusMessages.UploadingAllowed;
             }
             else
             {
+                CanSaveData = true;
                 UploadingStatus = UploadingStatusMessages.UploadingAllowed;
             }
         }

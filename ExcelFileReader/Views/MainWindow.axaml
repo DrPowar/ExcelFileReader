@@ -100,7 +100,7 @@
 					  IsReadOnly="False"
 					  CanUserSortColumns="True"
 					  GridLinesVisibility="All"
-					  CanUserResizeColumns="True"
+					  CanUserResizeColumns="True" 
 					  BorderThickness="1"
 					  BorderBrush="Black"
 					  Background="Snow"
@@ -112,7 +112,7 @@
 				
 
 				<DataGrid.Columns>
-					<DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True"/>
+					<DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True" />
 					<DataGridTextColumn Header="First Name" Binding="{Binding FirstName}"/>
 					<DataGridTextColumn Header="Last Name" Binding="{Binding LastName}" />
 					<DataGridTemplateColumn Header="Gender">
