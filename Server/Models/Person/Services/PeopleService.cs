@@ -14,14 +14,24 @@ namespace Server.Models.Person.Services
             _personRepository = personRepository;
         }
 
-        public async Task<SavePeopleResult> AddPeople(List<Person> people)
+        public async Task<PeopleCommandResult> AddPeople(List<Person> people)
         {
             return await _personRepository.AddPeople(people);
+        }
+
+        public async Task<PeopleCommandResult> DeletePeople(List<Person> people)
+        {
+            return await _personRepository.DeletePeople(people);
         }
 
         public async Task<GetPeopleResult> GetAllPeople()
         {
             return await _personRepository.GetAllPeople();
+        }
+
+        public async Task<PeopleCommandResult> UpdatePeople(List<Person> people)
+        {
+            return await _personRepository.UpdatePeople(people);
         }
     }
 }

@@ -39,21 +39,29 @@
 					Command="{Binding GetAllDataFromDBButton_Click}"
 					HorizontalAlignment="Center" 
 					VerticalAlignment="Top"
-					Width="215"
-					Margin="0,20,0,0">
+					Width="250"
+					Margin="0,20,0,20">
 					
 					<TextBlock HorizontalAlignment="Center">Get Data From DB</TextBlock>
 				</Button>
-				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,20">
-					<Button IsEnabled="{Binding CanUploadFile}" Command="{Binding OpenFileButton_Click}" Margin="0,0,10,0">
-						<TextBlock>Select File</TextBlock>
+				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,20">
+					<Button Width="120" IsEnabled="{Binding CanUploadFile}" Command="{Binding OpenFileButton_Click}" Margin="0,0,10,0">
+						<TextBlock HorizontalAlignment="Center">Select File</TextBlock>
 					</Button>
-					<Button IsEnabled="{Binding CanSaveData}" Command="{Binding SaveDataButton_Click}">
-						<TextBlock>Save Data</TextBlock>
+					<Button Width="120" IsEnabled="{Binding CanSaveData}" Command="{Binding SaveDataButton_Click}">
+						<TextBlock HorizontalAlignment="Center">Save Data</TextBlock>
+					</Button>
+				</StackPanel>
+				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,20">
+					<Button Width="120" IsEnabled="{Binding CanModifyDataBase}" Command="{Binding UpdateDataButton_Click}" Margin="0,0,10,0">
+						<TextBlock HorizontalAlignment="Center">Update Data</TextBlock>
+					</Button>
+					<Button Width="120" IsEnabled="{Binding CanModifyDataBase}" Command="{Binding DeleteDataButton_Click}">
+						<TextBlock HorizontalAlignment="Center">Delete Data</TextBlock>
 					</Button>
 				</StackPanel>
 				
-				<TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" MaxWidth="250" FontSize="22" Text="{Binding UploadingStatus}"/>
+				<TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" MaxWidth="250" FontSize="22" Text="{Binding ProgramStatus}"/>
 			</StackPanel>
 		</Grid>
 
@@ -124,7 +132,9 @@
 										  HorizontalAlignment="Center"
 										  Background="Transparent"
 										  CornerRadius="0"
-										  Width="120">
+										  Loaded="GenderComboBox_Loaded"
+										  Width="120"
+										  SelectionChanged="RowDataGrid_EditingGender">
 								</ComboBox>
 							</DataTemplate>
 						</DataGridTemplateColumn.CellTemplate>
@@ -139,7 +149,10 @@
 											HorizontalAlignment="Center"
 											Background="Transparent"
 											CornerRadius="0"
-											FontSize="18"/>
+											FontSize="18"
+											Loaded="DatePicker_Loaded"
+											SelectedDateChanged="RowDataGrid_EditingDateTime"
+											/>
 								
 							</DataTemplate>
 						</DataGridTemplateColumn.CellTemplate>

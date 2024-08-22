@@ -1,13 +1,12 @@
 ﻿using MediatR;
-using Server.Models.Person;
 
 namespace Server.Models.Person.Commands
 {
-    public class AddPeopleCommand : IRequest<PeopleCommandResult>
+    public class UpdatePeopleCommand : IRequest<PeopleCommandResult>
     {
         public List<Person> People { get; private set; }
 
-        public AddPeopleCommand(List<Person> people)
+        public UpdatePeopleCommand(List<Person> people)
         {
             People = people;
         }

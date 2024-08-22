@@ -17,18 +17,33 @@ namespace Server.Models.Person.Repositories
             _context = excelDBContext;
         }
 
-        public async Task<SavePeopleResult> AddPeople(List<Person> people)
+        public async Task<PeopleCommandResult> AddPeople(List<Person> people)
         {
             try
             {
                 await _context.Persons.AddRangeAsync(people);
                 await _context.SaveChangesAsync();
 
-                return new SavePeopleResult(true, SavingResultMessages.Success);
+                return new PeopleCommandResult(true, ResultMessages.Success);
             }
             catch (Exception ex)
             {
-                return new SavePeopleResult(false, ex.Message);
+                return new PeopleCommandResult(false, ex.Message);
+            }
+        }
+
+        public async Task<PeopleCommandResult> DeletePeople(List<Person> people)
+        {
+            try
+            {
+                _context.Persons.RemoveRange(people);
+                await _context.SaveChangesAsync();
+
+                return new PeopleCommandResult(true, ResultMessages.Success);
+            }
+            catch (Exception ex)
+            {
+                return new PeopleCommandResult(false, ex.Message);
             }
         }
 
@@ -39,11 +54,26 @@ namespace Server.Models.Person.Repositories
                 List<Person> people = await _context.Persons.ToListAsync();
                 await _context.SaveChangesAsync();
 
-                return new GetPeopleResult(people, SavingResultMessages.Success, true);
+                return new GetPeopleResult(people, ResultMessages.Success, true);
             }
             catch(Exception ex)
             {
-                return new GetPeopleResult(null!, SavingResultMessages.Success, false);
+                return new GetPeopleResult(null!, ResultMessages.Success, false);
+            }
+        }
+
+        public async Task<PeopleCommandResult> UpdatePeople(List<Person> people)
+        {
+            try
+            {
+                _context.Persons.UpdateRange(people);
+                await _context.SaveChangesAsync();
+
+                return new PeopleCommandResult(true, ResultMessages.Success);
+            }
+            catch(Exception ex)
+            {
+                return new PeopleCommandResult(false, ex.Message);
             }
         }
     }

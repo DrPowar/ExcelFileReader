@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
+using Avalonia.Interactivity;
 using DynamicData;
 using ExcelFileReader.Constants;
 using ExcelFileReader.InterfaceConverters;
@@ -13,6 +14,8 @@ namespace ExcelFileReader.Views
     public partial class MainWindow : Window
     {
         private MainWindowViewModel _viewModel;
+        private bool _datePickerIsLoading = true;
+        private bool _genderComboBoxIsLoading = true;
         public MainWindow()
         {
             TopLevel topLevel = GetTopLevel(this);
@@ -46,6 +49,30 @@ namespace ExcelFileReader.Views
             }
         }
 
+        public void RowDataGrid_EditingDateTime(object? sender, DatePickerSelectedValueChangedEventArgs e)
+        {
+            if(_datePickerIsLoading)
+            {
+                return;
+            }
+
+            Person person = (sender as DatePicker).DataContext as Person;
+
+            _viewModel.UpdatePerson(person);
+        }
+
+        public void RowDataGrid_EditingGender(object? sender, SelectionChangedEventArgs e)
+        {
+            if (_genderComboBoxIsLoading)
+            {
+                return;
+            }
+
+            Person person = (sender as ComboBox).DataContext as Person;
+
+            _viewModel.UpdatePerson(person);
+        }
+
         internal void OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
             DataGrid? dataGrid = sender as DataGrid;
@@ -55,6 +82,16 @@ namespace ExcelFileReader.Views
                 _viewModel.SelectedPeople.Add(person);
             }
             _viewModel.UpdateItemsCountFields();
+        }
+
+        private void DatePicker_Loaded(object sender, RoutedEventArgs e)
+        {
+            _datePickerIsLoading = false;
+        }
+
+        private void GenderComboBox_Loaded(object sender, RoutedEventArgs e)
+        {
+            _genderComboBoxIsLoading = false;
         }
     }
 }

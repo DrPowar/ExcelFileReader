@@ -1,6 +1,6 @@
 ﻿namespace Server.Parser
 {
-    public class SavingResultMessages
+    public class ResultMessages
     {
         public const string NullData = "No data received.";
         public const string Success = "Success";

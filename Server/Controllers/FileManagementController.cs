@@ -49,22 +49,70 @@ namespace Server.Controllers
         {
             if (persons == null)
             {
-                return BadRequest(new SavingDataResult(false, SavingResultMessages.NullData));
+                return BadRequest(new CommandDataResult(false, ResultMessages.NullData));
             }
 
             try
             {
                 await _mediator.Send(new AddPeopleCommand(persons));
 
-                return Ok(new SavingDataResult(true, SavingResultMessages.Success));
+                return Ok(new CommandDataResult(true, ResultMessages.Success));
             }
             catch (OperationCanceledException ex)
             {
-                return BadRequest(new SavingDataResult(false, ex.Message));
+                return BadRequest(new CommandDataResult(false, ex.Message));
             }
             catch (Exception ex)
             {
-                return BadRequest(new SavingDataResult(false, ex.Message));
+                return BadRequest(new CommandDataResult(false, ex.Message));
+            }
+        }
+
+        [HttpPost("DeletePeopleFromDB")]
+        public async Task<IActionResult> DeletePeopleFromDB([FromBody] List<Person> persons)
+        {
+            if (persons == null)
+            {
+                return BadRequest(new CommandDataResult(false, ResultMessages.NullData));
+            }
+
+            try
+            {
+                await _mediator.Send(new DeletePeopleCommand(persons));
+
+                return Ok(new CommandDataResult(true, ResultMessages.Success));
+            }
+            catch (OperationCanceledException ex)
+            {
+                return BadRequest(new CommandDataResult(false, ex.Message));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new CommandDataResult(false, ex.Message));
+            }
+        }
+
+        [HttpPost("UpdateDataInDB")]
+        public async Task<IActionResult> UpdateDataInDB([FromBody] List<Person> persons)
+        {
+            if (persons == null)
+            {
+                return BadRequest(new CommandDataResult(false, ResultMessages.NullData));
+            }
+
+            try
+            {
+                await _mediator.Send(new UpdatePeopleCommand(persons));
+
+                return Ok(new CommandDataResult(true, ResultMessages.Success));
+            }
+            catch (OperationCanceledException ex)
+            {
+                return BadRequest(new CommandDataResult(false, ex.Message));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new CommandDataResult(false, ex.Message));
             }
         }
 

@@ -54,7 +54,39 @@ namespace ExcelFileReader.DataTransfer
             }
             else
             {
-                return new SavingDataResponse(false, ResponseMessages.SendingFileError);
+                return new SavingDataResponse(false, ResponseMessages.ServerReturnInvalidData);
+            }
+        }
+
+        internal async Task<SavingDataResponse> DeleteDataOnServer(IEnumerable<Person> persons)
+        {
+            HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"http://localhost:{ServerData.ServerPort}/FileManagement/DeletePeopleFromDB", persons);
+
+            SavingDataResponse? savingDataResponse = await response.Content.ReadFromJsonAsync<SavingDataResponse>();
+
+            if (savingDataResponse != null)
+            {
+                return savingDataResponse;
+            }
+            else
+            {
+                return new SavingDataResponse(false, ResponseMessages.ServerReturnInvalidData);
+            }
+        }
+
+        internal async Task<SavingDataResponse> UpdateData(IEnumerable<Person> persons)
+        {
+            HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"http://localhost:{ServerData.ServerPort}/FileManagement/UpdateDataInDB", persons);
+
+            SavingDataResponse? savingDataResponse = await response.Content.ReadFromJsonAsync<SavingDataResponse>();
+
+            if (savingDataResponse != null)
+            {
+                return savingDataResponse;
+            }
+            else
+            {
+                return new SavingDataResponse(false, ResponseMessages.ServerReturnInvalidData);
             }
         }
 

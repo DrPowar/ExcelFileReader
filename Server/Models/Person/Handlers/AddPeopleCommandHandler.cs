@@ -4,18 +4,18 @@ using Server.Models.Person.Services;
 
 namespace Server.Models.Person.Handlers
 {
-    public class AddPeopleCommandHandler : IRequestHandler<AddPeopleCommand, SavePeopleResult>
+    public class AddPeopleCommandHandler : IRequestHandler<AddPeopleCommand, PeopleCommandResult>
     {
-        private readonly IPeopleService _addPeopleService;
+        private readonly IPeopleService _peopleService;
 
-        public AddPeopleCommandHandler(IPeopleService addPeopleService)
+        public AddPeopleCommandHandler(IPeopleService peopleService)
         {
-            _addPeopleService = addPeopleService;
+            _peopleService = peopleService;
         }
 
-        public async Task<SavePeopleResult> Handle(AddPeopleCommand addPeopleCommand, CancellationToken cancellationToken)
+        public async Task<PeopleCommandResult> Handle(AddPeopleCommand addPeopleCommand, CancellationToken cancellationToken)
         {
-            var result = await _addPeopleService.AddPeople(addPeopleCommand.People);
+            var result = await _peopleService.AddPeople(addPeopleCommand.People);
             return result;
         }
     }
