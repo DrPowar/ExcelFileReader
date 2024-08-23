@@ -1,4 +1,5 @@
 ﻿using DynamicData;
+using ExcelFileReader.FakeData;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,11 +10,15 @@ namespace ExcelFileReader.Models
     {
         private readonly ISourceCache<Person, int> _people;
         private ISourceCache<Person, int> _tempPeople;
+        private IFakeDataInitializer _fakeDataInitializer;
 
         public PeopleService()
         {
             _people = new SourceCache<Person, int>(e => (int)e.Number);
             _tempPeople = new SourceCache<Person, int>(e => (int)e.Number);
+
+            _fakeDataInitializer = new FakeDataInitializer();
+            _people.AddOrUpdate(_fakeDataInitializer.CreateFakeData(10));
         }
 
         public IObservable<IChangeSet<Person, int>>

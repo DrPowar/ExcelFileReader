@@ -42,6 +42,8 @@
     <None Remove="Assets\SaveData_Disabled.png" />
     <None Remove="Assets\SelectFile.png" />
     <None Remove="Assets\SelectFile_Disabled.png" />
+    <None Remove="Assets\ZoomIn.png" />
+    <None Remove="Assets\ZoomOut.png" />
   </ItemGroup>
 
   <ItemGroup>

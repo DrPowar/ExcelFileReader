@@ -42,6 +42,7 @@ namespace ExcelFileReader.ViewModels
         private int _validItems;
         private int _inValidItems;
         private int _totalPages;
+        private int _fontSize = 18;
 
         private string _searchField = string.Empty;
         private string _programStatus = ProgramStatusMessages.UploadingAllowed;
@@ -102,6 +103,12 @@ namespace ExcelFileReader.ViewModels
             set => this.RaiseAndSetIfChanged(ref _canSaveData, value);
         }
 
+        internal int FontSize
+        {
+            get => _fontSize;
+            set => this.RaiseAndSetIfChanged(ref _fontSize, value);
+        }
+
         internal bool CanModifyDataBase
         {
             get => _dataBaseDataActive;
@@ -130,6 +137,7 @@ namespace ExcelFileReader.ViewModels
         internal DelegateCommand GetAllDataFromDBCommand { get; init; } 
         internal DelegateCommand UpdateDataCommand { get; init; }
         internal DelegateCommand DeleteDataCommand { get; init; }
+        internal DelegateCommand<ZoomCommands?> ZoomCommand { get; init; }
 
         internal MainWindowViewModel(TopLevel topLevel)
         {
@@ -161,8 +169,26 @@ namespace ExcelFileReader.ViewModels
             GetAllDataFromDBCommand = new DelegateCommand(GetAllDataFromDBButton_Click);
             UpdateDataCommand = new DelegateCommand(UpdateDataButton_Click);
             DeleteDataCommand = new DelegateCommand(DeleteDataButton_Click);
+            ZoomCommand = new DelegateCommand<ZoomCommands?>(ZoomButton_Click);
             _topLevel = topLevel;
         }
+
+        internal void ZoomButton_Click(ZoomCommands? command)
+        {
+            const int minFontSize = 8;
+            const int maxFontSize = 52;
+
+            if (command == ZoomCommands.ZoomIn && FontSize < maxFontSize)
+            {
+                FontSize++;
+            }
+            else if (command == ZoomCommands.ZoomOut && FontSize > minFontSize)
+            {
+                FontSize--;
+            }
+
+        }
+
 
         internal async void GetAllDataFromDBButton_Click()
         {
