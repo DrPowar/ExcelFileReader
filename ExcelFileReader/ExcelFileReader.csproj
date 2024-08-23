@@ -13,6 +13,38 @@
   </ItemGroup>
 
   <ItemGroup>
+    <AvaloniaResource Remove="Assets\DeleteData.png" />
+    <AvaloniaResource Remove="Assets\DeleteData_Disabled.png" />
+    <AvaloniaResource Remove="Assets\EditData.png" />
+    <AvaloniaResource Remove="Assets\EditData_Disabled.png" />
+    <AvaloniaResource Remove="Assets\GetData.png" />
+    <AvaloniaResource Remove="Assets\GetData_Disabled.png" />
+    <AvaloniaResource Remove="Assets\SaveData.png" />
+    <AvaloniaResource Remove="Assets\SaveData_Disabled.png" />
+    <AvaloniaResource Remove="Assets\Search.png" />
+    <AvaloniaResource Remove="Assets\SelectFile.png" />
+    <AvaloniaResource Remove="Assets\SelectFile_Disabled.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Assets\DeleteData.png" />
+    <None Remove="Assets\DeleteData_Disabled.png" />
+    <None Remove="Assets\EditData.png" />
+    <None Remove="Assets\EditData_Disabled.png" />
+    <None Remove="Assets\Fonts\Nunito-Medium.ttf" />
+    <None Remove="Assets\GetData.png" />
+    <None Remove="Assets\GetData_Disabled.png" />
+    <None Remove="Assets\LeftArrow.png" />
+    <None Remove="Assets\LeftDoubleArrow.png" />
+    <None Remove="Assets\RightArrow.png" />
+    <None Remove="Assets\RightDoubleArrow.png" />
+    <None Remove="Assets\SaveData.png" />
+    <None Remove="Assets\SaveData_Disabled.png" />
+    <None Remove="Assets\SelectFile.png" />
+    <None Remove="Assets\SelectFile_Disabled.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Avalonia" Version="11.0.10" />
     <PackageReference Include="Avalonia.Desktop" Version="11.0.10" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.10" />
@@ -28,5 +60,41 @@
     <PackageReference Include="Projektanker.Icons.Avalonia" Version="9.4.0" />
     <PackageReference Include="Projektanker.Icons.Avalonia.FontAwesome" Version="9.4.0" />
     <PackageReference Include="Projektanker.Icons.Avalonia.MaterialDesign" Version="9.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\Search.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\DeleteData.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\DeleteData_Disabled.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\EditData.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\EditData_Disabled.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\GetData.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\GetData_Disabled.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\SaveData.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\SaveData_Disabled.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\SelectFile.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\SelectFile_Disabled.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 </Project>

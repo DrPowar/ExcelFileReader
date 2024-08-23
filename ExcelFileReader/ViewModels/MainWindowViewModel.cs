@@ -23,10 +23,12 @@ namespace ExcelFileReader.ViewModels
     {
         private const int PageSize = 25;
         private const int FirstPage = 1;
+
         private readonly ISubject<PageRequest> _pager;
         private readonly Client _client;
         private readonly TopLevel _topLevel;
         private readonly PeopleService _peopleService;
+
         private ObservableCollectionExtended<Person> _pagedPeople;
         private ObservableCollection<Person> _selectedPeople;
         private List<Person> _updatedPeople = new();
@@ -216,6 +218,7 @@ namespace ExcelFileReader.ViewModels
             {
                 ParsingResponse response = await _client.SendFile(filesRequests.FileContent, filesRequests.FileName);
                 ProgramStatus = ProgramStatusMessages.WaitingForDataGridUpdating;
+
                 if (response.IsValid)
                 {
                     CanModifyDataBase = false;
@@ -325,10 +328,11 @@ namespace ExcelFileReader.ViewModels
                 ProgramStatus = ProgramStatusMessages.SelectValidData;
             }
         }
+
         internal bool UpdatePerson(Person updatedPerson)
         {
             Person? person = People.FirstOrDefault(p => p.Id == updatedPerson.Id);
-            if (person != null && updatedPerson.Gender != null)
+            if (person != null)
             {
                 person.UpdateIsValidProperty();
                 if (_updatedPeople.Any(p => p.Number == person.Number))

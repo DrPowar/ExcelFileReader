@@ -21,6 +21,8 @@ namespace Server.Models.Person.Repositories
         {
             try
             {
+                people.RemoveAll(person => _context.Persons.Any(updatedPerson => updatedPerson.Number == person.Number));
+
                 await _context.Persons.AddRangeAsync(people);
                 await _context.SaveChangesAsync();
 
