@@ -10,7 +10,11 @@
         xmlns:models="clr-namespace:ExcelFileReader.Models;assembly=ExcelFileReader"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="ExcelFileReader">
+		TransparencyLevelHint="AcrylicBlur"
+        Background="Transparent"
+		ExtendClientAreaToDecorationsHint="True"
+		PointerPressed="Window_PointerPressed">
+	
 
 	<Window.Resources>
 		<converters:BoolToColorConverter x:Key="BoolToColorConverter"/>
@@ -51,6 +55,9 @@
 	</Window.Styles>
 
 	<DockPanel Name="Root">
+		<StackPanel DockPanel.Dock="Top" Height="30" Background="{StaticResource Platinum}">
+			<Image HorizontalAlignment="Left" Margin="2,1,0,0" Source="/Assets/ExcelIcon.png" Width="27"/>
+		</StackPanel>
 		<Grid DockPanel.Dock="Top" Height="120" Background="{StaticResource GhostWhite}">
 
 			<Grid.RowDefinitions>

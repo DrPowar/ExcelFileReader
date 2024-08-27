@@ -17,8 +17,8 @@ namespace ExcelFileReader.Models
             _people = new SourceCache<Person, int>(e => (int)e.Number);
             _tempPeople = new SourceCache<Person, int>(e => (int)e.Number);
 
-            _fakeDataInitializer = new FakeDataInitializer();
-            _people.AddOrUpdate(_fakeDataInitializer.CreateFakeData(10));
+            //_fakeDataInitializer = new FakeDataInitializer();
+            //_people.AddOrUpdate(_fakeDataInitializer.CreateFakeData(10));
         }
 
         public IObservable<IChangeSet<Person, int>>

@@ -15,7 +15,6 @@
   <ItemGroup>
     <AvaloniaResource Remove="Assets\DeleteData.png" />
     <AvaloniaResource Remove="Assets\DeleteData_Disabled.png" />
-    <AvaloniaResource Remove="Assets\EditData.png" />
     <AvaloniaResource Remove="Assets\EditData_Disabled.png" />
     <AvaloniaResource Remove="Assets\GetData.png" />
     <AvaloniaResource Remove="Assets\GetData_Disabled.png" />
@@ -31,6 +30,7 @@
     <None Remove="Assets\DeleteData_Disabled.png" />
     <None Remove="Assets\EditData.png" />
     <None Remove="Assets\EditData_Disabled.png" />
+    <None Remove="Assets\ExcelIcon.png" />
     <None Remove="Assets\Fonts\Nunito-Medium.ttf" />
     <None Remove="Assets\GetData.png" />
     <None Remove="Assets\GetData_Disabled.png" />
@@ -74,9 +74,6 @@
     <Content Include="Assets\DeleteData_Disabled.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\EditData.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Assets\EditData_Disabled.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -98,5 +95,14 @@
     <Content Include="Assets\SelectFile_Disabled.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <AvaloniaResource Update="Assets\EditData.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </AvaloniaResource>
+    <AvaloniaResource Update="Assets\ExcelIcon.png">
+      <CopyToOutputDirectory></CopyToOutputDirectory>
+    </AvaloniaResource>
   </ItemGroup>
 </Project>

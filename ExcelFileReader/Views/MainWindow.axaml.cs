@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using DynamicData;
@@ -93,6 +94,14 @@ namespace ExcelFileReader.Views
         private void GenderComboBox_Loaded(object sender, RoutedEventArgs e)
         {
             _genderComboBoxIsLoading = false;
+        }
+
+        private void Window_PointerPressed(object sender, PointerPressedEventArgs e)
+        {
+            if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+            {
+                BeginMoveDrag(e);
+            }
         }
     }
 }
