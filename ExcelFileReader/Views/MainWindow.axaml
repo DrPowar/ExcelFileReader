@@ -88,7 +88,6 @@
 					</Grid.RowDefinitions>
 
 					<StackPanel Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,20,5,0">
-						
 						<Button
 							IsEnabled="{Binding CanUploadFile}"
 							Command="{Binding OpenFileButton_Click}"
@@ -102,7 +101,6 @@
 					</StackPanel>
 
 					<StackPanel Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5,20,0,0">
-						
 						<Button
 							IsEnabled="{Binding CanSaveData}"
 							Command="{Binding SaveFileButton_Click}"
@@ -115,8 +113,6 @@
 						</Button>
 						<TextBlock Text="Save File" FontSize="14" HorizontalAlignment="Center" Margin="0,5,0,0"/>
 					</StackPanel>
-					
-					
 				</Grid>
 			</Grid>
 				

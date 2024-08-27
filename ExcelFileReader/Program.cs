@@ -26,8 +26,7 @@ namespace ExcelFileReader
             return AppBuilder.Configure<App>()
                 .UsePlatformDetect()
                 .LogToTrace()
-                .UseReactiveUI()
-                .WithInterFont();
+                .UseReactiveUI();
         }
     }
 }

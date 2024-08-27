@@ -15,6 +15,7 @@
   <ItemGroup>
     <AvaloniaResource Remove="Assets\DeleteData.png" />
     <AvaloniaResource Remove="Assets\DeleteData_Disabled.png" />
+    <AvaloniaResource Remove="Assets\EditData.png" />
     <AvaloniaResource Remove="Assets\EditData_Disabled.png" />
     <AvaloniaResource Remove="Assets\GetData.png" />
     <AvaloniaResource Remove="Assets\GetData_Disabled.png" />
@@ -47,11 +48,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="11.0.10" />
-    <PackageReference Include="Avalonia.Desktop" Version="11.0.10" />
-    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.10" />
-    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.10" />
-    <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+	  <PackageReference Include="Avalonia" Version="11.1.3" />
+	  <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.1.3" />
+	  <PackageReference Include="Avalonia.Desktop" Version="11.1.3" />
+	  <PackageReference Include="Avalonia.Themes.Fluent" Version="11.1.3" />
+	  <PackageReference Include="Avalonia.ReactiveUI" Version="11.1.3" />
+	  <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
     <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.10" />
     <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.10" />
     <PackageReference Include="DynamicData" Version="9.0.4" />
@@ -65,6 +67,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Assets\EditData.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Assets\Search.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -98,9 +103,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <AvaloniaResource Update="Assets\EditData.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </AvaloniaResource>
     <AvaloniaResource Update="Assets\ExcelIcon.png">
       <CopyToOutputDirectory></CopyToOutputDirectory>
     </AvaloniaResource>
