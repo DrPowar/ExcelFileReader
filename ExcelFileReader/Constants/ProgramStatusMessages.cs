@@ -9,6 +9,8 @@ namespace ExcelFileReader.Constants
     internal static class ProgramStatusMessages
     {
         internal const string UploadingAllowed = "You can select file";
+        internal const string DataParseToExcelSuccess = "Saving excel file";
+        internal const string NoDataToSave = "No data to save";
         internal const string WaitingForServerResponse = "Waiting for server response";
         internal const string WaitingForDataGridUpdating = "Waiting for the data grid to update";
         internal const string DataSaveSuccess = "Data saved successfully";

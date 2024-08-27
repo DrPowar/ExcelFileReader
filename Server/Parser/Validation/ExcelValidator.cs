@@ -6,7 +6,7 @@ namespace Server.Parser.Validation
 {
     internal static class ExcelValidator
     {
-        internal static ValidationResult ValidateFile(WorkBook workBook)
+        internal static FileValidatinResult ValidateFile(WorkBook workBook)
         {
             try
             {
@@ -32,12 +32,60 @@ namespace Server.Parser.Validation
                     }
                 });
 
-                return new ValidationResult(true, people, ParsingResultMessages.Success);
+                return new FileValidatinResult(true, people, ParsingResultMessages.Success);
             }
             catch (Exception ex)
             {
-                return new ValidationResult(false, null, ParsingResultMessages.ParsingError);
+                return new FileValidatinResult(false, null, ParsingResultMessages.ParsingError);
             }
+        }
+
+        internal static DataValidationResult ValidateData(List<Person> people)
+        {
+            try
+            {
+                WorkBook workBook = WorkBook.Create(ExcelFileFormat.XLSX);
+                WorkSheet workSheet = workBook.DefaultWorkSheet;
+
+                workSheet["A1"].Value = "Number";
+                workSheet["H1"].Value = "ID";
+                workSheet["B1"].Value = "First Name";
+                workSheet["C1"].Value = "Last Name";
+                workSheet["D1"].Value = "Gender";
+                workSheet["E1"].Value = "Country";
+                workSheet["F1"].Value = "Age";
+                workSheet["G1"].Value = "Date";
+
+                object lockObj = new object();
+
+                Parallel.For(0, people.Count, i =>
+                {
+                    var person = people[i];
+                    int rowIndex = i + 2;
+
+                    lock(lockObj)
+                    {
+                        PersonToDataRowParser.SetNumber(rowIndex, workSheet, person.Number);
+                        PersonToDataRowParser.SetId(rowIndex, workSheet, person.Id);
+                        PersonToDataRowParser.SetFirstName(rowIndex, workSheet, person.FirstName);
+                        PersonToDataRowParser.SetLastName(rowIndex, workSheet, person.LastName);
+                        PersonToDataRowParser.SetGender(rowIndex, workSheet, person.Gender);
+                        PersonToDataRowParser.SetCountry(rowIndex, workSheet, person.Country);
+                        PersonToDataRowParser.SetAge(rowIndex, workSheet, person.Age);
+                        PersonToDataRowParser.SetDate(rowIndex, workSheet, person.Birthday);
+                    }
+                });
+
+
+
+
+                return new DataValidationResult(true, workBook.ToByteArray(), ParsingResultMessages.Success);
+            }
+            catch (Exception ex)
+            {
+                return new DataValidationResult(false, null, ParsingResultMessages.ParsingError);
+            }
+
         }
     }
 }

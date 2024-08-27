@@ -29,24 +29,24 @@
 	</Window.Resources>
 
 	<Window.Styles>
-		<Style Selector="TextBlock">
-			<Setter Property="FontFamily" Value="{StaticResource NunitoFont}"/>
-			<Setter Property="Foreground" Value="{StaticResource EerieBlack}"/>
+		<Style Selector="Button">
+			<Setter Property="Background" Value="Transparent"/>
 		</Style>
-		<Style Selector="Button:disabled /template/ ContentPresenter#PART_ContentPresenter">
+
+		<Style Selector="Button:disabled">
 			<Setter Property="Background" Value="{StaticResource Platinum}"/>
 		</Style>
-		<Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+
+		<Style Selector="Button:pointerover">
 			<Setter Property="Background" Value="{StaticResource Alabaster}"/>
 		</Style>
+
 		<Style Selector="DataGridColumnHeader">
 			<Setter Property="Background" Value="{StaticResource Platinum}"/>
 			<Setter Property="Foreground" Value="{StaticResource EerieBlack}"/>
 			<Setter Property="FontSize" Value="14"/>
 		</Style>
-		<Style Selector="Button">
-			<Setter Property="Background" Value=""/>
-		</Style>
+
 		<StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
 	</Window.Styles>
 
@@ -94,11 +94,11 @@
 						<TextBlock Text="Open File" FontSize="14" HorizontalAlignment="Center" Margin="0,5,0,0"/>
 					</StackPanel>
 
-					<StackPanel Grid.Column="2" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5,20,0,0">
+					<StackPanel Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5,20,0,0">
 						
 						<Button
 							IsEnabled="{Binding CanSaveData}"
-							Command="{Binding SaveDataButton_Click}"
+							Command="{Binding SaveFileButton_Click}"
 							HorizontalAlignment="Center"
 							Background=""
 							CornerRadius="5">
@@ -106,8 +106,10 @@
 								<Image Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Save'}" Width="30"/>
 							</StackPanel>
 						</Button>
-						<TextBlock Text="Save Data" FontSize="14" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+						<TextBlock Text="Save File" FontSize="14" HorizontalAlignment="Center" Margin="0,5,0,0"/>
 					</StackPanel>
+					
+					
 				</Grid>
 			</Grid>
 				
@@ -122,48 +124,65 @@
 				<Grid.RowDefinitions>
 					<RowDefinition Height="Auto"/>
 					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
 				</Grid.RowDefinitions>
 
-				<StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,3">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+				</Grid.ColumnDefinitions>
+
+				<StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Margin="0,0,15,7">
 					<Button
-						Height="23"
+						Height="30"
 						IsEnabled="{Binding CanUploadFile}"
 						Command="{Binding GetAllDataFromDBButton_Click}"
 						Background=""
-						CornerRadius="5">
+						CornerRadius="5"
+						ToolTip.Tip="Get">
 						<StackPanel Orientation="Horizontal">
 							<Image Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Get'}" Height="23"/>
-							<TextBlock Text="Get from DB" FontSize="12" VerticalAlignment="Center" Margin="5,0,0,0"/>
 						</StackPanel>
 					</Button>
 				</StackPanel>
 
-				<StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,3,0,3">
+				<StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Margin="0,7,15,0">
 					<Button
-						Height="23"
+						Height="30"
 						IsEnabled="{Binding CanModifyDataBase}"
 						Command="{Binding UpdateDataButton_Click}"
 						Background=""
-						CornerRadius="5">
+						CornerRadius="5"
+						ToolTip.Tip="Update">
 						<StackPanel Orientation="Horizontal">
 							<Image Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Modify'}" Height="23"/>
-							<TextBlock Text="Update DB" FontSize="12" VerticalAlignment="Center" Margin="5,0,0,0"/>
 						</StackPanel>
 					</Button>
 				</StackPanel>
 
-				<StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,3,0,0">
+				<StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" Margin="0,0,0,7">
 					<Button
-						Height="23"
+						Height="30"
+						IsEnabled="{Binding CanSaveData}"
+						Command="{Binding SaveDataButton_Click}"
+						Background=""
+						CornerRadius="5"
+						ToolTip.Tip="Save">
+						<StackPanel Orientation="Horizontal">
+							<Image Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Save'}" Height="23"/>
+						</StackPanel>
+					</Button>
+				</StackPanel>
+
+				<StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Margin="0,7,0,0">
+					<Button
+						Height="30"
 						IsEnabled="{Binding CanModifyDataBase}"
 						Command="{Binding DeleteDataButton_Click}"
 						Background=""
-						CornerRadius="5">
+						CornerRadius="5"
+						ToolTip.Tip="Delete">
 						<StackPanel Orientation="Horizontal">
-							<Image Margin="2,0,3,0" Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Delete'}" Height="18"/>
-							<TextBlock Text="Delete from DB" FontSize="12" VerticalAlignment="Center" Margin="5,0,0,0"/>
+							<Image Margin="0,0,0,0" Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Delete'}" Height="23"/>
 						</StackPanel>
 					</Button>
 				</StackPanel>
@@ -322,15 +341,11 @@
 											  Loaded="GenderComboBox_Loaded"
 											  Width="120"
 											  SelectionChanged="RowDataGrid_EditingGender">
-										<ComboBox.Styles>
-											<Style Selector="ComboBoxItem:pointerover">
-												<Setter Property="Background" Value="{StaticResource GhostWhite}"/>
-											</Style>
-										</ComboBox.Styles>
 									</ComboBox>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
+
 						<DataGridTextColumn Header="Country" Binding="{Binding Country}" FontSize="{Binding FontSize}"/>
 						<DataGridTextColumn Header="Age" Binding="{Binding Age}" FontSize="{Binding FontSize}"/>
 						<DataGridTemplateColumn Header="Birthday">
@@ -361,10 +376,10 @@
 								Margin="10,0,0,0">
 							<Image Source="/Assets/LeftDoubleArrow.png" VerticalAlignment="Center" Width="20"/>
 						</Button>
-						<RepeatButton Margin="12,0,0,0"
+						<Button Margin="12,0,0,0"
 									  Command="{Binding PreviousPageCommand}">
 							<Image Source="/Assets/LeftArrow.png" VerticalAlignment="Center" Width="20"/>
-						</RepeatButton>
+						</Button>
 						<TextBlock Margin="8,0" VerticalAlignment="Center">
 							<TextBlock.Text>
 								<MultiBinding StringFormat="Page {0} of {1}">
@@ -373,15 +388,16 @@
 								</MultiBinding>
 							</TextBlock.Text>
 						</TextBlock>
-						<RepeatButton 
-							Command="{Binding NextPageCommand}">
-							<Image Source="/Assets/RightArrow.png" VerticalAlignment="Center" Width="20"/>
-						</RepeatButton>
+							<Button
+								Command="{Binding NextPageCommand}">
+								<Image Source="/Assets/RightArrow.png" VerticalAlignment="Center" Width="20"/>
+							</Button>
 						<Button Margin="12,0,10,0"
 								Command="{Binding LastPageCommand}">
 							<Image Source="/Assets/RightDoubleArrow.png" VerticalAlignment="Center" Width="20"/>
 						</Button>
-					</StackPanel>
+					
+				</StackPanel>
 				</Border>
 
 				<Grid Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center">

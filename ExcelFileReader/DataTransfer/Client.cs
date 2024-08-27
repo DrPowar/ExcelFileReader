@@ -98,5 +98,21 @@ namespace ExcelFileReader.DataTransfer
 
             return getAllDataResponse;
         }
+
+        internal async Task<ParseDataToExcleFileResponse> ParseDataToExcelFile(IEnumerable<Person> persons)
+        {
+            HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"http://localhost:{ServerData.ServerPort}/FileManagement/ParseDataToExcleFile", persons);
+
+            ParseDataToExcleFileResponse? savingDataResponse = await response.Content.ReadFromJsonAsync<ParseDataToExcleFileResponse>();
+
+            if (savingDataResponse != null)
+            {
+                return savingDataResponse;
+            }
+            else
+            {
+                return new ParseDataToExcleFileResponse(null, false, ResponseMessages.ServerReturnInvalidData);
+            }
+        }
     }
 }

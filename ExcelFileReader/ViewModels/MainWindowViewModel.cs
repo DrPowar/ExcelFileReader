@@ -127,7 +127,8 @@ namespace ExcelFileReader.ViewModels
             set => this.RaiseAndSetIfChanged(ref _pagedPeople, value);
         }
 
-        internal DelegateCommand OpenFilePicker { get; init; }
+        internal DelegateCommand OpenGetFilePicker { get; init; }
+        internal DelegateCommand OpenSaveFilePicker { get; init; }
         internal DelegateCommand FirstPageCommand { get; init; }
         internal DelegateCommand PreviousPageCommand { get; init; }
         internal DelegateCommand NextPageCommand { get; init; }
@@ -163,7 +164,8 @@ namespace ExcelFileReader.ViewModels
                 .ObservesProperty(() => TotalPages);
 
 
-            OpenFilePicker = new DelegateCommand(OpenFileButton_Click);
+            OpenGetFilePicker = new DelegateCommand(OpenFileButton_Click);
+            OpenSaveFilePicker = new DelegateCommand(SaveFileButton_Click);
             SaveDataCommand = new DelegateCommand(SaveDataButton_Click);
             SearchDataCommand = new DelegateCommand<string>(SearchDataButton_Click);
             GetAllDataFromDBCommand = new DelegateCommand(GetAllDataFromDBButton_Click);
@@ -224,6 +226,39 @@ namespace ExcelFileReader.ViewModels
                 _peopleService.SavePeopleToTemp();
                 _peopleService.ClearPeople();
                 _peopleService.LoadData(SearchData(_peopleService.GetTempPeople(), query));
+            }
+        }
+
+        internal async void SaveFileButton_Click()
+        {
+            ProgramStatus = ProgramStatusMessages.WaitingForServerResponse;
+            CanSaveData = false;
+            CanUploadFile = false;
+
+            if (_peopleService.GetPeople().Count > 0 && _peopleService.GetPeople().All(p => p.IsValid))
+            {
+                ParseDataToExcleFileResponse response = await _client.ParseDataToExcelFile(_peopleService.GetPeople());
+
+                if (response.Result)
+                {
+                    ProgramStatus = ProgramStatusMessages.DataParseToExcelSuccess;
+
+                    SaveFile(_topLevel, response.FileContent);
+
+                    UpdateItemsCountFields();
+                    CanSaveData = true;
+                    CanUploadFile = true;
+                }
+                else
+                {
+                    ProgramStatus = response.Message;
+                }
+            }
+            else
+            {
+                CanSaveData = true;
+                CanUploadFile = true;
+                ProgramStatus = ProgramStatusMessages.NoDataToSave;
             }
         }
 
@@ -291,6 +326,8 @@ namespace ExcelFileReader.ViewModels
             }
             else
             {
+                CanSaveData = true;
+                CanUploadFile = true;
                 ProgramStatus = ProgramStatusMessages.SelectValidData;
             }
         }
@@ -395,6 +432,21 @@ namespace ExcelFileReader.ViewModels
                 Title = "Open Text File",
                 AllowMultiple = false,
             });
+        }
+
+        private async void SaveFile(TopLevel topLevel, byte[] fileContent)
+        {
+            var file = await topLevel.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+            {
+                Title = "Save Text File",
+                DefaultExtension = "xlsx"
+            });
+
+            if (file is not null)
+            {
+                await using var stream = await file.OpenWriteAsync();
+                await stream.WriteAsync(fileContent);
+            }
         }
 
         private IEnumerable<Person> SearchData(IEnumerable<Person> people, string query)
