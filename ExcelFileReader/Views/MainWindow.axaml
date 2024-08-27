@@ -18,17 +18,40 @@
 		<models:Person x:Key="Person"/>
 		<converters:BoolToImageConverter x:Key="BoolToImageConverter"/>
 		<FontFamily x:Key="NunitoFont">avares://ExcelFileReader/Assets/Fonts/Nunito-Medium.ttf#Nunito</FontFamily>
+		<Color x:Key="GhostWhite">#FAFAFF</Color>
+		<Color x:Key="AntiFlashWhite">#EEF0F2</Color>
+		<Color x:Key="Alabaster">#ECEBE4</Color>
+		<Color x:Key="Platinum">#DADDD8</Color>
+		<Color x:Key="EerieBlack">#1C1C1C</Color>
+		<Color x:Key="Green">#ecf39e</Color>
+		<Color x:Key="Red">#ffb3c1</Color>
+		<Color x:Key="DarkPlatinum">#5f605e</Color>
 	</Window.Resources>
 
 	<Window.Styles>
 		<Style Selector="TextBlock">
 			<Setter Property="FontFamily" Value="{StaticResource NunitoFont}"/>
+			<Setter Property="Foreground" Value="{StaticResource EerieBlack}"/>
+		</Style>
+		<Style Selector="Button:disabled /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="{StaticResource Platinum}"/>
+		</Style>
+		<Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="{StaticResource Alabaster}"/>
+		</Style>
+		<Style Selector="DataGridColumnHeader">
+			<Setter Property="Background" Value="{StaticResource Platinum}"/>
+			<Setter Property="Foreground" Value="{StaticResource EerieBlack}"/>
+			<Setter Property="FontSize" Value="14"/>
+		</Style>
+		<Style Selector="Button">
+			<Setter Property="Background" Value=""/>
 		</Style>
 		<StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
 	</Window.Styles>
 
 	<DockPanel Name="Root">
-		<Grid DockPanel.Dock="Top" Height="120" Background="#a1e3c7">
+		<Grid DockPanel.Dock="Top" Height="120" Background="{StaticResource GhostWhite}">
 
 			<Grid.RowDefinitions>
 				<RowDefinition Height="3*"/>
@@ -58,20 +81,12 @@
 					</Grid.RowDefinitions>
 
 					<StackPanel Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,20,5,0">
+						
 						<Button
 							IsEnabled="{Binding CanUploadFile}"
 							Command="{Binding OpenFileButton_Click}"
 							HorizontalAlignment="Center"
-							Background="#edfcf6"
-							CornerRadius="5"
-							BorderThickness="1"
-							BorderBrush="#6e6e6e">
-							<Button.Styles>
-								<Style Selector="Button:disabled">
-									<Setter Property="Background" Value="#a4baaf"/>
-									<Setter Property="BorderBrush" Value="#B0B0B0"/>
-								</Style>
-							</Button.Styles>
+							CornerRadius="5">
 							<StackPanel Orientation="Horizontal">
 								<Image Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Select'}" Width="30"/>
 							</StackPanel>
@@ -80,20 +95,13 @@
 					</StackPanel>
 
 					<StackPanel Grid.Column="2" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5,20,0,0">
+						
 						<Button
 							IsEnabled="{Binding CanSaveData}"
 							Command="{Binding SaveDataButton_Click}"
 							HorizontalAlignment="Center"
-							Background="#edfcf6"
-							CornerRadius="5"
-							BorderThickness="1"
-							BorderBrush="#6e6e6e">
-							<Button.Styles>
-								<Style Selector="Button:disabled">
-									<Setter Property="Background" Value="#a4baaf"/>
-									<Setter Property="BorderBrush" Value="#B0B0B0"/>
-								</Style>
-							</Button.Styles>
+							Background=""
+							CornerRadius="5">
 							<StackPanel Orientation="Horizontal">
 								<Image Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Save'}" Width="30"/>
 							</StackPanel>
@@ -123,10 +131,8 @@
 						Height="23"
 						IsEnabled="{Binding CanUploadFile}"
 						Command="{Binding GetAllDataFromDBButton_Click}"
-						Background="#edfcf6"
-						CornerRadius="5"
-						BorderThickness="1"
-						BorderBrush="#6e6e6e">
+						Background=""
+						CornerRadius="5">
 						<StackPanel Orientation="Horizontal">
 							<Image Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Get'}" Height="23"/>
 							<TextBlock Text="Get from DB" FontSize="12" VerticalAlignment="Center" Margin="5,0,0,0"/>
@@ -139,10 +145,8 @@
 						Height="23"
 						IsEnabled="{Binding CanModifyDataBase}"
 						Command="{Binding UpdateDataButton_Click}"
-						Background="#edfcf6"
-						CornerRadius="5"
-						BorderThickness="1"
-						BorderBrush="#6e6e6e">
+						Background=""
+						CornerRadius="5">
 						<StackPanel Orientation="Horizontal">
 							<Image Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Modify'}" Height="23"/>
 							<TextBlock Text="Update DB" FontSize="12" VerticalAlignment="Center" Margin="5,0,0,0"/>
@@ -155,10 +159,8 @@
 						Height="23"
 						IsEnabled="{Binding CanModifyDataBase}"
 						Command="{Binding DeleteDataButton_Click}"
-						Background="#edfcf6"
-						CornerRadius="5"
-						BorderThickness="1"
-						BorderBrush="#6e6e6e">
+						Background=""
+						CornerRadius="5">
 						<StackPanel Orientation="Horizontal">
 							<Image Margin="2,0,3,0" Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Delete'}" Height="18"/>
 							<TextBlock Text="Delete from DB" FontSize="12" VerticalAlignment="Center" Margin="5,0,0,0"/>
@@ -186,10 +188,8 @@
 							<Button
 								Command="{Binding ZoomButton_Click}"
 								CommandParameter="0"
-								Background="#edfcf6"
-								CornerRadius="5"
-								BorderThickness="1"
-								BorderBrush="#6e6e6e">
+								Background=""
+								CornerRadius="5">
 								<StackPanel Orientation="Horizontal">
 									<Image Source="/Assets/ZoomIn.png" VerticalAlignment="Center" Width="15"/>
 									<TextBlock Text="Zoom in" FontSize="12" VerticalAlignment="Center" Margin="5,0,0,0"/>
@@ -201,16 +201,8 @@
 							<Button
 								Command="{Binding ZoomButton_Click}"
 								CommandParameter="1"
-								Background="#edfcf6"
-								CornerRadius="5"
-								BorderThickness="1"
-								BorderBrush="#f2fbfc">
-								<Button.Styles>
-									<Style Selector="Button:disabled">
-										<Setter Property="Background" Value="#a4baaf"/>
-										<Setter Property="BorderBrush" Value="#B0B0B0"/>
-									</Style>
-								</Button.Styles>
+								Background=""
+								CornerRadius="5">
 								<StackPanel Orientation="Horizontal">
 									<Image Source="/Assets/ZoomOut.png" VerticalAlignment="Center" Width="15"/>
 									<TextBlock Text="Zoom out" FontSize="12" VerticalAlignment="Center" Margin="5,0,0,0"/>
@@ -237,28 +229,45 @@
 					<ColumnDefinition Width="100"/>
 				</Grid.ColumnDefinitions>
 
-				<TextBox Grid.Column="0" Grid.Row="1" Text="{Binding SearchField}" VerticalContentAlignment="Center" Watermark="Search">
-
+				<TextBox
+					Grid.Column="0"
+					Grid.Row="1"
+					Text="{Binding SearchField}"
+					VerticalContentAlignment="Center"
+					Watermark="Search"
+					Background="{StaticResource GhostWhite}"
+					Foreground="{StaticResource EerieBlack}"
+					BorderBrush="{StaticResource EerieBlack}"
+					BorderThickness="1">
+					<TextBox.Styles>
+						<Style Selector="TextBox:focus">
+							<Setter Property="Foreground" Value="{StaticResource EerieBlack}"/>
+							<Setter Property="CaretBrush" Value="{StaticResource EerieBlack}"/>
+							<Style Selector="^ /template/ Border#PART_BorderElement">
+								<Setter Property="Background" Value="{StaticResource GhostWhite}"/>
+								<Setter Property="BorderBrush" Value="{StaticResource EerieBlack}"/>
+								<Setter Property="BorderThickness" Value="2"/>
+							</Style>
+						</Style>
+					</TextBox.Styles>
 				</TextBox>
 
 
-				<Border Grid.Column="1"
+
+
+				<Button
+						Margin="15,0,0,0"
+						Grid.Column="1"
 						Grid.Row="1"
 						Width="35"
 						Height="35"
-						Background="Gray"
-						CornerRadius="5">
-					<Button
-							Width="35"
-							Height="35"
-							Background="#edfcf6"
-							Command="{Binding SearchDataCommand}"
-							CommandParameter="{Binding SearchField}">
-						<StackPanel Orientation="Horizontal">
-							<Image Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Search'}" Height="20"/>
-						</StackPanel>
-					</Button>
-				</Border>
+						Background=""
+						Command="{Binding SearchDataCommand}"
+						CommandParameter="{Binding SearchField}">
+					<StackPanel Orientation="Horizontal">
+						<Image Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Search'}" Height="20"/>
+					</StackPanel>
+				</Button>
 			</Grid>			
 		</Grid>
 		
@@ -281,9 +290,9 @@
 						  CanUserSortColumns="True"
 						  GridLinesVisibility="All"
 						  CanUserResizeColumns="True"
+						  BorderBrush="{StaticResource DarkPlatinum}"
 						  BorderThickness="1"
-						  BorderBrush="Black"
-						  Background="Snow"
+						  Background="{StaticResource GhostWhite}"
 						  LoadingRow="RowsDataGrid_LoadingRow"
 						  RowEditEnded="RowDataGrid_EditingRow"
 						  VerticalAlignment="Stretch"
@@ -313,6 +322,11 @@
 											  Loaded="GenderComboBox_Loaded"
 											  Width="120"
 											  SelectionChanged="RowDataGrid_EditingGender">
+										<ComboBox.Styles>
+											<Style Selector="ComboBoxItem:pointerover">
+												<Setter Property="Background" Value="{StaticResource GhostWhite}"/>
+											</Style>
+										</ComboBox.Styles>
 									</ComboBox>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>

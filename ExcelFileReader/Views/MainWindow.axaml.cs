@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Interactivity;
+using Avalonia.Media;
 using DynamicData;
 using ExcelFileReader.Constants;
 using ExcelFileReader.InterfaceConverters;
@@ -40,11 +41,11 @@ namespace ExcelFileReader.Views
                 bool isValidPerson = _viewModel.UpdatePerson(e.Row.DataContext as Person);
                 if (isValidPerson)
                 {
-                    e.Row.Background = RGBBrush.GetBrushFromRGB(RGBColors.RGBSuccessRed, RGBColors.RGBSuccessGreen, RGBColors.RGBSuccessBlue);
+                    e.Row.Background = new SolidColorBrush(Color.Parse(ColorsConst.Success));
                 }
                 else
                 {
-                    e.Row.Background = RGBBrush.GetBrushFromRGB(RGBColors.RGBFailureRed, RGBColors.RGBFailureGreen, RGBColors.RGBFailureBlue);
+                    e.Row.Background = new SolidColorBrush(Color.Parse(ColorsConst.Error));
                 }
             }
         }

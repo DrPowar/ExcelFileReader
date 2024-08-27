@@ -2,6 +2,7 @@
 using Avalonia.Media;
 using ExcelFileReader.Constants;
 using System;
+
 using System.Globalization;
 
 namespace ExcelFileReader.InterfaceConverters
@@ -10,11 +11,12 @@ namespace ExcelFileReader.InterfaceConverters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            SolidColorBrush success = new SolidColorBrush(Color.Parse(ColorsConst.Success));
+            SolidColorBrush error = new SolidColorBrush(Color.Parse(ColorsConst.Error));
+
             if (value is bool boolValue)
             {
-                return boolValue
-                    ? RGBBrush.GetBrushFromRGB(RGBColors.RGBSuccessRed, RGBColors.RGBSuccessGreen, RGBColors.RGBSuccessBlue)
-                    : RGBBrush.GetBrushFromRGB(RGBColors.RGBFailureRed, RGBColors.RGBFailureGreen, RGBColors.RGBFailureBlue);
+                return boolValue ? success : error;
             }
             return Brushes.Transparent;
         }
