@@ -21,8 +21,8 @@ namespace ExcelFileReader.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        private const int PageSize = 25;
         private const int FirstPage = 1;
+        private int _pageSize = 25;
 
         private readonly ISubject<PageRequest> _pager;
         private readonly Client _client;
@@ -48,11 +48,18 @@ namespace ExcelFileReader.ViewModels
         private string _programStatus = ProgramStatusMessages.UploadingAllowed;
 
         internal ObservableCollection<Gender> GenderOptions { get; } = new ObservableCollection<Gender> { Gender.Male, Gender.Female };
+        internal ObservableCollection<int> PageSizes { get; } = new ObservableCollection<int> { 5, 10, 25, 50, 100 };
 
         internal int TotalItems
         {
             get => _totalItems;
             set => this.RaiseAndSetIfChanged(ref _totalItems, value);
+        }
+
+        internal int PageSize
+        {
+            get => _pageSize;
+            set => this.RaiseAndSetIfChanged(ref _pageSize, value);
         }
 
         internal string SearchField

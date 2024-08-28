@@ -32,7 +32,7 @@
 		<Color x:Key="Red">#ffb3c1</Color>
 		<Color x:Key="DarkPlatinum">#8b8c89</Color>
 		<Color x:Key="LightPlatinum">#edf0eb</Color>
-		<x:Double x:Key="TabItemMinHeight">30</x:Double>
+		<x:Double x:Key="TabItemMinHeight">35</x:Double>
 
 		<ControlTheme x:Key="{x:Type TabItem}" TargetType="TabItem">
 			<Setter Property="Padding" Value="5,0,5,0" />
@@ -44,9 +44,12 @@
 					<Border
 						Name="PART_LayoutRoot"
 						Background="{TemplateBinding Background}"
+						BorderBrush="{TemplateBinding BorderBrush}"
+						BorderThickness="{TemplateBinding BorderThickness}"
 						Padding="{TemplateBinding Padding}">
-						<Panel>
+						<Panel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 							<ContentPresenter
+								Margin="0,5,0,0"
 								Name="PART_ContentPresenter"
 								HorizontalAlignment="Center"
 								VerticalAlignment="Center"
@@ -61,6 +64,10 @@
 			<Style Selector="^:pointerover">
 				<Setter Property="Background" Value="{StaticResource DarkPlatinum}" />
 			</Style>
+			<Style Selector="^:selected">
+				<Setter Property="BorderBrush" Value="#549dc4"/>
+				<Setter Property="BorderThickness" Value="0,0,0,4"/>
+			</Style>
 		</ControlTheme>
 	</Window.Resources>
 	
@@ -71,7 +78,7 @@
 		</Style>
 
 		<Style Selector="Button:disabled /template/ ContentPresenter">
-			<Setter Property="Background" Value="{StaticResource Platinum}"/>
+			<Setter Property="Background" Value="Transparent"/>
 		</Style>
 
 		<Style Selector="Button:pointerover /template/ ContentPresenter">
@@ -100,6 +107,9 @@
 		<TabControl Padding="0" DockPanel.Dock="Top" Background="{StaticResource Platinum}">
 			<TabItem Header="Home" Margin="50,0,0,0">
 				<Grid MaxHeight="130" Background="{StaticResource GhostWhite}">
+					<Grid.Effect>
+						<DropShadowEffect Color="Black" BlurRadius="10"/>
+					</Grid.Effect>
 					<Grid.RowDefinitions>
 						<RowDefinition Height="3*"/>
 						<RowDefinition Height="1*"/>
@@ -134,7 +144,7 @@
 									VerticalAlignment="Center"
 									CornerRadius="5">
 									<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-										<Image Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Select'}" Width="30"/>
+										<Image Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Select'}" Width="45"/>
 										<TextBlock TextWrapping="Wrap" MaxWidth="50" Text="Open File" FontSize="14" HorizontalAlignment="Center" Margin="0,5,0,0" TextAlignment="Center"/>
 									</StackPanel>
 								</Button>
@@ -151,7 +161,7 @@
 									Background=""
 									CornerRadius="5">
 									<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-										<Image Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Save'}" Width="30"/>
+										<Image Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Save'}" Width="45"/>
 										<TextBlock TextWrapping="Wrap" MaxWidth="50" Text="Save File" FontSize="14" HorizontalAlignment="Center" Margin="0,5,0,0" TextAlignment="Center"/>
 									</StackPanel>
 								</Button>
@@ -181,7 +191,7 @@
 								Background=""
 								CornerRadius="5">
 								<StackPanel Orientation="Horizontal">
-									<Image Source="/Assets/ZoomIn.png" VerticalAlignment="Center" Width="15"/>
+									<Image Source="/Assets/ZoomIn.png" VerticalAlignment="Center" Width="25"/>
 									<TextBlock Text="Zoom in" FontSize="12" VerticalAlignment="Center" Margin="5,0,0,0"/>
 								</StackPanel>
 							</Button>
@@ -194,7 +204,7 @@
 								Background=""
 								CornerRadius="5">
 								<StackPanel Orientation="Horizontal">
-									<Image Source="/Assets/ZoomOut.png" VerticalAlignment="Center" Width="15"/>
+									<Image Source="/Assets/ZoomOut.png" VerticalAlignment="Center" Width="25"/>
 									<TextBlock Text="Zoom out" FontSize="12" VerticalAlignment="Center" Margin="5,0,0,0"/>
 								</StackPanel>
 							</Button>
@@ -261,6 +271,9 @@
 			
 			<TabItem Header="DB Actions">
 				<Grid Background="{StaticResource GhostWhite}">
+					<Grid.Effect>
+						<DropShadowEffect Color="Black" BlurRadius="10"/>
+					</Grid.Effect>
 					<Grid.RowDefinitions>
 						<RowDefinition Height="3*"/>
 						<RowDefinition Height="1.5*"/>
@@ -293,7 +306,7 @@
 								HorizontalAlignment="Center"
 								CornerRadius="5">
 								<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-									<Image Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Get'}" Width="30"/>
+									<Image Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Get'}" Width="45"/>
 									<TextBlock TextAlignment="Center" TextWrapping="Wrap" MaxWidth="50" Text="Get Data" FontSize="14" HorizontalAlignment="Center" Margin="0,5,0,0"/>
 								</StackPanel>
 							</Button>
@@ -308,7 +321,7 @@
 								HorizontalAlignment="Center"
 								CornerRadius="5">
 								<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-									<Image Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Modify'}" Width="30"/>
+									<Image Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Modify'}" Width="45"/>
 									<TextBlock TextAlignment="Center" TextWrapping="Wrap" MaxWidth="50" Text="Update Data" FontSize="14" HorizontalAlignment="Center" Margin="0,5,0,0"/>
 								</StackPanel>
 							</Button>
@@ -323,7 +336,7 @@
 								HorizontalAlignment="Center"
 								CornerRadius="5">
 								<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-									<Image Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Save'}" Width="30"/>
+									<Image Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Upload'}" Width="45"/>
 									<TextBlock TextAlignment="Center" TextWrapping="Wrap" MaxWidth="50" Text="Save Data" FontSize="14" HorizontalAlignment="Center" Margin="0,5,0,0"/>
 								</StackPanel>
 							</Button>
@@ -338,7 +351,7 @@
 								HorizontalAlignment="Center"
 								CornerRadius="5">
 								<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-									<Image Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Delete'}" Width="30"/>
+									<Image Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Delete'}" Width="45"/>
 									<TextBlock TextAlignment="Center" TextWrapping="Wrap" MaxWidth="50" Text="Delete Data" FontSize="14" HorizontalAlignment="Center" Margin="0,5,0,0"/>
 								</StackPanel>
 							</Button>
@@ -425,8 +438,7 @@
 					</DataGrid.Columns>
 				</DataGrid>
 
-				<Border Grid.Row="1" Height="45" Margin="5,5,0,5" HorizontalAlignment="Left"
-					Background="Snow" BorderThickness="1" BorderBrush="#6e6e6e" CornerRadius="10">
+				<Border Grid.Row="1" Height="45" Margin="5,5,0,5" HorizontalAlignment="Center">
 
 					<StackPanel Orientation="Horizontal">
 						<Button Command="{Binding FirstPageCommand}"
@@ -457,7 +469,21 @@
 				</StackPanel>
 				</Border>
 
-				<Grid Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center">
+			<StackPanel Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center">
+				<ComboBox
+					CornerRadius="0"
+					Margin="10,0,0,0"
+					SelectedItem="{Binding PageSize, Mode=TwoWay}">
+					<ComboBoxItem Content="5" />
+					<ComboBoxItem Content="10" />
+					<ComboBoxItem Content="25" />
+					<ComboBoxItem Content="50" />
+					<ComboBoxItem Content="100" />
+				</ComboBox>
+			</StackPanel>
+
+
+			<Grid Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center">
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="Auto"/>
 						<ColumnDefinition Width="Auto"/>

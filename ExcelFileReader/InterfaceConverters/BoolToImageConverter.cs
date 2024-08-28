@@ -23,28 +23,32 @@ namespace ExcelFileReader.InterfaceConverters
             string imagePath = imageType switch
             {   
                 "Delete" => isEnabled
-                    ? $"{baseDirectory}Assets\\DeleteData.png"
-                    : $"{baseDirectory}Assets\\DeleteData_Disabled.png",
+                    ? $"{baseDirectory}Assets\\Delete.png"
+                    : $"{baseDirectory}Assets\\DeleteDisabled.png",
 
                 "Search" => isEnabled
                     ? $"{baseDirectory}Assets\\Search.png"
                     : throw new ArgumentException("Unknown image type"),
 
                 "Select" => isEnabled
-                    ? $"{baseDirectory}Assets\\SelectFile.png"
-                    : $"{baseDirectory}Assets\\SelectFile_Disabled.png",
+                    ? $"{baseDirectory}Assets\\Open.png"
+                    : $"{baseDirectory}Assets\\OpenDisabled.png",
 
                 "Save" => isEnabled
-                    ? $"{baseDirectory}Assets\\SaveData.png"
-                    : $"{baseDirectory}Assets\\SaveData_Disabled.png",
+                    ? $"{baseDirectory}Assets\\Save.png"
+                    : $"{baseDirectory}Assets\\SaveDisabled.png",
 
                 "Get" => isEnabled
-                    ? $"{baseDirectory}Assets\\GetData.png"
-                    : $"{baseDirectory}Assets\\GetData_Disabled.png",
+                    ? $"{baseDirectory}Assets\\Download.png"
+                    : $"{baseDirectory}Assets\\DownloadDisabled.png",
 
                 "Modify" => isEnabled
-                    ? $"{baseDirectory}Assets\\EditData.png"
-                    : $"{baseDirectory}Assets\\EditData_Disabled.png",
+                    ? $"{baseDirectory}Assets\\Modify.png"
+                    : $"{baseDirectory}Assets\\ModifyDisabled.png",
+
+                "Upload" => isEnabled
+                    ? $"{baseDirectory}Assets\\Upload.png"
+                    : $"{baseDirectory}Assets\\UploadDisabled.png",
 
                 _ => throw new ArgumentException("Unknown image type"),
             };

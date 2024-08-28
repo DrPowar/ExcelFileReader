@@ -13,24 +13,26 @@
   </ItemGroup>
 
   <ItemGroup>
-    <AvaloniaResource Remove="Assets\DeleteData.png" />
-    <AvaloniaResource Remove="Assets\DeleteData_Disabled.png" />
-    <AvaloniaResource Remove="Assets\EditData.png" />
-    <AvaloniaResource Remove="Assets\EditData_Disabled.png" />
-    <AvaloniaResource Remove="Assets\GetData.png" />
-    <AvaloniaResource Remove="Assets\GetData_Disabled.png" />
-    <AvaloniaResource Remove="Assets\SaveData.png" />
-    <AvaloniaResource Remove="Assets\SaveData_Disabled.png" />
+    <AvaloniaResource Remove="Assets\Delete.png" />
+    <AvaloniaResource Remove="Assets\DeleteDisabled.png" />
+    <AvaloniaResource Remove="Assets\Download.png" />
+    <AvaloniaResource Remove="Assets\DownloadDisabled.png" />
+    <AvaloniaResource Remove="Assets\Modify.png" />
+    <AvaloniaResource Remove="Assets\ModifyDisabled.png" />
+    <AvaloniaResource Remove="Assets\Open.png" />
+    <AvaloniaResource Remove="Assets\OpenDisabled.png" />
+    <AvaloniaResource Remove="Assets\Save.png" />
+    <AvaloniaResource Remove="Assets\SaveDisabled.png" />
     <AvaloniaResource Remove="Assets\Search.png" />
-    <AvaloniaResource Remove="Assets\SelectFile.png" />
-    <AvaloniaResource Remove="Assets\SelectFile_Disabled.png" />
+    <AvaloniaResource Remove="Assets\Upload.png" />
+    <AvaloniaResource Remove="Assets\UploadDisabled.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Assets\DeleteData.png" />
-    <None Remove="Assets\DeleteData_Disabled.png" />
-    <None Remove="Assets\EditData.png" />
-    <None Remove="Assets\EditData_Disabled.png" />
+    <None Remove="Assets\Delete.png" />
+    <None Remove="Assets\DeleteDisabled.png" />
+    <None Remove="Assets\Download.png" />
+    <None Remove="Assets\DownloadDisabled.png" />
     <None Remove="Assets\ExcelIcon.png" />
     <None Remove="Assets\Fonts\Roboto-Black.ttf" />
     <None Remove="Assets\Fonts\Roboto-BlackItalic.ttf" />
@@ -44,16 +46,18 @@
     <None Remove="Assets\Fonts\Roboto-Regular.ttf" />
     <None Remove="Assets\Fonts\Roboto-Thin.ttf" />
     <None Remove="Assets\Fonts\Roboto-ThinItalic.ttf" />
-    <None Remove="Assets\GetData.png" />
-    <None Remove="Assets\GetData_Disabled.png" />
     <None Remove="Assets\LeftArrow.png" />
     <None Remove="Assets\LeftDoubleArrow.png" />
+    <None Remove="Assets\Modify.png" />
+    <None Remove="Assets\ModifyDisabled.png" />
+    <None Remove="Assets\Open.png" />
+    <None Remove="Assets\OpenDisabled.png" />
     <None Remove="Assets\RightArrow.png" />
     <None Remove="Assets\RightDoubleArrow.png" />
-    <None Remove="Assets\SaveData.png" />
-    <None Remove="Assets\SaveData_Disabled.png" />
-    <None Remove="Assets\SelectFile.png" />
-    <None Remove="Assets\SelectFile_Disabled.png" />
+    <None Remove="Assets\Save.png" />
+    <None Remove="Assets\SaveDisabled.png" />
+    <None Remove="Assets\Upload.png" />
+    <None Remove="Assets\UploadDisabled.png" />
     <None Remove="Assets\ZoomIn.png" />
     <None Remove="Assets\ZoomOut.png" />
   </ItemGroup>
@@ -78,43 +82,67 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Assets\EditData.png">
+    <Content Include="Assets\Delete.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\DeleteDisabled.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Download.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\DownloadDisabled.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Modify.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\ModifyDisabled.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Open.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\OpenDisabled.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Save.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\SaveDisabled.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\Search.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\DeleteData.png">
+    <Content Include="Assets\Upload.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\DeleteData_Disabled.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\EditData_Disabled.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\GetData.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\GetData_Disabled.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\SaveData.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\SaveData_Disabled.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\SelectFile.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\SelectFile_Disabled.png">
+    <Content Include="Assets\UploadDisabled.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
   <ItemGroup>
     <AvaloniaResource Update="Assets\ExcelIcon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AvaloniaResource>
+    <AvaloniaResource Update="Assets\LeftArrow.png">
+      <CopyToOutputDirectory></CopyToOutputDirectory>
+    </AvaloniaResource>
+    <AvaloniaResource Update="Assets\LeftDoubleArrow.png">
+      <CopyToOutputDirectory></CopyToOutputDirectory>
+    </AvaloniaResource>
+    <AvaloniaResource Update="Assets\RightArrow.png">
+      <CopyToOutputDirectory></CopyToOutputDirectory>
+    </AvaloniaResource>
+    <AvaloniaResource Update="Assets\RightDoubleArrow.png">
+      <CopyToOutputDirectory></CopyToOutputDirectory>
+    </AvaloniaResource>
+    <AvaloniaResource Update="Assets\ZoomIn.png">
+      <CopyToOutputDirectory></CopyToOutputDirectory>
+    </AvaloniaResource>
+    <AvaloniaResource Update="Assets\ZoomOut.png">
       <CopyToOutputDirectory></CopyToOutputDirectory>
     </AvaloniaResource>
   </ItemGroup>
