@@ -19,7 +19,7 @@ namespace ExcelFileReader.Views
         private MainWindowViewModel _viewModel;
         private bool _datePickerIsLoading = true;
         private bool _genderComboBoxIsLoading = true;
-        private bool _isScrolling = false;
+        private bool _isDataPickerOpen = false;
 
         public MainWindow()
         {
@@ -53,36 +53,6 @@ namespace ExcelFileReader.Views
                 }
             }
         }
-
-        public void RowDataGrid_EditingDateTime(object? sender, DatePickerSelectedValueChangedEventArgs e)
-        {
-            if (_datePickerIsLoading || _isScrolling)
-            {
-                return;
-            }
-
-            if (_viewModel.CanEditDateAndGender())
-            {
-                Person person = (sender as DatePicker).DataContext as Person;
-                _viewModel.UpdatePerson(person);
-            }
-        }
-
-        public void RowDataGrid_EditingGender(object? sender, SelectionChangedEventArgs e)
-        {
-            if (_genderComboBoxIsLoading || _isScrolling)
-            {
-                return;
-            }
-
-            if (_viewModel.CanEditDateAndGender())
-            {
-                Person person = (sender as ComboBox).DataContext as Person;
-                _viewModel.UpdatePerson(person);
-            }
-        }
-
-
 
         internal void OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
         {

@@ -405,8 +405,7 @@
 											  Background="Transparent"
 											  CornerRadius="0"
 											  Loaded="GenderComboBox_Loaded"
-											  Width="120"
-											  SelectionChanged="RowDataGrid_EditingGender">
+											  Width="120">
 									</ComboBox>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
@@ -423,8 +422,9 @@
 												Background="Transparent"
 												CornerRadius="0"
 												FontSize="{Binding #Root.((vm:MainWindowViewModel)DataContext).FontSize}}"
-												Loaded="DatePicker_Loaded"
-												SelectedDateChanged="RowDataGrid_EditingDateTime" />
+												Loaded="DatePicker_Loaded">
+									</DatePicker>
+									
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -465,11 +465,25 @@
 				</StackPanel>
 				</Border>
 			
-			<StackPanel Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center">
-				<ComboBox  SelectedItem="{Binding PageSize}" ItemsSource="{Binding PageSizes}" Margin="10,0,0,0" Width="100">
+			<Grid Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+				</Grid.ColumnDefinitions>
+				<ComboBox 
+					Grid.Column="1"
+					SelectedItem="{Binding PageSize}" 
+					ItemsSource="{Binding PageSizes}" 
+					Margin="10,0,0,0"
+					Width="70"
+					BorderThickness="1"
+					BorderBrush="{StaticResource DarkPlatinum}">
 				
 				</ComboBox>
-			</StackPanel>
+				<TextBlock Grid.Column="0" VerticalAlignment="Center" Margin="10,0,0,0">
+					Page Size
+				</TextBlock>
+			</Grid>
 
 			<Grid Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center">
 					<Grid.ColumnDefinitions>
