@@ -12,8 +12,7 @@
         Icon="/Assets/ExcelIcon.png"
 		Title="EXCEL File Reader"
 		TransparencyLevelHint="AcrylicBlur"
-        Background="Transparent"
-		PointerPressed="Window_PointerPressed">
+        Background="Transparent">
 	
 
 	<Window.Resources>
@@ -30,7 +29,7 @@
 		<Color x:Key="EerieBlack">#1C1C1C</Color>
 		<Color x:Key="Green">#ecf39e</Color>
 		<Color x:Key="Red">#ffb3c1</Color>
-		<Color x:Key="DarkPlatinum">#8b8c89</Color>
+		<Color x:Key="DarkPlatinum">#a7a8a5</Color>
 		<Color x:Key="LightPlatinum">#edf0eb</Color>
 		<x:Double x:Key="TabItemMinHeight">35</x:Double>
 
@@ -75,6 +74,7 @@
 	<Window.Styles>
 		<Style Selector="Button">
 			<Setter Property="Background" Value="Transparent"/>
+			<Setter Property="CornerRadius" Value="0"/>
 		</Style>
 
 		<Style Selector="Button:disabled /template/ ContentPresenter">
@@ -82,7 +82,7 @@
 		</Style>
 
 		<Style Selector="Button:pointerover /template/ ContentPresenter">
-			<Setter Property="Background" Value="{StaticResource Alabaster}"/>
+			<Setter Property="Background" Value="{StaticResource DarkPlatinum}"/>
 		</Style>
 
 		<Style Selector="DataGridColumnHeader">
@@ -95,6 +95,13 @@
 			<Setter Property="FontSize" Value="14"/>
 			<Setter Property="FontFamily" Value="{StaticResource RobotoMedium}"/>
 		</Style>
+		<Style Selector="ComboBox">
+			<Setter Property="CornerRadius" Value="0"/>
+		</Style>
+
+		<Style Selector="Border">
+			<Setter Property="CornerRadius" Value="0"/>
+		</Style>
 
 		<Style Selector="TextBlock">
 			<Setter Property="FontFamily" Value="{StaticResource RobotoLight}"/>
@@ -105,8 +112,8 @@
 
 	<DockPanel Name="Root">
 		<TabControl Padding="0" DockPanel.Dock="Top" Background="{StaticResource Platinum}">
-			<TabItem Header="Home" Margin="50,0,0,0">
-				<Grid MaxHeight="130" Background="{StaticResource GhostWhite}">
+			<TabItem Header="Home" Margin="50,0,0,0" PointerPressed="Window_PointerPressed">
+				<Grid Height="135" Background="{StaticResource GhostWhite}" PointerPressed="Window_PointerPressed">
 					<Grid.Effect>
 						<DropShadowEffect Color="Black" BlurRadius="10"/>
 					</Grid.Effect>
@@ -141,8 +148,7 @@
 									IsEnabled="{Binding CanUploadFile}"
 									Command="{Binding OpenFileButton_Click}"
 									HorizontalAlignment="Center"
-									VerticalAlignment="Center"
-									CornerRadius="5">
+									VerticalAlignment="Center">
 									<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
 										<Image Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Select'}" Width="45"/>
 										<TextBlock TextWrapping="Wrap" MaxWidth="50" Text="Open File" FontSize="14" HorizontalAlignment="Center" Margin="0,5,0,0" TextAlignment="Center"/>
@@ -157,9 +163,7 @@
 									Width="70"
 									IsEnabled="{Binding CanSaveData}"
 									Command="{Binding SaveFileButton_Click}"
-									HorizontalAlignment="Center"
-									Background=""
-									CornerRadius="5">
+									HorizontalAlignment="Center">
 									<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
 										<Image Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Save'}" Width="45"/>
 										<TextBlock TextWrapping="Wrap" MaxWidth="50" Text="Save File" FontSize="14" HorizontalAlignment="Center" Margin="0,5,0,0" TextAlignment="Center"/>
@@ -170,7 +174,7 @@
 					</Grid>
 
 
-					<TextBlock Grid.Row="1" Foreground="#696969" Text="File action" FontSize="13" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,0,5"/>
+					<TextBlock Grid.Row="1" Foreground="#696969" Text="File action" FontSize="13" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,0,0"/>
 
 					<Border Grid.Column="1" Height="85" Width="1" Background="#b5b5b5" Margin="20,20,20,0"/>
 
@@ -187,9 +191,7 @@
 						<StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,10,0,5">
 							<Button
 								Command="{Binding ZoomButton_Click}"
-								CommandParameter="0"
-								Background=""
-								CornerRadius="5">
+								CommandParameter="0">
 								<StackPanel Orientation="Horizontal">
 									<Image Source="/Assets/ZoomIn.png" VerticalAlignment="Center" Width="25"/>
 									<TextBlock Text="Zoom in" FontSize="12" VerticalAlignment="Center" Margin="5,0,0,0"/>
@@ -200,9 +202,7 @@
 						<StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,3,0,3">
 							<Button
 								Command="{Binding ZoomButton_Click}"
-								CommandParameter="1"
-								Background=""
-								CornerRadius="5">
+								CommandParameter="1">
 								<StackPanel Orientation="Horizontal">
 									<Image Source="/Assets/ZoomOut.png" VerticalAlignment="Center" Width="25"/>
 									<TextBlock Text="Zoom out" FontSize="12" VerticalAlignment="Center" Margin="5,0,0,0"/>
@@ -237,7 +237,8 @@
 							Watermark="Search"
 							Background="{StaticResource GhostWhite}"
 							Foreground="{StaticResource EerieBlack}"
-							BorderBrush="{StaticResource EerieBlack}"
+							BorderBrush="{StaticResource DarkPlatinum}"
+							CornerRadius="0"
 							BorderThickness="1">
 							<TextBox.Styles>
 								<Style Selector="TextBox:focus">
@@ -246,7 +247,7 @@
 									<Style Selector="^ /template/ Border#PART_BorderElement">
 										<Setter Property="Background" Value="{StaticResource GhostWhite}"/>
 										<Setter Property="BorderBrush" Value="{StaticResource EerieBlack}"/>
-										<Setter Property="BorderThickness" Value="2"/>
+										<Setter Property="BorderThickness" Value="1"/>
 									</Style>
 								</Style>
 							</TextBox.Styles>
@@ -258,7 +259,6 @@
 								Grid.Row="1"
 								Width="35"
 								Height="35"
-								Background=""
 								Command="{Binding SearchDataCommand}"
 								CommandParameter="{Binding SearchField}">
 							<StackPanel Orientation="Horizontal">
@@ -270,7 +270,7 @@
 			</TabItem>
 			
 			<TabItem Header="DB Actions">
-				<Grid Background="{StaticResource GhostWhite}">
+				<Grid Height="135" Background="{StaticResource GhostWhite}">
 					<Grid.Effect>
 						<DropShadowEffect Color="Black" BlurRadius="10"/>
 					</Grid.Effect>
@@ -303,8 +303,7 @@
 								Width="70"
 								IsEnabled="{Binding CanUploadFile}"
 								Command="{Binding GetAllDataFromDBButton_Click}"
-								HorizontalAlignment="Center"
-								CornerRadius="5">
+								HorizontalAlignment="Center">
 								<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
 									<Image Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Get'}" Width="45"/>
 									<TextBlock TextAlignment="Center" TextWrapping="Wrap" MaxWidth="50" Text="Get Data" FontSize="14" HorizontalAlignment="Center" Margin="0,5,0,0"/>
@@ -318,8 +317,7 @@
 								Width="70"
 								IsEnabled="{Binding CanModifyDataBase}"
 								Command="{Binding UpdateDataButton_Click}"
-								HorizontalAlignment="Center"
-								CornerRadius="5">
+								HorizontalAlignment="Center">
 								<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
 									<Image Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Modify'}" Width="45"/>
 									<TextBlock TextAlignment="Center" TextWrapping="Wrap" MaxWidth="50" Text="Update Data" FontSize="14" HorizontalAlignment="Center" Margin="0,5,0,0"/>
@@ -333,8 +331,7 @@
 								Width="70"
 								IsEnabled="{Binding CanSaveData}"
 								Command="{Binding SaveDataButton_Click}"
-								HorizontalAlignment="Center"
-								CornerRadius="5">
+								HorizontalAlignment="Center">
 								<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
 									<Image Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Upload'}" Width="45"/>
 									<TextBlock TextAlignment="Center" TextWrapping="Wrap" MaxWidth="50" Text="Save Data" FontSize="14" HorizontalAlignment="Center" Margin="0,5,0,0"/>
@@ -348,8 +345,7 @@
 								Width="70"
 								IsEnabled="{Binding CanModifyDataBase}"
 								Command="{Binding DeleteDataButton_Click}"
-								HorizontalAlignment="Center"
-								CornerRadius="5">
+								HorizontalAlignment="Center">
 								<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
 									<Image Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Delete'}" Width="45"/>
 									<TextBlock TextAlignment="Center" TextWrapping="Wrap" MaxWidth="50" Text="Delete Data" FontSize="14" HorizontalAlignment="Center" Margin="0,5,0,0"/>
@@ -358,8 +354,8 @@
 						</StackPanel>
 					</Grid>
 
-					<TextBlock Grid.Row="1" Grid.Column="0" Foreground="#696969"  Text="DB actions" FontSize="13" Margin="0,0,0,5" HorizontalAlignment="Center"/>
-
+					<TextBlock Grid.Row="1" Grid.Column="0" Foreground="#696969"  Text="DB actions" FontSize="13" Margin="0,10,0,0" HorizontalAlignment="Center"/>
+	
 					<Border Grid.Column="1" Height="85" Width="0" Background="#b5b5b5" Margin="20,20,20,0"/>
 				</Grid>
 			</TabItem>
@@ -371,22 +367,22 @@
 					<RowDefinition Height="*"/>
 					<RowDefinition Height="Auto"/>
 				</Grid.RowDefinitions>
-
+			
 				<DataGrid
-						  Name="PersonsGrid"
-						  ItemsSource="{Binding People}"
-						  IsReadOnly="False"
-						  CanUserSortColumns="True"
-						  GridLinesVisibility="All"
-						  CanUserResizeColumns="True"
-						  BorderBrush="{StaticResource DarkPlatinum}"
-						  BorderThickness="1"
-						  Background="{StaticResource GhostWhite}"
-						  LoadingRow="RowsDataGrid_LoadingRow"
-						  RowEditEnded="RowDataGrid_EditingRow"
-						  VerticalAlignment="Stretch"
-						  HorizontalAlignment="Stretch"
-						  SelectionChanged="OnSelectionChanged">
+					Name="PersonsGrid"
+					ItemsSource="{Binding People}"
+					IsReadOnly="False"
+					CanUserSortColumns="True"
+					GridLinesVisibility="All"
+					CanUserResizeColumns="True"
+					BorderBrush="{StaticResource DarkPlatinum}"
+					BorderThickness="1"
+					Background="{StaticResource GhostWhite}"
+					LoadingRow="RowsDataGrid_LoadingRow"
+					RowEditEnded="RowDataGrid_EditingRow"
+					VerticalAlignment="Stretch"
+					HorizontalAlignment="Stretch"
+					SelectionChanged="OnSelectionChanged">
 
 					<DataGrid.Styles>
 						<Style Selector="DataGridColumnHeader">
@@ -428,9 +424,7 @@
 												CornerRadius="0"
 												FontSize="{Binding #Root.((vm:MainWindowViewModel)DataContext).FontSize}}"
 												Loaded="DatePicker_Loaded"
-												SelectedDateChanged="RowDataGrid_EditingDateTime"
-											/>
-
+												SelectedDateChanged="RowDataGrid_EditingDateTime" />
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -438,7 +432,9 @@
 					</DataGrid.Columns>
 				</DataGrid>
 
-				<Border Grid.Row="1" Height="45" Margin="5,5,0,5" HorizontalAlignment="Center">
+
+
+			<Border Grid.Row="1" Height="45" Margin="5,5,0,5" HorizontalAlignment="Center">
 
 					<StackPanel Orientation="Horizontal">
 						<Button Command="{Binding FirstPageCommand}"
@@ -468,20 +464,12 @@
 					
 				</StackPanel>
 				</Border>
-
+			
 			<StackPanel Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center">
-				<ComboBox
-					CornerRadius="0"
-					Margin="10,0,0,0"
-					SelectedItem="{Binding PageSize, Mode=TwoWay}">
-					<ComboBoxItem Content="5" />
-					<ComboBoxItem Content="10" />
-					<ComboBoxItem Content="25" />
-					<ComboBoxItem Content="50" />
-					<ComboBoxItem Content="100" />
+				<ComboBox  SelectedItem="{Binding PageSize}" ItemsSource="{Binding PageSizes}" Margin="10,0,0,0" Width="100">
+				
 				</ComboBox>
 			</StackPanel>
-
 
 			<Grid Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center">
 					<Grid.ColumnDefinitions>
@@ -494,9 +482,8 @@
 					<Border
 						Height="30"
 						Grid.Column="0"
-						Margin="0,5,15,5"
+						Margin="0,5,25,5"
 						Background="Snow"
-						CornerRadius="5"
 						BorderThickness="1"
 						BorderBrush="#6e6e6e">
 						<TextBlock Margin="5"
@@ -504,51 +491,59 @@
 								   FontSize="16"
 								   VerticalAlignment="Center"/>
 					</Border>
-					
-					
-					
-					<Border
-						Height="30"
-						Grid.Column="1"
-						Margin="0,5,15,5"
-						Background="Snow"
-						CornerRadius="5"
-						BorderThickness="1"
-						BorderBrush="#6e6e6e">
-						<TextBlock Margin="5"
-								   Text="{Binding TotalItems, StringFormat={}{0} items}"
-								   FontSize="16"
-								   VerticalAlignment="Center"/>
-					</Border>
 
 					<Border
-						Height="30"
-						Grid.Column="2"
-						Margin="0,5,15,5"
-						Background="Snow"
-						CornerRadius="5"
-						BorderThickness="1"
-						BorderBrush="#6e6e6e">
-						<TextBlock Margin="5"
-								   Text="{Binding ValidItems, StringFormat={}{0} valid items}"
-								   Foreground="#49c46e"
-								   FontSize="16"
-								   VerticalAlignment="Center"/>
-					</Border>
-
-					<Border
-						Height="30"
 						Grid.Column="3"
-						Margin="0,5,15,5"
-						Background="Snow"
-						CornerRadius="5"
-						BorderThickness="1"
-						BorderBrush="#6e6e6e">
-						<TextBlock Margin="5"
-								   Text="{Binding InValidItems, StringFormat={}{0} invalid items}"
-								   Foreground="#ff8a8a"
-								   FontSize="16"
-								   VerticalAlignment="Center"/>
+						Margin="0,5,15,5">
+						<Grid>
+							<Grid.RowDefinitions>
+								<RowDefinition Height="Auto"/>
+								<RowDefinition Height="Auto"/>
+								<RowDefinition Height="Auto"/>
+							</Grid.RowDefinitions>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="Auto"/>
+								<ColumnDefinition Width="Auto"/>
+							</Grid.ColumnDefinitions>
+							<TextBlock Grid.Row="0"
+									   Grid.Column="0"
+									   HorizontalAlignment="Left"
+										Text="{Binding TotalItems}"
+										FontSize="14"
+										VerticalAlignment="Center"/>
+							<TextBlock HorizontalAlignment="Left"
+									   Grid.Row="1"
+									   Grid.Column="0"
+										Text="{Binding ValidItems}"
+										FontSize="14"
+										VerticalAlignment="Center"/>
+							<TextBlock Grid.Row="2"
+									   Grid.Column="0"
+									   Margin="0,0,0,0"
+									   HorizontalAlignment="Left"
+										Text="{Binding InValidItems}"
+										FontSize="14"
+										VerticalAlignment="Center"/>
+							<TextBlock Grid.Row="0"
+									   Grid.Column="1"
+									   HorizontalAlignment="Right"
+										Text="total items"
+										FontSize="14"
+										VerticalAlignment="Center"/>
+							<TextBlock HorizontalAlignment="Right"
+									   Grid.Row="1"
+									   Grid.Column="1"
+										Text="valid items"
+										FontSize="14"
+										VerticalAlignment="Center"/>
+							<TextBlock Grid.Row="2"
+									   Grid.Column="1"
+									   Margin="5,0,0,0"
+									   HorizontalAlignment="Right"
+										Text="invalid items"
+										FontSize="14"
+										VerticalAlignment="Center"/>
+						</Grid>
 					</Border>
 				</Grid>
 			</Grid>

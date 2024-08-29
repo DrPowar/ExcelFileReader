@@ -9,12 +9,14 @@ using ExcelFileReader.Models;
 using Prism.Commands;
 using ReactiveUI;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace ExcelFileReader.ViewModels
@@ -36,6 +38,7 @@ namespace ExcelFileReader.ViewModels
         private bool _dataBaseDataActive;
         private bool _canUploadFile = true;
         private bool _canSaveData;
+        private bool _canEditDateAndGender = true;
 
         private int _currentPage;
         private int _totalItems;
@@ -59,7 +62,12 @@ namespace ExcelFileReader.ViewModels
         internal int PageSize
         {
             get => _pageSize;
-            set => this.RaiseAndSetIfChanged(ref _pageSize, value);
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _pageSize, value);
+                UpdatePagesFields();
+                _pager.OnNext(new PageRequest(CurrentPage, PageSize));
+            }
         }
 
         internal string SearchField
@@ -201,6 +209,7 @@ namespace ExcelFileReader.ViewModels
 
         internal async void GetAllDataFromDBButton_Click()
         {
+            _canEditDateAndGender = false;
             CanSaveData = false;
             CanUploadFile = false;
             GetAllDataResponse getAllDataResponse = await _client.GetAllDataFromDB();
@@ -213,11 +222,13 @@ namespace ExcelFileReader.ViewModels
                 UpdateItemsCountFields();
 
                 CanUploadFile = true;
+                _canEditDateAndGender = true;
                 ProgramStatus = ProgramStatusMessages.UploadingAllowed;
             }
             else
             {
                 CanUploadFile = true;
+                _canEditDateAndGender = true;
                 ProgramStatus = ProgramStatusMessages.UploadingAllowed;
             }
         }
@@ -241,6 +252,7 @@ namespace ExcelFileReader.ViewModels
             ProgramStatus = ProgramStatusMessages.WaitingForServerResponse;
             CanSaveData = false;
             CanUploadFile = false;
+            _canEditDateAndGender = false;
 
             if (_peopleService.GetPeople().Count > 0 && _peopleService.GetPeople().All(p => p.IsValid))
             {
@@ -255,6 +267,7 @@ namespace ExcelFileReader.ViewModels
                     UpdateItemsCountFields();
                     CanSaveData = true;
                     CanUploadFile = true;
+                    _canEditDateAndGender = true;
                 }
                 else
                 {
@@ -265,6 +278,7 @@ namespace ExcelFileReader.ViewModels
             {
                 CanSaveData = true;
                 CanUploadFile = true;
+                _canEditDateAndGender = true;
                 ProgramStatus = ProgramStatusMessages.NoDataToSave;
             }
         }
@@ -311,6 +325,7 @@ namespace ExcelFileReader.ViewModels
             ProgramStatus = ProgramStatusMessages.WaitingForServerResponse;
             CanSaveData = false;
             CanUploadFile = false;
+            _canEditDateAndGender = false;
 
             if (_selectedPeople.Count > 0 && _selectedPeople.All(p => p.IsValid))
             {
@@ -325,6 +340,7 @@ namespace ExcelFileReader.ViewModels
                     UpdateItemsCountFields();
                     CanSaveData = true;
                     CanUploadFile = true;
+                    _canEditDateAndGender = true;
                 }
                 else
                 {
@@ -335,6 +351,7 @@ namespace ExcelFileReader.ViewModels
             {
                 CanSaveData = true;
                 CanUploadFile = true;
+                _canEditDateAndGender = true;
                 ProgramStatus = ProgramStatusMessages.SelectValidData;
             }
         }
@@ -425,6 +442,10 @@ namespace ExcelFileReader.ViewModels
             InValidItems = people.Where(p => !p.IsValid).Count();
             ValidItems = people.Where(p => p.IsValid).Count();
         }
+
+        internal bool CanEditDateAndGender() =>
+            _canEditDateAndGender;
+
 
         private void UpdatePagesFields()
         {

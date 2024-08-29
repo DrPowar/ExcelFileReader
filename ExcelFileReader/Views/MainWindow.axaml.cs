@@ -4,6 +4,7 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using Avalonia.Threading;
 using DynamicData;
 using ExcelFileReader.Constants;
 using ExcelFileReader.InterfaceConverters;
@@ -18,6 +19,8 @@ namespace ExcelFileReader.Views
         private MainWindowViewModel _viewModel;
         private bool _datePickerIsLoading = true;
         private bool _genderComboBoxIsLoading = true;
+        private bool _isScrolling = false;
+
         public MainWindow()
         {
             TopLevel topLevel = GetTopLevel(this);
@@ -53,27 +56,33 @@ namespace ExcelFileReader.Views
 
         public void RowDataGrid_EditingDateTime(object? sender, DatePickerSelectedValueChangedEventArgs e)
         {
-            if(_datePickerIsLoading)
+            if (_datePickerIsLoading || _isScrolling)
             {
                 return;
             }
 
-            Person person = (sender as DatePicker).DataContext as Person;
-
-            _viewModel.UpdatePerson(person);
+            if (_viewModel.CanEditDateAndGender())
+            {
+                Person person = (sender as DatePicker).DataContext as Person;
+                _viewModel.UpdatePerson(person);
+            }
         }
 
         public void RowDataGrid_EditingGender(object? sender, SelectionChangedEventArgs e)
         {
-            if (_genderComboBoxIsLoading)
+            if (_genderComboBoxIsLoading || _isScrolling)
             {
                 return;
             }
 
-            Person person = (sender as ComboBox).DataContext as Person;
-
-            _viewModel.UpdatePerson(person);
+            if (_viewModel.CanEditDateAndGender())
+            {
+                Person person = (sender as ComboBox).DataContext as Person;
+                _viewModel.UpdatePerson(person);
+            }
         }
+
+
 
         internal void OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
@@ -88,13 +97,20 @@ namespace ExcelFileReader.Views
 
         private void DatePicker_Loaded(object sender, RoutedEventArgs e)
         {
-            _datePickerIsLoading = false;
+            if (_datePickerIsLoading)
+            {
+                _datePickerIsLoading = false;
+            }
         }
 
         private void GenderComboBox_Loaded(object sender, RoutedEventArgs e)
         {
-            _genderComboBoxIsLoading = false;
+            if (_genderComboBoxIsLoading)
+            {
+                _genderComboBoxIsLoading = false;
+            }
         }
+
 
         private void Window_PointerPressed(object sender, PointerPressedEventArgs e)
         {
