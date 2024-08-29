@@ -124,6 +124,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <AvaloniaResource Update="Assets\ExcelFileReader.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AvaloniaResource>
     <AvaloniaResource Update="Assets\ExcelIcon.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </AvaloniaResource>

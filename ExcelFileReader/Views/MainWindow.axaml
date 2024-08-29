@@ -9,7 +9,7 @@
         xmlns:converters="clr-namespace:ExcelFileReader.InterfaceConverters;assembly=ExcelFileReader"
         xmlns:models="clr-namespace:ExcelFileReader.Models;assembly=ExcelFileReader"
         x:DataType="vm:MainWindowViewModel"
-        Icon="/Assets/ExcelIcon.png"
+        Icon="/Assets/ExcelFileReader.png"
 		Title="EXCEL File Reader"
 		TransparencyLevelHint="AcrylicBlur"
         Background="Transparent">
