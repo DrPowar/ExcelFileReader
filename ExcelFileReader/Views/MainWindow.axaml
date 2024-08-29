@@ -34,9 +34,10 @@
 		<x:Double x:Key="TabItemMinHeight">35</x:Double>
 
 		<ControlTheme x:Key="{x:Type TabItem}" TargetType="TabItem">
-			<Setter Property="Padding" Value="5,0,5,0" />
-			<Setter Property="Margin" Value="10,0,0,0" />
-			<Setter Property="Width" Value="90"/>
+			<Setter Property="Padding" Value="5,5,5,5" />
+			<Setter Property="Margin" Value="0,0,0,0" />
+			<Setter Property="Height" Value="40"/>
+			<Setter Property="Width" Value="85"/>
 			<Setter Property="MinHeight" Value="{DynamicResource TabItemMinHeight}" />
 			<Setter Property="Template">
 				<ControlTemplate>
@@ -60,9 +61,13 @@
 					</Border>
 				</ControlTemplate>
 			</Setter>
+
 			<Style Selector="^:pointerover">
-				<Setter Property="Background" Value="{StaticResource DarkPlatinum}" />
+				<Setter Property="BorderBrush" Value="{StaticResource DarkPlatinum}"/>
+				<Setter Property="BorderThickness" Value="0,0,0,4"/>
+				<Setter Property="Background" Value="{StaticResource LightPlatinum}"/>
 			</Style>
+
 			<Style Selector="^:selected">
 				<Setter Property="BorderBrush" Value="#549dc4"/>
 				<Setter Property="BorderThickness" Value="0,0,0,4"/>
@@ -92,9 +97,14 @@
 			<Setter Property="FontFamily" Value="{StaticResource RobotoLight}"/>
 		</Style>
 		<Style Selector="TabItem">
-			<Setter Property="FontSize" Value="14"/>
 			<Setter Property="FontFamily" Value="{StaticResource RobotoMedium}"/>
+			<Setter Property="FontSize" Value="13"/>
 		</Style>
+
+		<Style Selector="TabItem:pointerover">
+			<Setter Property="FontSize" Value="14"/>
+		</Style>
+		
 		<Style Selector="ComboBox">
 			<Setter Property="CornerRadius" Value="0"/>
 		</Style>
@@ -113,9 +123,16 @@
 	<DockPanel Name="Root">
 		<TabControl Padding="0" DockPanel.Dock="Top" Background="{StaticResource Platinum}">
 			<TabItem Header="Home" Margin="50,0,0,0" PointerPressed="Window_PointerPressed">
+				<TabItem.Styles>
+				</TabItem.Styles>
+				<TabItem.Transitions>
+					<Transitions>
+						<DoubleTransition Property="FontSize" Duration="0:0:0.05" />
+					</Transitions>
+				</TabItem.Transitions>
 				<Grid Height="135" Background="{StaticResource GhostWhite}" PointerPressed="Window_PointerPressed">
 					<Grid.Effect>
-						<DropShadowEffect Color="Black" BlurRadius="10"/>
+						<DropShadowEffect Color="Black" BlurRadius="13"/>
 					</Grid.Effect>
 					<Grid.RowDefinitions>
 						<RowDefinition Height="3*"/>
@@ -270,6 +287,13 @@
 			</TabItem>
 			
 			<TabItem Header="DB Actions">
+				<TabItem.Styles>
+				</TabItem.Styles>
+				<TabItem.Transitions>
+					<Transitions>
+						<DoubleTransition Property="FontSize" Duration="0:0:0.05" />
+					</Transitions>
+				</TabItem.Transitions>
 				<Grid Height="135" Background="{StaticResource GhostWhite}">
 					<Grid.Effect>
 						<DropShadowEffect Color="Black" BlurRadius="10"/>
