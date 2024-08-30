@@ -29,6 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Assets\Close.png" />
     <None Remove="Assets\Delete.png" />
     <None Remove="Assets\DeleteDisabled.png" />
     <None Remove="Assets\Download.png" />
@@ -46,8 +47,10 @@
     <None Remove="Assets\Fonts\Roboto-Regular.ttf" />
     <None Remove="Assets\Fonts\Roboto-Thin.ttf" />
     <None Remove="Assets\Fonts\Roboto-ThinItalic.ttf" />
+    <None Remove="Assets\FullScreen.png" />
     <None Remove="Assets\LeftArrow.png" />
     <None Remove="Assets\LeftDoubleArrow.png" />
+    <None Remove="Assets\Minimize.png" />
     <None Remove="Assets\Modify.png" />
     <None Remove="Assets\ModifyDisabled.png" />
     <None Remove="Assets\Open.png" />
@@ -56,6 +59,7 @@
     <None Remove="Assets\RightDoubleArrow.png" />
     <None Remove="Assets\Save.png" />
     <None Remove="Assets\SaveDisabled.png" />
+    <None Remove="Assets\Theme.png" />
     <None Remove="Assets\Upload.png" />
     <None Remove="Assets\UploadDisabled.png" />
     <None Remove="Assets\ZoomIn.png" />
@@ -143,10 +147,10 @@
       <CopyToOutputDirectory></CopyToOutputDirectory>
     </AvaloniaResource>
     <AvaloniaResource Update="Assets\ZoomIn.png">
-      <CopyToOutputDirectory></CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </AvaloniaResource>
     <AvaloniaResource Update="Assets\ZoomOut.png">
-      <CopyToOutputDirectory></CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </AvaloniaResource>
   </ItemGroup>
 </Project>

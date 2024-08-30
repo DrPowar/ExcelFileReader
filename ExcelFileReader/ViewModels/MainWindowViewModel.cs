@@ -153,6 +153,9 @@ namespace ExcelFileReader.ViewModels
         internal DelegateCommand UpdateDataCommand { get; init; }
         internal DelegateCommand DeleteDataCommand { get; init; }
         internal DelegateCommand<ZoomCommands?> ZoomCommand { get; init; }
+        internal DelegateCommand FullScreenCommnad { get; init; }
+        internal DelegateCommand MinimizeWindowCommand { get; init; }
+        internal DelegateCommand CloseWindowCommand { get; init; }
 
         internal MainWindowViewModel(TopLevel topLevel)
         {
@@ -186,7 +189,41 @@ namespace ExcelFileReader.ViewModels
             UpdateDataCommand = new DelegateCommand(UpdateDataButton_Click);
             DeleteDataCommand = new DelegateCommand(DeleteDataButton_Click);
             ZoomCommand = new DelegateCommand<ZoomCommands?>(ZoomButton_Click);
+            FullScreenCommnad = new DelegateCommand(FullScreenButton_Click);
+            MinimizeWindowCommand = new DelegateCommand(MinimizeWindowButton_Click);
+            CloseWindowCommand = new DelegateCommand(CloseWindowButton_Click);
             _topLevel = topLevel;
+        }
+
+        internal void CloseWindowButton_Click()
+        {
+            if (_topLevel is Window window)
+            {
+                window.Close();
+            }
+        }
+
+        internal void MinimizeWindowButton_Click()
+        {
+            if (_topLevel is Window window)
+            {
+                window.WindowState = WindowState.Minimized;
+            }
+        }
+
+        internal void FullScreenButton_Click()
+        {
+            if (_topLevel is Window window)
+            {
+                if (window.WindowState == WindowState.FullScreen)
+                {
+                    window.WindowState = WindowState.Normal;
+                }
+                else
+                {
+                    window.WindowState = WindowState.FullScreen;
+                }
+            }
         }
 
         internal void ZoomButton_Click(ZoomCommands? command)
@@ -311,6 +348,7 @@ namespace ExcelFileReader.ViewModels
                     ProgramStatus = response.Message;
                 }
             }
+            CanUploadFile = true;
         }
 
         internal async void SaveDataButton_Click()
@@ -496,10 +534,23 @@ namespace ExcelFileReader.ViewModels
 
             if (file != null)
             {
-                await using Stream stream = await file.OpenReadAsync();
-                using MemoryStream memoryStream = new MemoryStream();
-                await stream.CopyToAsync(memoryStream);
-                fileContent = memoryStream.ToArray();
+                try
+                {
+                    await using Stream stream = await file.OpenReadAsync();
+                    using MemoryStream memoryStream = new MemoryStream();
+                    await stream.CopyToAsync(memoryStream);
+                    fileContent = memoryStream.ToArray();
+                }
+                catch (IOException ex)
+                {
+                    ProgramStatus = ProgramStatusMessages.FileUsedByAnotherProgram;
+                    return null;
+                }
+                catch (Exception ex)
+                {
+                    ProgramStatus = $"{ProgramStatusMessages.UnexpectedError}: {ex.Message}";
+                    return null;
+                }
             }
 
             return new FileUploadRequest(file!.Name, fileContent);

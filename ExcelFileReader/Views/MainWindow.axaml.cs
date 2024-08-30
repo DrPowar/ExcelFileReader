@@ -38,6 +38,8 @@ namespace ExcelFileReader.Views
             });
         }
 
+
+
         public void RowDataGrid_EditingRow(object? sender, DataGridRowEditEndedEventArgs e)
         {
             if (e.Row.DataContext is Person)

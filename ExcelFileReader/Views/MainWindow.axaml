@@ -12,7 +12,12 @@
         Icon="/Assets/ExcelFileReader.png"
 		Title="EXCEL File Reader"
 		TransparencyLevelHint="AcrylicBlur"
-        Background="Transparent">
+        Background="Transparent"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaTitleBarHeightHint="0"
+        ExtendClientAreaChromeHints="NoChrome"
+        >
+	
 	
 
 	<Window.Resources>
@@ -22,34 +27,29 @@
 		<converters:BoolToImageConverter x:Key="BoolToImageConverter"/>
 		<FontFamily x:Key="RobotoMedium">avares://ExcelFileReader/Assets/Fonts/Roboto-Medium.ttf#Roboto</FontFamily>
 		<FontFamily x:Key="RobotoLight">avares://ExcelFileReader/Assets/Fonts/Roboto-Light.ttf#Roboto</FontFamily>
-		<Color x:Key="GhostWhite">#FAFAFF</Color>
-		<Color x:Key="AntiFlashWhite">#EEF0F2</Color>
+		<Color x:Key="SecondWhite">#f4f4f4</Color>
 		<Color x:Key="Alabaster">#ECEBE4</Color>
-		<Color x:Key="Platinum">#DADDD8</Color>
+		<Color x:Key="MainFontColor">#484644</Color>
+		<Color x:Key="ExcelGreen">#217346</Color>
 		<Color x:Key="EerieBlack">#1C1C1C</Color>
 		<Color x:Key="Green">#ecf39e</Color>
 		<Color x:Key="Red">#ffb3c1</Color>
 		<Color x:Key="DarkPlatinum">#a7a8a5</Color>
+		<Color x:Key="Platinum">#e1dfdd</Color>
 		<Color x:Key="LightPlatinum">#edf0eb</Color>
+		<Color x:Key="ExcelWindowColor">#217346</Color>
 		<x:Double x:Key="TabItemMinHeight">35</x:Double>
 
 		<ControlTheme x:Key="{x:Type TabItem}" TargetType="TabItem">
-			<Setter Property="Padding" Value="5,5,5,5" />
 			<Setter Property="Margin" Value="0,0,0,0" />
-			<Setter Property="Height" Value="40"/>
-			<Setter Property="Width" Value="85"/>
+			<Setter Property="Height" Value="35"/>
+			<Setter Property="VerticalAlignment" Value="Bottom"/>
 			<Setter Property="MinHeight" Value="{DynamicResource TabItemMinHeight}" />
 			<Setter Property="Template">
 				<ControlTemplate>
-					<Border
-						Name="PART_LayoutRoot"
-						Background="{TemplateBinding Background}"
-						BorderBrush="{TemplateBinding BorderBrush}"
-						BorderThickness="{TemplateBinding BorderThickness}"
-						Padding="{TemplateBinding Padding}">
-						<Panel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+						<Panel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{TemplateBinding Background}">
 							<ContentPresenter
-								Margin="0,5,0,0"
+								Margin="15,0,15,0"
 								Name="PART_ContentPresenter"
 								HorizontalAlignment="Center"
 								VerticalAlignment="Center"
@@ -57,19 +57,22 @@
 								ContentTemplate="{TemplateBinding HeaderTemplate}"
 								RecognizesAccessKey="True"
                 />
+							<Border 
+								BorderThickness="{TemplateBinding BorderThickness}" 
+								BorderBrush="{TemplateBinding BorderBrush}">
+								
+							</Border>
 						</Panel>
-					</Border>
 				</ControlTemplate>
 			</Setter>
 
 			<Style Selector="^:pointerover">
-				<Setter Property="BorderBrush" Value="{StaticResource DarkPlatinum}"/>
 				<Setter Property="BorderThickness" Value="0,0,0,4"/>
-				<Setter Property="Background" Value="{StaticResource LightPlatinum}"/>
+				<Setter Property="Background" Value="{StaticResource DarkPlatinum}"/>
 			</Style>
 
 			<Style Selector="^:selected">
-				<Setter Property="BorderBrush" Value="#549dc4"/>
+				<Setter Property="BorderBrush" Value="{StaticResource ExcelGreen}"/>
 				<Setter Property="BorderThickness" Value="0,0,0,4"/>
 			</Style>
 		</ControlTheme>
@@ -87,11 +90,11 @@
 		</Style>
 
 		<Style Selector="Button:pointerover /template/ ContentPresenter">
-			<Setter Property="Background" Value="{StaticResource DarkPlatinum}"/>
+			<Setter Property="Background" Value="{StaticResource Platinum}"/>
 		</Style>
 
 		<Style Selector="DataGridColumnHeader">
-			<Setter Property="Background" Value="{StaticResource Platinum}"/>
+			<Setter Property="Background" Value="{StaticResource SecondWhite}"/>
 			<Setter Property="Foreground" Value="{StaticResource EerieBlack}"/>
 			<Setter Property="FontSize" Value="14"/>
 			<Setter Property="FontFamily" Value="{StaticResource RobotoLight}"/>
@@ -99,10 +102,6 @@
 		<Style Selector="TabItem">
 			<Setter Property="FontFamily" Value="{StaticResource RobotoMedium}"/>
 			<Setter Property="FontSize" Value="13"/>
-		</Style>
-
-		<Style Selector="TabItem:pointerover">
-			<Setter Property="FontSize" Value="14"/>
 		</Style>
 		
 		<Style Selector="ComboBox">
@@ -115,477 +114,436 @@
 
 		<Style Selector="TextBlock">
 			<Setter Property="FontFamily" Value="{StaticResource RobotoLight}"/>
+			<Setter Property="Foreground" Value="{StaticResource MainFontColor}"/>
 		</Style>
 
 		<StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
 	</Window.Styles>
 
+
 	<DockPanel Name="Root">
-		<TabControl Padding="0" DockPanel.Dock="Top" Background="{StaticResource Platinum}">
-			<TabItem Header="Home" Margin="50,0,0,0" PointerPressed="Window_PointerPressed">
-				<TabItem.Styles>
-				</TabItem.Styles>
-				<TabItem.Transitions>
-					<Transitions>
-						<DoubleTransition Property="FontSize" Duration="0:0:0.05" />
-					</Transitions>
-				</TabItem.Transitions>
-				<Grid Height="135" Background="{StaticResource GhostWhite}" PointerPressed="Window_PointerPressed">
-					<Grid.Effect>
-						<DropShadowEffect Color="Black" BlurRadius="13"/>
-					</Grid.Effect>
-					<Grid.RowDefinitions>
-						<RowDefinition Height="3*"/>
-						<RowDefinition Height="1*"/>
-					</Grid.RowDefinitions>
+		<DockPanel Background="{StaticResource ExcelWindowColor}" Height="40" DockPanel.Dock="Top" PointerPressed="Window_PointerPressed">
+			<TextBlock Text="EXCEL File Reader" VerticalAlignment="Center" Margin="10,0,0,0" Foreground="White"/>
+			<Grid VerticalAlignment="Center" HorizontalAlignment="Right">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+				</Grid.ColumnDefinitions>
 
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="Auto"/>
-						<ColumnDefinition Width="Auto"/>
-						<ColumnDefinition Width="Auto"/>
-						<ColumnDefinition Width="Auto"/>
-						<ColumnDefinition Width="Auto"/>
-						<ColumnDefinition Width="*"/>
-					</Grid.ColumnDefinitions>
+				<Button Grid.Column="0" Content="-" Width="40" Height="40" Background="Transparent" Foreground="White" Command="{Binding MinimizeWindowButton_Click}">
+					<Image Source="/Assets/Minimize.png" VerticalAlignment="Center" Width="15"/>
+				</Button>
 
-					<Grid Grid.Column="0" Grid.Row="0" VerticalAlignment="Center">
-						<Grid>
+				<Button Grid.Column="1" Content="□" Width="40" Height="40" Background="Transparent" Foreground="White" Command="{Binding FullScreenButton_Click}">
+					<Image Source="/Assets/FullScreen.png" VerticalAlignment="Center" Width="13"/>
+				</Button>
+
+				<Button Grid.Column="2" Content="X" Width="40" Height="40" Background="Transparent" Foreground="White" Command="{Binding CloseWindowButton_Click}">
+					<Image Source="/Assets/Close.png" VerticalAlignment="Center" Width="15"/>
+				</Button>
+			</Grid>
+
+		</DockPanel>
+		
+		<TabControl Padding="0" DockPanel.Dock="Top" Background="{StaticResource SecondWhite}">
+			<TabItem Header="Home" Margin="50,0,0,-2" PointerPressed="Window_PointerPressed">
+				<StackPanel Height="120" Background="White" PointerPressed="Window_PointerPressed" Orientation="Horizontal">
+					<StackPanel.Effect>
+						<DropShadowEffect Color="Black" BlurRadius="10"/>
+					</StackPanel.Effect>
+					<StackPanel>
+						<Grid Margin="5,5,5,0">
 							<Grid.ColumnDefinitions>
-								<ColumnDefinition Width="*"/>
-								<ColumnDefinition Width="*"/>
+								<ColumnDefinition Width="Auto"/>
+								<ColumnDefinition Width="Auto"/>
 							</Grid.ColumnDefinitions>
-							<Grid.RowDefinitions>
-								<RowDefinition Height="Auto"/>
-								<RowDefinition Height="Auto"/>
-							</Grid.RowDefinitions>
 
-							<StackPanel Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,10,5,0">
+							<StackPanel Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">
 								<Button
+									FontSize="13"
 									Width="70"
 									IsEnabled="{Binding CanUploadFile}"
 									Command="{Binding OpenFileButton_Click}"
 									HorizontalAlignment="Center"
 									VerticalAlignment="Center">
 									<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-										<Image Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Select'}" Width="45"/>
-										<TextBlock TextWrapping="Wrap" MaxWidth="50" Text="Open File" FontSize="14" HorizontalAlignment="Center" Margin="0,5,0,0" TextAlignment="Center"/>
+										<Image Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Select'}" Width="37"/>
+										<TextBlock TextWrapping="Wrap" MaxWidth="50" Text="Open File" HorizontalAlignment="Center" Margin="0,5,0,0" TextAlignment="Center"/>
 									</StackPanel>
 								</Button>
 							</StackPanel>
 
-
-
-							<StackPanel Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" Margin="5,10,0,0">
+							<StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
 								<Button
+									FontSize="13"
 									Width="70"
 									IsEnabled="{Binding CanSaveData}"
 									Command="{Binding SaveFileButton_Click}"
 									HorizontalAlignment="Center">
 									<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-										<Image Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Save'}" Width="45"/>
-										<TextBlock TextWrapping="Wrap" MaxWidth="50" Text="Save File" FontSize="14" HorizontalAlignment="Center" Margin="0,5,0,0" TextAlignment="Center"/>
+										<Image Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Save'}" Width="37"/>
+										<TextBlock TextWrapping="Wrap" MaxWidth="50" Text="Save File" HorizontalAlignment="Center" Margin="0,5,0,0" TextAlignment="Center"/>
 									</StackPanel>
 								</Button>
 							</StackPanel>
 						</Grid>
-					</Grid>
+						<TextBlock FontSize="13" VerticalAlignment="Bottom" Foreground="#696969" Text="File action" HorizontalAlignment="Center" Margin="0,10,0,0"/>
+					</StackPanel>
 
+					<Border VerticalAlignment="Stretch" Margin="0,4,0,4" Width="1" Background="#b5b5b5"/>
 
-					<TextBlock Grid.Row="1" Foreground="#696969" Text="File action" FontSize="13" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,0,0"/>
+					<StackPanel>
+						<Grid Margin="5,5,5,0">
+							<Grid.RowDefinitions>
+								<RowDefinition Height="Auto"/>
+								<RowDefinition Height="Auto"/>
+							</Grid.RowDefinitions>
 
-					<Border Grid.Column="1" Height="85" Width="1" Background="#b5b5b5" Margin="20,20,20,0"/>
-
-					<Grid
-								Grid.Column="2"
-								HorizontalAlignment="Center"
-								VerticalAlignment="Center">
-
-						<Grid.RowDefinitions>
-							<RowDefinition Height="Auto"/>
-							<RowDefinition Height="Auto"/>
-						</Grid.RowDefinitions>
-
-						<StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,10,0,5">
-							<Button
-								Command="{Binding ZoomButton_Click}"
-								CommandParameter="0">
-								<StackPanel Orientation="Horizontal">
-									<Image Source="/Assets/ZoomIn.png" VerticalAlignment="Center" Width="25"/>
-									<TextBlock Text="Zoom in" FontSize="12" VerticalAlignment="Center" Margin="5,0,0,0"/>
+							<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5,0">
+								<StackPanel Orientation="Horizontal" Margin="0,10,0,5">
+									<Button Command="{Binding ZoomButton_Click}" CommandParameter="0">
+										<StackPanel Orientation="Horizontal">
+											<Image Source="/Assets/ZoomIn.png" VerticalAlignment="Center" Width="25"/>
+											<TextBlock FontSize="13" Text="Zoom in" VerticalAlignment="Center" Margin="5,0,0,0"/>
+										</StackPanel>
+									</Button>
 								</StackPanel>
-							</Button>
-						</StackPanel>
 
-						<StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,3,0,3">
-							<Button
-								Command="{Binding ZoomButton_Click}"
-								CommandParameter="1">
-								<StackPanel Orientation="Horizontal">
-									<Image Source="/Assets/ZoomOut.png" VerticalAlignment="Center" Width="25"/>
-									<TextBlock Text="Zoom out" FontSize="12" VerticalAlignment="Center" Margin="5,0,0,0"/>
+								<StackPanel Orientation="Horizontal" Margin="0,3,0,0">
+									<Button Command="{Binding ZoomButton_Click}" CommandParameter="1">
+										<StackPanel Orientation="Horizontal">
+											<Image Source="/Assets/ZoomOut.png" VerticalAlignment="Center" Width="25"/>
+											<TextBlock FontSize="13" Text="Zoom out" VerticalAlignment="Center" Margin="5,0,0,0"/>
+										</StackPanel>
+									</Button>
 								</StackPanel>
-							</Button>
-						</StackPanel>
-					</Grid>
-					<TextBlock Grid.Column="2" Grid.Row="1" VerticalAlignment="Bottom" Foreground="#696969" Text="Zoom" FontSize="13" HorizontalAlignment="Center" Margin="0,0,0,5"/>
-
-					<Border Grid.Column="3" Height="85" Width="1" Background="#b5b5b5" Margin="20,20,20,0"/>
-
-					<Grid
-							Grid.Column="4"
-							HorizontalAlignment="Center"
-							VerticalAlignment="Center">
-
-						<Grid.RowDefinitions>
-							<RowDefinition Height="Auto"/>
-							<RowDefinition Height="Auto"/>
-						</Grid.RowDefinitions>
-
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="250"/>
-							<ColumnDefinition Width="100"/>
-						</Grid.ColumnDefinitions>
-
-						<TextBox
-							Grid.Column="0"
-							Grid.Row="1"
-							Text="{Binding SearchField}"
-							VerticalContentAlignment="Center"
-							Watermark="Search"
-							Background="{StaticResource GhostWhite}"
-							Foreground="{StaticResource EerieBlack}"
-							BorderBrush="{StaticResource DarkPlatinum}"
-							CornerRadius="0"
-							BorderThickness="1">
-							<TextBox.Styles>
-								<Style Selector="TextBox:focus">
-									<Setter Property="Foreground" Value="{StaticResource EerieBlack}"/>
-									<Setter Property="CaretBrush" Value="{StaticResource EerieBlack}"/>
-									<Style Selector="^ /template/ Border#PART_BorderElement">
-										<Setter Property="Background" Value="{StaticResource GhostWhite}"/>
-										<Setter Property="BorderBrush" Value="{StaticResource EerieBlack}"/>
-										<Setter Property="BorderThickness" Value="1"/>
-									</Style>
-								</Style>
-							</TextBox.Styles>
-						</TextBox>
-
-						<Button
-								Margin="15,0,0,0"
-								Grid.Column="1"
-								Grid.Row="1"
-								Width="35"
-								Height="35"
-								Command="{Binding SearchDataCommand}"
-								CommandParameter="{Binding SearchField}">
-							<StackPanel Orientation="Horizontal">
-								<Image Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Search'}" Height="20"/>
 							</StackPanel>
-						</Button>
-					</Grid>
-				</Grid>
-			</TabItem>
-			
-			<TabItem Header="DB Actions">
-				<TabItem.Styles>
-				</TabItem.Styles>
-				<TabItem.Transitions>
-					<Transitions>
-						<DoubleTransition Property="FontSize" Duration="0:0:0.05" />
-					</Transitions>
-				</TabItem.Transitions>
-				<Grid Height="135" Background="{StaticResource GhostWhite}">
-					<Grid.Effect>
-						<DropShadowEffect Color="Black" BlurRadius="10"/>
-					</Grid.Effect>
-					<Grid.RowDefinitions>
-						<RowDefinition Height="3*"/>
-						<RowDefinition Height="1.5*"/>
-					</Grid.RowDefinitions>
+						</Grid>
+						<TextBlock FontSize="13" VerticalAlignment="Bottom" Foreground="#696969" Text="Zoom" HorizontalAlignment="Center" Margin="0,3,0,0"/>
+					</StackPanel>
 
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="Auto"/>
-						<ColumnDefinition Width="Auto"/>
-						<ColumnDefinition Width="*"/>
-					</Grid.ColumnDefinitions>
+					<Border VerticalAlignment="Stretch" Margin="0,4,0,4" Width="1" Background="#b5b5b5"/>
 
-					<Grid Grid.Column="0" Grid.Row="0" VerticalAlignment="Center">
+					<Grid>
 						<Grid.RowDefinitions>
-							<RowDefinition Height="Auto"/>
+							<RowDefinition Height="*"/>
 							<RowDefinition Height="Auto"/>
 						</Grid.RowDefinitions>
 
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="Auto"/>
-							<ColumnDefinition Width="Auto"/>
-							<ColumnDefinition Width="Auto"/>
-							<ColumnDefinition Width="Auto"/>
-						</Grid.ColumnDefinitions>
+						<Grid Margin="5,5,5,0" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="Auto"/>
+								<ColumnDefinition Width="Auto"/>
+							</Grid.ColumnDefinitions>
 
-						<StackPanel Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,10,10,0">
-							<Button
-								Width="70"
-								IsEnabled="{Binding CanUploadFile}"
-								Command="{Binding GetAllDataFromDBButton_Click}"
-								HorizontalAlignment="Center">
-								<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-									<Image Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Get'}" Width="45"/>
-									<TextBlock TextAlignment="Center" TextWrapping="Wrap" MaxWidth="50" Text="Get Data" FontSize="14" HorizontalAlignment="Center" Margin="0,5,0,0"/>
-								</StackPanel>
-							</Button>
-						</StackPanel>
+							<StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5,0">
+								<TextBox
+									Width="200"
+									Text="{Binding SearchField}"
+									VerticalContentAlignment="Center"
+									Watermark="Search"
+									Background="White"
+									Foreground="{StaticResource EerieBlack}"
+									BorderBrush="{StaticResource DarkPlatinum}"
+									CornerRadius="0"
+									BorderThickness="1">
+									<TextBox.Styles>
+										<Style Selector="TextBox:focus">
+											<Setter Property="Foreground" Value="{StaticResource EerieBlack}"/>
+											<Setter Property="CaretBrush" Value="{StaticResource EerieBlack}"/>
+											<Style Selector="^ /template/ Border#PART_BorderElement">
+												<Setter Property="Background" Value="White"/>
+												<Setter Property="BorderBrush" Value="{StaticResource EerieBlack}"/>
+												<Setter Property="BorderThickness" Value="1"/>
+											</Style>
+										</Style>
+									</TextBox.Styles>
+								</TextBox>
 
-
-						<StackPanel Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,10,10,0">
-							<Button
-								Width="70"
-								IsEnabled="{Binding CanModifyDataBase}"
-								Command="{Binding UpdateDataButton_Click}"
-								HorizontalAlignment="Center">
-								<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-									<Image Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Modify'}" Width="45"/>
-									<TextBlock TextAlignment="Center" TextWrapping="Wrap" MaxWidth="50" Text="Update Data" FontSize="14" HorizontalAlignment="Center" Margin="0,5,0,0"/>
-								</StackPanel>
-							</Button>
-						</StackPanel>
-						
-
-						<StackPanel Grid.Column="2" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,10,10,0">
-							<Button
-								Width="70"
-								IsEnabled="{Binding CanSaveData}"
-								Command="{Binding SaveDataButton_Click}"
-								HorizontalAlignment="Center">
-								<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-									<Image Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Upload'}" Width="45"/>
-									<TextBlock TextAlignment="Center" TextWrapping="Wrap" MaxWidth="50" Text="Save Data" FontSize="14" HorizontalAlignment="Center" Margin="0,5,0,0"/>
-								</StackPanel>
-							</Button>
-						</StackPanel>
-
-
-						<StackPanel Grid.Column="3" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,10,0,0">
-							<Button 
-								Width="70"
-								IsEnabled="{Binding CanModifyDataBase}"
-								Command="{Binding DeleteDataButton_Click}"
-								HorizontalAlignment="Center">
-								<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-									<Image Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Delete'}" Width="45"/>
-									<TextBlock TextAlignment="Center" TextWrapping="Wrap" MaxWidth="50" Text="Delete Data" FontSize="14" HorizontalAlignment="Center" Margin="0,5,0,0"/>
-								</StackPanel>
-							</Button>
-						</StackPanel>
+								<Button
+									Grid.Column="1"
+									Margin="15,0,0,0"
+									Width="35"
+									Height="35"
+									Command="{Binding SearchDataCommand}"
+									CommandParameter="{Binding SearchField}">
+									<StackPanel Orientation="Horizontal">
+										<Image Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Search'}" Height="20"/>
+									</StackPanel>
+								</Button>
+							</StackPanel>
+						</Grid>
+						<TextBlock FontSize="13" Grid.Row="1" VerticalAlignment="Bottom" Foreground="#696969" Text="Search" HorizontalAlignment="Center" Margin="0,0,0,3"/>
 					</Grid>
+					<Border VerticalAlignment="Stretch" Margin="0,4,0,4" Width="1" Background="#b5b5b5"/>
 
-					<TextBlock Grid.Row="1" Grid.Column="0" Foreground="#696969"  Text="DB actions" FontSize="13" Margin="0,10,0,0" HorizontalAlignment="Center"/>
-	
-					<Border Grid.Column="1" Height="85" Width="0" Background="#b5b5b5" Margin="20,20,20,0"/>
-				</Grid>
+				</StackPanel>
+
+			</TabItem>
+
+			<TabItem Header="DB Actions" Margin="0,0,0,-2">
+				<StackPanel Height="120" Background="White" PointerPressed="Window_PointerPressed" Orientation="Horizontal">
+					<StackPanel.Effect>
+						<DropShadowEffect Color="Black" BlurRadius="10"/>
+					</StackPanel.Effect>
+
+					<StackPanel>
+						<Grid Margin="5,5,5,0">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="Auto"/>
+								<ColumnDefinition Width="Auto"/>
+								<ColumnDefinition Width="Auto"/>
+								<ColumnDefinition Width="Auto"/>
+							</Grid.ColumnDefinitions>
+
+							<StackPanel Grid.Column="0" HorizontalAlignment="Center">
+								<Button Width="70" IsEnabled="{Binding CanUploadFile}" Command="{Binding GetAllDataFromDBButton_Click}">
+									<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+										<Image Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Get'}" Width="40"/>
+										<TextBlock FontSize="13" Text="Get Data" HorizontalAlignment="Center" Margin="0,5,0,0" TextAlignment="Center" TextWrapping="Wrap" MaxWidth="50"/>
+									</StackPanel>
+								</Button>
+							</StackPanel>
+
+							<StackPanel Grid.Column="1" HorizontalAlignment="Center">
+								<Button Width="70" IsEnabled="{Binding CanModifyDataBase}" Command="{Binding UpdateDataButton_Click}">
+									<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+										<Image Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Modify'}" Width="40"/>
+										<TextBlock FontSize="13" Text="Update Data" HorizontalAlignment="Center" Margin="0,5,0,0" TextAlignment="Center" TextWrapping="Wrap" MaxWidth="50"/>
+									</StackPanel>
+								</Button>
+							</StackPanel>
+
+							<StackPanel Grid.Column="2" HorizontalAlignment="Center">
+								<Button Width="70" IsEnabled="{Binding CanSaveData}" Command="{Binding SaveDataButton_Click}">
+									<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+										<Image Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Upload'}" Width="40"/>
+										<TextBlock FontSize="13" Text="Save Data" HorizontalAlignment="Center" Margin="0,5,0,0" TextAlignment="Center" TextWrapping="Wrap" MaxWidth="50"/>
+									</StackPanel>
+								</Button>
+							</StackPanel>
+
+							<StackPanel Grid.Column="3" HorizontalAlignment="Center">
+								<Button Width="70" IsEnabled="{Binding CanModifyDataBase}" Command="{Binding DeleteDataButton_Click}">
+									<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+										<Image Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='Delete'}" Width="40"/>
+										<TextBlock FontSize="13" Text="Delete Data" HorizontalAlignment="Center" Margin="0,5,0,0" TextAlignment="Center" TextWrapping="Wrap" MaxWidth="50"/>
+									</StackPanel>
+								</Button>
+							</StackPanel>
+
+						</Grid>
+
+						<TextBlock FontSize="13" VerticalAlignment="Bottom" Foreground="#696969" Text="CRUD actions" HorizontalAlignment="Center" Margin="0,7,0,0"/>
+					</StackPanel>
+					<Border VerticalAlignment="Stretch" Margin="0,4,0,4" Width="1" Background="#b5b5b5"/>
+				</StackPanel>
+
 			</TabItem>
 		</TabControl>
 
 		<Grid DockPanel.Dock="Bottom" Background="#ededed">
 
-				<Grid.RowDefinitions>
-					<RowDefinition Height="*"/>
-					<RowDefinition Height="Auto"/>
-				</Grid.RowDefinitions>
-			
-				<DataGrid
-					Name="PersonsGrid"
-					ItemsSource="{Binding People}"
-					IsReadOnly="False"
-					CanUserSortColumns="True"
-					GridLinesVisibility="All"
-					CanUserResizeColumns="True"
-					BorderBrush="{StaticResource DarkPlatinum}"
-					BorderThickness="1"
-					Background="{StaticResource GhostWhite}"
-					LoadingRow="RowsDataGrid_LoadingRow"
-					RowEditEnded="RowDataGrid_EditingRow"
-					VerticalAlignment="Stretch"
-					HorizontalAlignment="Stretch"
-					SelectionChanged="OnSelectionChanged">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="*"/>
+				<RowDefinition Height="Auto"/>
+			</Grid.RowDefinitions>
 
-					<DataGrid.Styles>
-						<Style Selector="DataGridColumnHeader">
-							<Setter Property="FontSize" Value="{Binding #Root.((vm:MainWindowViewModel)DataContext).FontSize}" />
-						</Style>
-					</DataGrid.Styles>
+			<DataGrid
+				Name="PersonsGrid"
+				ItemsSource="{Binding People}"
+				IsReadOnly="False"
+				CanUserSortColumns="True"
+				GridLinesVisibility="All"
+				CanUserResizeColumns="True"
+				BorderBrush="{StaticResource DarkPlatinum}"
+				BorderThickness="1"
+				Background="White"
+				LoadingRow="RowsDataGrid_LoadingRow"
+				RowEditEnded="RowDataGrid_EditingRow"
+				VerticalAlignment="Stretch"
+				HorizontalAlignment="Stretch"
+				SelectionChanged="OnSelectionChanged">
 
-					<DataGrid.Columns>
-						<DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True" FontSize="{Binding FontSize}" />
-						<DataGridTextColumn Header="First Name" Binding="{Binding FirstName}" FontSize="{Binding FontSize}"/>
-						<DataGridTextColumn Header="Last Name" Binding="{Binding LastName}" FontSize="{Binding FontSize}"/>
-						<DataGridTemplateColumn Header="Gender">
-							<DataGridTemplateColumn.CellTemplate>
-								<DataTemplate>
-									<ComboBox SelectedItem="{Binding Gender}"
-											  ItemsSource="{Binding #Root.((vm:MainWindowViewModel)DataContext).GenderOptions}"
-											  BorderThickness="0"
-											  FontSize="{Binding #Root.((vm:MainWindowViewModel)DataContext).FontSize}"
-											  HorizontalAlignment="Center"
-											  Background="Transparent"
-											  CornerRadius="0"
-											  Loaded="GenderComboBox_Loaded"
-											  Width="120">
-									</ComboBox>
-								</DataTemplate>
-							</DataGridTemplateColumn.CellTemplate>
-						</DataGridTemplateColumn>
+				<DataGrid.Styles>
+					<Style Selector="DataGridColumnHeader">
+						<Setter Property="FontSize" Value="{Binding #Root.((vm:MainWindowViewModel)DataContext).FontSize}" />
+					</Style>
+				</DataGrid.Styles>
 
-						<DataGridTextColumn Header="Country" Binding="{Binding Country}" FontSize="{Binding FontSize}"/>
-						<DataGridTextColumn Header="Age" Binding="{Binding Age}" FontSize="{Binding FontSize}"/>
-						<DataGridTemplateColumn Header="Birthday">
-							<DataGridTemplateColumn.CellTemplate>
-								<DataTemplate>
-									<DatePicker SelectedDate="{Binding Birthday, Converter={StaticResource DateOnlyConverter}}"
-												BorderThickness="0"
-												HorizontalAlignment="Center"
-												Background="Transparent"
-												CornerRadius="0"
-												FontSize="{Binding #Root.((vm:MainWindowViewModel)DataContext).FontSize}}"
-												Loaded="DatePicker_Loaded">
-									</DatePicker>
-									
-								</DataTemplate>
-							</DataGridTemplateColumn.CellTemplate>
-						</DataGridTemplateColumn>
+				<DataGrid.Columns>
+					<DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True" FontSize="{Binding FontSize}" />
+					<DataGridTextColumn Header="First Name" Binding="{Binding FirstName}" FontSize="{Binding FontSize}"/>
+					<DataGridTextColumn Header="Last Name" Binding="{Binding LastName}" FontSize="{Binding FontSize}"/>
+					<DataGridTemplateColumn Header="Gender">
+						<DataGridTemplateColumn.CellTemplate>
+							<DataTemplate>
+								<ComboBox SelectedItem="{Binding Gender}"
+										  ItemsSource="{Binding #Root.((vm:MainWindowViewModel)DataContext).GenderOptions}"
+										  BorderThickness="0"
+										  FontSize="{Binding #Root.((vm:MainWindowViewModel)DataContext).FontSize}"
+										  HorizontalAlignment="Center"
+										  Background="Transparent"
+										  CornerRadius="0"
+										  Loaded="GenderComboBox_Loaded"
+										  Width="120">
+								</ComboBox>
+							</DataTemplate>
+						</DataGridTemplateColumn.CellTemplate>
+					</DataGridTemplateColumn>
 
-					</DataGrid.Columns>
-				</DataGrid>
+					<DataGridTextColumn Header="Country" Binding="{Binding Country}" FontSize="{Binding FontSize}"/>
+					<DataGridTextColumn Header="Age" Binding="{Binding Age}" FontSize="{Binding FontSize}"/>
+					<DataGridTemplateColumn Header="Birthday">
+						<DataGridTemplateColumn.CellTemplate>
+							<DataTemplate>
+								<DatePicker SelectedDate="{Binding Birthday, Converter={StaticResource DateOnlyConverter}}"
+											BorderThickness="0"
+											HorizontalAlignment="Center"
+											Background="Transparent"
+											CornerRadius="0"
+											FontSize="{Binding #Root.((vm:MainWindowViewModel)DataContext).FontSize}}"
+											Loaded="DatePicker_Loaded">
+								</DatePicker>
+
+							</DataTemplate>
+						</DataGridTemplateColumn.CellTemplate>
+					</DataGridTemplateColumn>
+
+				</DataGrid.Columns>
+			</DataGrid>
 
 
 
 			<Border Grid.Row="1" Height="45" Margin="5,5,0,5" HorizontalAlignment="Center">
 
-					<StackPanel Orientation="Horizontal">
-						<Button Command="{Binding FirstPageCommand}"
-								Margin="10,0,0,0">
-							<Image Source="/Assets/LeftDoubleArrow.png" VerticalAlignment="Center" Width="20"/>
-						</Button>
-						<Button Margin="12,0,0,0"
-									  Command="{Binding PreviousPageCommand}">
-							<Image Source="/Assets/LeftArrow.png" VerticalAlignment="Center" Width="20"/>
-						</Button>
-						<TextBlock Margin="8,0" VerticalAlignment="Center">
-							<TextBlock.Text>
-								<MultiBinding StringFormat="Page {0} of {1}">
-									<Binding Path="CurrentPage" />
-									<Binding Path="TotalPages" />
-								</MultiBinding>
-							</TextBlock.Text>
-						</TextBlock>
-							<Button
-								Command="{Binding NextPageCommand}">
-								<Image Source="/Assets/RightArrow.png" VerticalAlignment="Center" Width="20"/>
-							</Button>
-						<Button Margin="12,0,10,0"
-								Command="{Binding LastPageCommand}">
-							<Image Source="/Assets/RightDoubleArrow.png" VerticalAlignment="Center" Width="20"/>
-						</Button>
-					
+				<StackPanel Orientation="Horizontal">
+					<Button Command="{Binding FirstPageCommand}"
+							Margin="10,0,0,0">
+						<Image Source="/Assets/LeftDoubleArrow.png" VerticalAlignment="Center" Width="20"/>
+					</Button>
+					<Button Margin="12,0,0,0"
+								  Command="{Binding PreviousPageCommand}">
+						<Image Source="/Assets/LeftArrow.png" VerticalAlignment="Center" Width="20"/>
+					</Button>
+					<TextBlock Margin="8,0" VerticalAlignment="Center">
+						<TextBlock.Text>
+							<MultiBinding StringFormat="Page {0} of {1}">
+								<Binding Path="CurrentPage" />
+								<Binding Path="TotalPages" />
+							</MultiBinding>
+						</TextBlock.Text>
+					</TextBlock>
+					<Button
+						Command="{Binding NextPageCommand}">
+						<Image Source="/Assets/RightArrow.png" VerticalAlignment="Center" Width="20"/>
+					</Button>
+					<Button Margin="12,0,10,0"
+							Command="{Binding LastPageCommand}">
+						<Image Source="/Assets/RightDoubleArrow.png" VerticalAlignment="Center" Width="20"/>
+					</Button>
+
 				</StackPanel>
-				</Border>
-			
+			</Border>
+
 			<Grid Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="Auto"/>
 					<ColumnDefinition Width="Auto"/>
 				</Grid.ColumnDefinitions>
-				<ComboBox 
+				<ComboBox
 					Grid.Column="1"
-					SelectedItem="{Binding PageSize}" 
-					ItemsSource="{Binding PageSizes}" 
+					SelectedItem="{Binding PageSize}"
+					ItemsSource="{Binding PageSizes}"
 					Margin="10,0,0,0"
 					Width="70"
+					FontSize="13"
 					BorderThickness="1"
 					BorderBrush="{StaticResource DarkPlatinum}">
-				
+
 				</ComboBox>
-				<TextBlock Grid.Column="0" VerticalAlignment="Center" Margin="10,0,0,0">
+				<TextBlock Grid.Column="0" FontSize="13" VerticalAlignment="Center" Margin="10,0,0,0">
 					Page Size
 				</TextBlock>
 			</Grid>
 
 			<Grid Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center">
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="Auto"/>
-						<ColumnDefinition Width="Auto"/>
-						<ColumnDefinition Width="Auto"/>
-						<ColumnDefinition Width="Auto"/>
-					</Grid.ColumnDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+				</Grid.ColumnDefinitions>
 
-					<Border
-						Height="30"
-						Grid.Column="0"
-						Margin="0,5,25,5"
-						Background="Snow"
-						BorderThickness="1"
-						BorderBrush="#6e6e6e">
-						<TextBlock Margin="5"
-								   Text="{Binding ProgramStatus}"
-								   FontSize="16"
-								   VerticalAlignment="Center"/>
-					</Border>
+				<Border
+					Height="30"
+					Grid.Column="0"
+					Margin="0,5,25,5"
+					Background="Snow"
+					BorderThickness="1"
+					BorderBrush="#6e6e6e">
+					<TextBlock Margin="5"
+							   Text="{Binding ProgramStatus}"
+							   FontSize="16"
+							   VerticalAlignment="Center"/>
+				</Border>
 
-					<Border
-						Grid.Column="3"
-						Margin="0,5,15,5">
-						<Grid>
-							<Grid.RowDefinitions>
-								<RowDefinition Height="Auto"/>
-								<RowDefinition Height="Auto"/>
-								<RowDefinition Height="Auto"/>
-							</Grid.RowDefinitions>
-							<Grid.ColumnDefinitions>
-								<ColumnDefinition Width="Auto"/>
-								<ColumnDefinition Width="Auto"/>
-							</Grid.ColumnDefinitions>
-							<TextBlock Grid.Row="0"
-									   Grid.Column="0"
-									   HorizontalAlignment="Left"
-										Text="{Binding TotalItems}"
-										FontSize="14"
-										VerticalAlignment="Center"/>
-							<TextBlock HorizontalAlignment="Left"
-									   Grid.Row="1"
-									   Grid.Column="0"
-										Text="{Binding ValidItems}"
-										FontSize="14"
-										VerticalAlignment="Center"/>
-							<TextBlock Grid.Row="2"
-									   Grid.Column="0"
-									   Margin="0,0,0,0"
-									   HorizontalAlignment="Left"
-										Text="{Binding InValidItems}"
-										FontSize="14"
-										VerticalAlignment="Center"/>
-							<TextBlock Grid.Row="0"
-									   Grid.Column="1"
-									   HorizontalAlignment="Right"
-										Text="total items"
-										FontSize="14"
-										VerticalAlignment="Center"/>
-							<TextBlock HorizontalAlignment="Right"
-									   Grid.Row="1"
-									   Grid.Column="1"
-										Text="valid items"
-										FontSize="14"
-										VerticalAlignment="Center"/>
-							<TextBlock Grid.Row="2"
-									   Grid.Column="1"
-									   Margin="5,0,0,0"
-									   HorizontalAlignment="Right"
-										Text="invalid items"
-										FontSize="14"
-										VerticalAlignment="Center"/>
-						</Grid>
-					</Border>
-				</Grid>
+				<Border
+					Grid.Column="3"
+					Margin="0,5,15,5">
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition Height="Auto"/>
+						</Grid.RowDefinitions>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto"/>
+							<ColumnDefinition Width="Auto"/>
+						</Grid.ColumnDefinitions>
+						<TextBlock Grid.Row="0"
+								   Grid.Column="0"
+								   FontSize="13"
+								   HorizontalAlignment="Left"
+									Text="{Binding TotalItems}"
+									VerticalAlignment="Center"/>
+						<TextBlock HorizontalAlignment="Left"
+								   Grid.Row="1"
+								   Grid.Column="0"
+								   FontSize="13"
+									Text="{Binding ValidItems}"
+									VerticalAlignment="Center"/>
+						<TextBlock Grid.Row="2"
+								   Grid.Column="0"
+								   Margin="0,0,0,0"
+								   FontSize="13"
+								   HorizontalAlignment="Left"
+									Text="{Binding InValidItems}"
+									VerticalAlignment="Center"/>
+						<TextBlock Grid.Row="0"
+								   Grid.Column="1"
+								   HorizontalAlignment="Right"
+								   FontSize="13"
+									Text="total items"
+									VerticalAlignment="Center"/>
+						<TextBlock HorizontalAlignment="Right"
+								   Grid.Row="1"
+								   Grid.Column="1"
+								   FontSize="13"
+									Text="valid items"
+									VerticalAlignment="Center"/>
+						<TextBlock Grid.Row="2"
+								   Grid.Column="1"
+								   Margin="5,0,0,0"
+								   FontSize="13"
+								   HorizontalAlignment="Right"
+									Text="invalid items"
+									VerticalAlignment="Center"/>
+					</Grid>
+				</Border>
 			</Grid>
-
+		</Grid>
 	</DockPanel>
 
 </Window>
