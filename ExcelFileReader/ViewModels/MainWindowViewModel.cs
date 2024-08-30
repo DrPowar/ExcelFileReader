@@ -45,13 +45,13 @@ namespace ExcelFileReader.ViewModels
         private int _inValidItems;
         private int _totalPages;
         private int _fontSize = 18;
+        private string _selectedItemType;
 
         private string _searchField = string.Empty;
         private string _programStatus = ProgramStatusMessages.UploadingAllowed;
 
         internal ObservableCollection<Gender> GenderOptions { get; } = new ObservableCollection<Gender> { Gender.Male, Gender.Female };
         internal ObservableCollection<int> PageSizes { get; } = new ObservableCollection<int> { 5, 10, 25, 50, 100 };
-
         internal int TotalItems
         {
             get => _totalItems;
@@ -66,6 +66,16 @@ namespace ExcelFileReader.ViewModels
                 this.RaiseAndSetIfChanged(ref _pageSize, value);
                 UpdatePagesFields();
                 _pager.OnNext(new PageRequest(CurrentPage, PageSize));
+            }
+        }
+
+        internal string SelectedItemType
+        {
+            get => _selectedItemType;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _selectedItemType, value);
+                Console.Write(value);
             }
         }
 
@@ -263,6 +273,30 @@ namespace ExcelFileReader.ViewModels
             {
                 CanUploadFile = true;
                 ProgramStatus = ProgramStatusMessages.UploadingAllowed;
+            }
+        }
+
+        internal void ItemTypeCombobox_SelectionChanged(string query)
+        {
+            const string valid = "valid";
+            const string inValid = "invalid";
+            const string total = "total";
+            if (query == total)
+            {
+                _peopleService.RestorePeopleFromTemp();
+            }
+            else
+            {
+                _peopleService.SavePeopleToTemp();
+                _peopleService.ClearPeople();
+                if(query == valid)
+                {
+                    _peopleService.LoadData(_peopleService.GetTempPeople().Where(p => p.IsValid));
+                }
+                else
+                {
+                    _peopleService.LoadData(_peopleService.GetTempPeople().Where(p => !p.IsValid));
+                }
             }
         }
 
@@ -470,6 +504,7 @@ namespace ExcelFileReader.ViewModels
             List<Person> people = _peopleService.GetPeople();
             InValidItems = people.Where(p => !p.IsValid).Count();
             ValidItems = people.Where(p => p.IsValid).Count();
+            TotalItems = people.Count;
         }
 
 
@@ -523,7 +558,6 @@ namespace ExcelFileReader.ViewModels
 
         private void PagingUpdate(IPageResponse response)
         {
-            TotalItems = response.TotalSize;
             CurrentPage = response.Page;
             TotalPages = response.Pages;
         }

@@ -56,6 +56,27 @@ namespace ExcelFileReader.Views
             }
         }
 
+        public void ItemsTypeCombobox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+        {
+            var comboBox = sender as ComboBox;
+            var selectedItem = comboBox.SelectedItem as ComboBoxItem;
+
+            int itemCount = 0;
+
+            if (selectedItem.Content.ToString().Contains("total items"))
+            {
+                _viewModel.ItemTypeCombobox_SelectionChanged("total");
+            }
+            else if (selectedItem.Content.ToString().Contains("invalid items"))
+            {
+                _viewModel.ItemTypeCombobox_SelectionChanged("invalid");
+            }
+            else if (selectedItem.Content.ToString().Contains("valid items"))
+            {
+                _viewModel.ItemTypeCombobox_SelectionChanged("valid");
+            }
+        }
+
         internal void OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
             DataGrid? dataGrid = sender as DataGrid;
