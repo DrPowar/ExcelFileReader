@@ -29,13 +29,20 @@ namespace ExcelFileReader.ViewModels
         private readonly ISubject<PageRequest> _pager;
         private readonly Client _client;
         private readonly TopLevel _topLevel;
-        private readonly PeopleService _peopleService;
 
+
+        private readonly CacheService<Log, int> _logsCache;
+        private ObservableCollectionExtended<Log> _pagedLogs;
+
+        private readonly CacheService<Person, int> _peopleCache;
         private ObservableCollectionExtended<Person> _pagedPeople;
-        private ObservableCollection<Person> _selectedPeople;
+
+        private ObservableCollection<object> _selectedRows;
         private List<Person> _updatedPeople = new();
+        private List<Log> _logs = new();
 
         private bool _dataBaseDataActive;
+        private bool _canModifyLogs;
         private bool _canUploadFile = true;
         private bool _canSaveData;
 
@@ -44,7 +51,7 @@ namespace ExcelFileReader.ViewModels
         private int _validItems;
         private int _inValidItems;
         private int _totalPages;
-        private int _fontSize = 18;
+        private int _fontSize = 16;
         private string _selectedItemType;
 
         private string _searchField = string.Empty;
@@ -133,16 +140,22 @@ namespace ExcelFileReader.ViewModels
             set => this.RaiseAndSetIfChanged(ref _fontSize, value);
         }
 
-        internal bool CanModifyDataBase
+        internal bool CanModifyPeople
         {
             get => _dataBaseDataActive;
             set => this.RaiseAndSetIfChanged(ref _dataBaseDataActive, value);
         }
 
-        internal ObservableCollection<Person> SelectedPeople
+        internal bool CanModifyLogs
         {
-            get => _selectedPeople;
-            set => this.RaiseAndSetIfChanged(ref _selectedPeople, value);
+            get => _canModifyLogs;
+            set => this.RaiseAndSetIfChanged(ref _canModifyLogs, value);
+        }
+
+        internal ObservableCollection<object> SelectedPeople
+        {
+            get => _selectedRows;
+            set => this.RaiseAndSetIfChanged(ref _selectedRows, value);
         }
 
         internal ObservableCollectionExtended<Person> People
@@ -159,9 +172,11 @@ namespace ExcelFileReader.ViewModels
         internal DelegateCommand LastPageCommand { get; init; }
         internal DelegateCommand SaveDataCommand { get; init; }
         internal DelegateCommand<string> SearchDataCommand { get; init; }
-        internal DelegateCommand GetAllDataFromDBCommand { get; init; } 
+        internal DelegateCommand GetPeopleDataFromDBCommand { get; init; } 
         internal DelegateCommand UpdateDataCommand { get; init; }
         internal DelegateCommand DeleteDataCommand { get; init; }
+        internal DelegateCommand GetLogsDataFromDBCommand { get; init; }
+        internal DelegateCommand RemoveLogCommand { get; init; }
         internal DelegateCommand<ZoomCommands?> ZoomCommand { get; init; }
         internal DelegateCommand FullScreenCommnad { get; init; }
         internal DelegateCommand MinimizeWindowCommand { get; init; }
@@ -169,11 +184,14 @@ namespace ExcelFileReader.ViewModels
 
         internal MainWindowViewModel(TopLevel topLevel)
         {
-            _selectedPeople = new ObservableCollection<Person>();
+            _selectedRows = new ObservableCollection<object>();
             _pager = new BehaviorSubject<PageRequest>(new PageRequest(FirstPage, PageSize));
             _pagedPeople = new ObservableCollectionExtended<Person>();
-            _peopleService = new PeopleService();
-            PeopleCacheInit(_peopleService);
+            _pagedLogs = new ObservableCollectionExtended<Log>();
+            _peopleCache = new CacheService<Person, int>(e => (int)e.Number);
+            _logsCache = new CacheService<Log, int>(e => (int)e.PersonNumber);
+            LogCacheInit(_logsCache);
+            PeopleCacheInit(_peopleCache);
             _client = new Client();
 
             FirstPageCommand = new DelegateCommand(MoveToFirstPage, CanMoveToFirstPage)
@@ -193,11 +211,17 @@ namespace ExcelFileReader.ViewModels
 
             OpenGetFilePicker = new DelegateCommand(OpenFileButton_Click);
             OpenSaveFilePicker = new DelegateCommand(SaveFileButton_Click);
+
             SaveDataCommand = new DelegateCommand(SaveDataButton_Click);
             SearchDataCommand = new DelegateCommand<string>(SearchDataButton_Click);
-            GetAllDataFromDBCommand = new DelegateCommand(GetAllDataFromDBButton_Click);
+
+            GetPeopleDataFromDBCommand = new DelegateCommand(GetPeopleDataFromDBButton_Click);
             UpdateDataCommand = new DelegateCommand(UpdateDataButton_Click);
             DeleteDataCommand = new DelegateCommand(DeleteDataButton_Click);
+
+            GetLogsDataFromDBCommand = new DelegateCommand(GetLogsDataFromDBButton_Click);
+            RemoveLogCommand = new DelegateCommand(RemoveLogButton_Click);
+
             ZoomCommand = new DelegateCommand<ZoomCommands?>(ZoomButton_Click);
             FullScreenCommnad = new DelegateCommand(FullScreenButton_Click);
             MinimizeWindowCommand = new DelegateCommand(MinimizeWindowButton_Click);
@@ -253,16 +277,17 @@ namespace ExcelFileReader.ViewModels
         }
 
 
-        internal async void GetAllDataFromDBButton_Click()
+        internal async void GetPeopleDataFromDBButton_Click()
         {
             CanSaveData = false;
             CanUploadFile = false;
-            GetAllDataResponse getAllDataResponse = await _client.GetAllDataFromDB();
+            CanModifyLogs = false;
+            GetPeopleDataResponse getAllDataResponse = await _client.GetPeople();
             if(getAllDataResponse.Result)
             {
-                CanModifyDataBase = true;
-                _peopleService.ClearPeople();
-                _peopleService.LoadData(getAllDataResponse.People);
+                CanModifyPeople = true;
+                _peopleCache.ClearData();
+                _peopleCache.LoadData(getAllDataResponse.People);
 
                 UpdateItemsCountFields();
 
@@ -276,6 +301,55 @@ namespace ExcelFileReader.ViewModels
             }
         }
 
+        internal async void GetLogsDataFromDBButton_Click()
+        {
+            CanSaveData = false;
+            CanUploadFile = false;
+            CanModifyPeople = false;
+
+            GetLogsDataResponse getAllDataResponse = await _client.GetLogs();
+            if (getAllDataResponse.Result)
+            {
+                CanModifyLogs = true;
+                _logsCache.ClearData();
+                _logsCache.LoadData(getAllDataResponse.Logs);
+
+                UpdateItemsCountFields();
+
+                CanUploadFile = true;
+                ProgramStatus = ProgramStatusMessages.UploadingAllowed;
+            }
+            else
+            {
+                CanUploadFile = true;
+                ProgramStatus = ProgramStatusMessages.UploadingAllowed;
+            }
+        }
+
+        internal async void RemoveLogButton_Click()
+        {
+            ProgramStatus = ProgramStatusMessages.WaitingForServerResponse;
+            CanUploadFile = false;
+            CanModifyLogs = false;
+
+            SavingDataResponse response = await _client.DeleteLogsOnServer(_selectedRows.Cast<Log>().ToList());
+
+            if (response.IsValid)
+            {
+                ProgramStatus = ProgramStatusMessages.DataDeleteSuccess;
+
+                _logsCache.RemoveData(_selectedRows.Cast<Log>());
+
+                UpdateItemsCountFields();
+                CanModifyLogs = true;
+                CanUploadFile = true;
+            }
+            else
+            {
+                ProgramStatus = response.Message;
+            }
+        }
+
         internal void ItemTypeCombobox_SelectionChanged(string query)
         {
             const string valid = "valid";
@@ -283,19 +357,19 @@ namespace ExcelFileReader.ViewModels
             const string total = "total";
             if (query == total)
             {
-                _peopleService.RestorePeopleFromTemp();
+                _peopleCache.RestoreDataFromTemp();
             }
             else
             {
-                _peopleService.SavePeopleToTemp();
-                _peopleService.ClearPeople();
+                _peopleCache.SaveDataToTemp();
+                _peopleCache.ClearData();
                 if(query == valid)
                 {
-                    _peopleService.LoadData(_peopleService.GetTempPeople().Where(p => p.IsValid));
+                    _peopleCache.LoadData(_peopleCache.GetTempData().Where(p => p.IsValid));
                 }
                 else
                 {
-                    _peopleService.LoadData(_peopleService.GetTempPeople().Where(p => !p.IsValid));
+                    _peopleCache.LoadData(_peopleCache.GetTempData().Where(p => !p.IsValid));
                 }
             }
         }
@@ -304,13 +378,13 @@ namespace ExcelFileReader.ViewModels
         {
             if (string.IsNullOrWhiteSpace(query))
             {
-                _peopleService.RestorePeopleFromTemp();
+                _peopleCache.RestoreDataFromTemp();
             }
             else
             {
-                _peopleService.SavePeopleToTemp();
-                _peopleService.ClearPeople();
-                _peopleService.LoadData(SearchData(_peopleService.GetTempPeople(), query));
+                _peopleCache.SaveDataToTemp();
+                _peopleCache.ClearData();
+                _peopleCache.LoadData(SearchData(_peopleCache.GetTempData(), query));
             }
         }
 
@@ -320,9 +394,9 @@ namespace ExcelFileReader.ViewModels
             CanSaveData = false;
             CanUploadFile = false;
 
-            if (_peopleService.GetPeople().Count > 0 && _peopleService.GetPeople().All(p => p.IsValid))
+            if (_peopleCache.GetData().Count > 0 && _peopleCache.GetData().All(p => p.IsValid))
             {
-                ParseDataToExcleFileResponse response = await _client.ParseDataToExcelFile(_peopleService.GetPeople());
+                ParseDataToExcleFileResponse response = await _client.ParseDataToExcelFile(_peopleCache.GetData());
 
                 if (response.Result)
                 {
@@ -367,9 +441,9 @@ namespace ExcelFileReader.ViewModels
 
                 if (response.IsValid)
                 {
-                    CanModifyDataBase = false;
-                    _peopleService.ClearPeople();
-                    _peopleService.LoadData(response.People);
+                    CanModifyPeople = false;
+                    _peopleCache.ClearData();
+                    _peopleCache.LoadData(response.People);
 
                     UpdateItemsCountFields();
 
@@ -391,15 +465,15 @@ namespace ExcelFileReader.ViewModels
             CanSaveData = false;
             CanUploadFile = false;
 
-            if (_selectedPeople.Count > 0 && _selectedPeople.All(p => p.IsValid))
+            if (_selectedRows.Count > 0 && _selectedRows.All(p => (p as Person)?.IsValid == true))
             {
-                SavingDataResponse response = await _client.SaveDataOnServer(_selectedPeople.ToList());
+                SavingDataResponse response = await _client.SaveDataOnServer(_selectedRows.Cast<Person>().ToList());
 
                 if (response.IsValid)
                 {
                     ProgramStatus = ProgramStatusMessages.DataSaveSuccess;
 
-                    _peopleService.RemoveData(_selectedPeople);
+                    _peopleCache.RemoveData(_selectedRows.Cast<Person>());
 
                     UpdateItemsCountFields();
                     CanSaveData = true;
@@ -416,29 +490,32 @@ namespace ExcelFileReader.ViewModels
                 CanUploadFile = true;
                 ProgramStatus = ProgramStatusMessages.SelectValidData;
             }
+
         }
 
         internal async void UpdateDataButton_Click()
         {
             ProgramStatus = ProgramStatusMessages.WaitingForServerResponse;
             CanUploadFile = false;
-            CanModifyDataBase = false;
+            CanModifyPeople = false;
 
-            if (_selectedPeople.Count > 0 && _selectedPeople.All(p => p.IsValid))
+            if (_updatedPeople.Count > 0 && _updatedPeople.All(p => p.IsValid == true))
             {
-                SavingDataResponse response = await _client.UpdateData(_selectedPeople.ToList());
+                SavingDataResponse response = await _client.UpdateData(_updatedPeople);
 
                 if (response.IsValid)
                 {
                     ProgramStatus = ProgramStatusMessages.DataUpdateSuccess;
 
-                    CanModifyDataBase = true;
+                    CanModifyPeople = true;
                     CanUploadFile = true;
                 }
                 else
                 {
                     ProgramStatus = response.Message;
                 }
+
+                _updatedPeople.Clear();
             }
             else
             {
@@ -452,20 +529,20 @@ namespace ExcelFileReader.ViewModels
         {
             ProgramStatus = ProgramStatusMessages.WaitingForServerResponse;
             CanUploadFile = false;
-            CanModifyDataBase = false;
+            CanModifyPeople = false;
 
-            if (_selectedPeople.Count > 0 && _selectedPeople.All(p => p.IsValid))
+            if (_selectedRows.Count > 0 && _selectedRows.All(p => (p as Person)?.IsValid == true))
             {
-                SavingDataResponse response = await _client.DeleteDataOnServer(_selectedPeople.ToList());
+                SavingDataResponse response = await _client.DeletePeopleOnServer(_selectedRows.Cast<Person>().ToList());
 
                 if (response.IsValid)
                 {
                     ProgramStatus = ProgramStatusMessages.DataDeleteSuccess;
 
-                    _peopleService.RemoveData(_selectedPeople);
+                    _peopleCache.RemoveData(_selectedRows.Cast<Person>());
 
                     UpdateItemsCountFields();
-                    CanModifyDataBase = true;
+                    CanModifyPeople = true;
                     CanUploadFile = true;
                 }
                 else
@@ -479,29 +556,32 @@ namespace ExcelFileReader.ViewModels
             }
         }
 
-        internal bool UpdatePerson(Person updatedPerson)
+        internal bool SaveUpdatedPerson(Person oldPerson, Person updatedPerson)
         {
-            Person? person = People.FirstOrDefault(p => p.Id == updatedPerson.Id);
-            if (person != null)
+            updatedPerson.UpdateIsValidProperty();
+            var changes = GetChangedFields(oldPerson, updatedPerson);
+            if (CanModifyPeople && changes.Any())
             {
-                person.UpdateIsValidProperty();
-                if (_updatedPeople.Any(p => p.Number == person.Number))
+                Log log = new(updatedPerson.Number, changes.Values.ToList());
+                if (_updatedPeople.Any(p => p.Number == updatedPerson.Number))
                 {
-                    _updatedPeople.RemoveAll(p => p.Number == person.Number);
-                    _updatedPeople.Add(person);
+                    _updatedPeople.RemoveAll(p => p.Number == updatedPerson.Number);
+                    _updatedPeople.Add(updatedPerson);
+                    Log oldLog = _logs.First(l => l.PersonNumber == updatedPerson.Number);
+                    oldLog.Changes.AddRange(changes.Values.ToList());
                 }
                 else
                 {
-                    _updatedPeople.Add(person);
+                    _updatedPeople.Add(updatedPerson);
+                    _logs.Add(log);
                 }
             }
-
-            return person!.IsValid;
+            return updatedPerson!.IsValid;
         }
 
         internal void UpdateItemsCountFields()
         {
-            List<Person> people = _peopleService.GetPeople();
+            List<Person> people = _peopleCache.GetData();
             InValidItems = people.Where(p => !p.IsValid).Count();
             ValidItems = people.Where(p => p.IsValid).Count();
             TotalItems = people.Count;
@@ -546,13 +626,23 @@ namespace ExcelFileReader.ViewModels
             ).ToList();
         }
 
-        private void PeopleCacheInit(PeopleService peopleService)
+        private void PeopleCacheInit(CacheService<Person, int> peopleService)
         {
-            peopleService.PeopleConnection()
+            peopleService.DataConnection()
                 .Sort(SortExpressionComparer<Person>.Ascending(e => e.Number))
                 .Page(_pager)
                 .Do(change => PagingUpdate(change.Response))
                 .Bind(_pagedPeople)
+                .Subscribe();
+        }
+
+        private void LogCacheInit(CacheService<Log, int> logService)
+        {
+            logService.DataConnection()
+                .Sort(SortExpressionComparer<Log>.Ascending(e => e.PersonNumber))
+                .Page(_pager)
+                .Do(change => PagingUpdate(change.Response))
+                .Bind(_pagedLogs)
                 .Subscribe();
         }
 
@@ -606,6 +696,44 @@ namespace ExcelFileReader.ViewModels
             }
             return filesContent;
         }
+
+        private Dictionary<string, OldNewValuePair> GetChangedFields(Person original, Person updated)
+        {
+            Dictionary<string, OldNewValuePair> changes = new Dictionary<string, OldNewValuePair>();
+
+            if (original.FirstName != updated.FirstName)
+            {
+                changes["FirstName"] = new(original.FirstName, updated.FirstName);
+            }
+
+            if (original.LastName != updated.LastName)
+            {
+                changes["LastName"] = new(original.LastName, updated.LastName);
+            }
+
+            if (original.Gender != updated.Gender)
+            {
+                changes["Gender"] = new(original.Gender.ToString(), updated.Gender.ToString());
+            }
+
+            if (original.Country != updated.Country)
+            {
+                changes["Country"] = new(original.Country, updated.Country);
+            }
+
+            if (original.Age != updated.Age)
+            {
+                changes["Age"] = new(original.Age.ToString(), updated.Age.ToString());
+            }
+
+            if (original.Birthday != updated.Birthday)
+            {
+                changes["Birthday"] = new(original.Birthday.ToString(), updated.Birthday.ToString());
+            }
+
+            return changes;
+        }
+
 
         private void MoveToPreviousPage() =>
             _pager.OnNext(new PageRequest(_currentPage - 1, PageSize));

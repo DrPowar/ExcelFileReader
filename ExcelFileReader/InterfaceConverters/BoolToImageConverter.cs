@@ -46,6 +46,14 @@ namespace ExcelFileReader.InterfaceConverters
                     ? $"{baseDirectory}Assets\\Modify.png"
                     : $"{baseDirectory}Assets\\ModifyDisabled.png",
 
+                "GetLogs" => isEnabled
+                    ? $"{baseDirectory}Assets\\GetLogs.png"
+                    : $"{baseDirectory}Assets\\GetLogsDisabled.png",
+
+                "RemoveLog" => isEnabled
+                    ? $"{baseDirectory}Assets\\RemoveLog.png"
+                    : $"{baseDirectory}Assets\\RemoveLogDisabled.png",
+
                 "Upload" => isEnabled
                     ? $"{baseDirectory}Assets\\Upload.png"
                     : $"{baseDirectory}Assets\\UploadDisabled.png",

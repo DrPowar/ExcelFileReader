@@ -1,0 +1,25 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Design.PreviewWith>
+    <Border Padding="20">
+		<Button
+			Classes="big standard-font-size"
+			HorizontalAlignment="Center"
+			VerticalAlignment="Center">
+			<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+				<TextBlock TextWrapping="Wrap" MaxWidth="50" Text="Open File" HorizontalAlignment="Center" Margin="0,5,0,0" TextAlignment="Center"/>
+			</StackPanel>
+		</Button>
+    </Border>
+  </Design.PreviewWith>
+
+	<Style Selector="Button.big">
+		<Setter Property="Width" Value="70"/>
+		<Setter Property="HorizontalAlignment" Value="Center"/>
+		<Setter Property="VerticalAlignment" Value="Center"/>
+	</Style>
+
+	<Style Selector="Button.standard-font-size">
+		<Setter Property="FontSize" Value="13"/>
+	</Style>
+</Styles>

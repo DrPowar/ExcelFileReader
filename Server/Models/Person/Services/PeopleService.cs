@@ -29,7 +29,7 @@ namespace Server.Models.Person.Services
             return await _personRepository.GetAllPeople();
         }
 
-        public async Task<PeopleCommandResult> UpdatePeople(List<Person> people)
+        public async Task<PeopleCommandResult> UpdatePeople(List<UpdatedPerson> people)
         {
             return await _personRepository.UpdatePeople(people);
         }

@@ -17,10 +17,14 @@
     <AvaloniaResource Remove="Assets\DeleteDisabled.png" />
     <AvaloniaResource Remove="Assets\Download.png" />
     <AvaloniaResource Remove="Assets\DownloadDisabled.png" />
+    <AvaloniaResource Remove="Assets\GetLogs.png" />
+    <AvaloniaResource Remove="Assets\GetLogsDisabled.png" />
     <AvaloniaResource Remove="Assets\Modify.png" />
     <AvaloniaResource Remove="Assets\ModifyDisabled.png" />
     <AvaloniaResource Remove="Assets\Open.png" />
     <AvaloniaResource Remove="Assets\OpenDisabled.png" />
+    <AvaloniaResource Remove="Assets\RemoveLog.png" />
+    <AvaloniaResource Remove="Assets\RemoveLogDisabled.png" />
     <AvaloniaResource Remove="Assets\Save.png" />
     <AvaloniaResource Remove="Assets\SaveDisabled.png" />
     <AvaloniaResource Remove="Assets\Search.png" />
@@ -48,6 +52,8 @@
     <None Remove="Assets\Fonts\Roboto-Thin.ttf" />
     <None Remove="Assets\Fonts\Roboto-ThinItalic.ttf" />
     <None Remove="Assets\FullScreen.png" />
+    <None Remove="Assets\GetLogs.png" />
+    <None Remove="Assets\GetLogsDisabled.png" />
     <None Remove="Assets\LeftArrow.png" />
     <None Remove="Assets\LeftDoubleArrow.png" />
     <None Remove="Assets\Minimize.png" />
@@ -55,6 +61,8 @@
     <None Remove="Assets\ModifyDisabled.png" />
     <None Remove="Assets\Open.png" />
     <None Remove="Assets\OpenDisabled.png" />
+    <None Remove="Assets\RemoveLog.png" />
+    <None Remove="Assets\RemoveLogDisabled.png" />
     <None Remove="Assets\RightArrow.png" />
     <None Remove="Assets\RightDoubleArrow.png" />
     <None Remove="Assets\Save.png" />
@@ -98,6 +106,12 @@
     <Content Include="Assets\DownloadDisabled.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Assets\GetLogs.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\GetLogsDisabled.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Assets\Modify.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -108,6 +122,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\OpenDisabled.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\RemoveLog.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\RemoveLogDisabled.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\Save.png">

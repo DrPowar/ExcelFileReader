@@ -20,6 +20,7 @@ namespace ExcelFileReader.Views
         private bool _datePickerIsLoading = true;
         private bool _genderComboBoxIsLoading = true;
         private bool _isDataPickerOpen = false;
+        private Person _originalPerson;
 
         public MainWindow()
         {
@@ -38,13 +39,31 @@ namespace ExcelFileReader.Views
             });
         }
 
+        public void DataGrid_BeginningEdit(object? sender, DataGridBeginningEditEventArgs e)
+        {
+            if (e.Row.DataContext is Person person)
+            {
+                _originalPerson = new Person
+                {
+                    Id = person.Id,
+                    Number = person.Number,
+                    FirstName = person.FirstName,
+                    LastName = person.LastName,
+                    Gender = person.Gender,
+                    Country = person.Country,
+                    Age = person.Age,
+                    Birthday = person.Birthday,
+                };
+            }
+        }
+
 
 
         public void RowDataGrid_EditingRow(object? sender, DataGridRowEditEndedEventArgs e)
         {
-            if (e.Row.DataContext is Person)
+            if (e.Row.DataContext is Person editedPerson)
             {
-                bool isValidPerson = _viewModel.UpdatePerson(e.Row.DataContext as Person);
+                bool isValidPerson = _viewModel.SaveUpdatedPerson(_originalPerson, editedPerson);
                 if (isValidPerson)
                 {
                     e.Row.Background = new SolidColorBrush(Color.Parse(ColorsConst.Success));
@@ -112,5 +131,7 @@ namespace ExcelFileReader.Views
                 BeginMoveDrag(e);
             }
         }
+
+
     }
 }

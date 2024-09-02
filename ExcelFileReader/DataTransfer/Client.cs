@@ -58,7 +58,7 @@ namespace ExcelFileReader.DataTransfer
             }
         }
 
-        internal async Task<SavingDataResponse> DeleteDataOnServer(IEnumerable<Person> persons)
+        internal async Task<SavingDataResponse> DeletePeopleOnServer(IEnumerable<Person> persons)
         {
             HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"http://localhost:{ServerData.ServerPort}/FileManagement/DeletePeopleFromDB", persons);
 
@@ -90,13 +90,38 @@ namespace ExcelFileReader.DataTransfer
             }
         }
 
-        internal async Task<GetAllDataResponse> GetAllDataFromDB()
+        internal async Task<GetPeopleDataResponse> GetPeople()
         {
-            HttpResponseMessage response = await _httpClient.GetAsync($"http://localhost:{ServerData.ServerPort}/FileManagement/GetAllDataFromDB");
+            HttpResponseMessage response = await _httpClient.GetAsync($"http://localhost:{ServerData.ServerPort}/FileManagement/GetPeople");
 
-            GetAllDataResponse? getAllDataResponse = await response.Content.ReadFromJsonAsync<GetAllDataResponse>();
+            GetPeopleDataResponse? getAllDataResponse = await response.Content.ReadFromJsonAsync<GetPeopleDataResponse>();
 
             return getAllDataResponse;
+        }
+
+        internal async Task<GetLogsDataResponse> GetLogs()
+        {
+            HttpResponseMessage response = await _httpClient.GetAsync($"http://localhost:{ServerData.ServerPort}/FileManagement/GetLogs");
+
+            GetLogsDataResponse? getAllDataResponse = await response.Content.ReadFromJsonAsync<GetLogsDataResponse>();
+
+            return getAllDataResponse;
+        }
+
+        internal async Task<SavingDataResponse> DeleteLogsOnServer(IEnumerable<Log> logs)
+        {
+            HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"http://localhost:{ServerData.ServerPort}/FileManagement/DeleteLogsFromDB", logs);
+
+            SavingDataResponse? savingDataResponse = await response.Content.ReadFromJsonAsync<SavingDataResponse>();
+
+            if (savingDataResponse != null)
+            {
+                return savingDataResponse;
+            }
+            else
+            {
+                return new SavingDataResponse(false, ResponseMessages.ServerReturnInvalidData);
+            }
         }
 
         internal async Task<ParseDataToExcleFileResponse> ParseDataToExcelFile(IEnumerable<Person> persons)

@@ -2,6 +2,8 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Server.Constants;
+using Server.Models;
+using Server.Models.Log.Queries;
 using Server.Models.Person;
 using Server.Models.Person.Commands;
 using Server.Models.Person.Queries;
@@ -93,16 +95,16 @@ namespace Server.Controllers
         }
 
         [HttpPost("UpdateDataInDB")]
-        public async Task<IActionResult> UpdateDataInDB([FromBody] List<Person> persons)
+        public async Task<IActionResult> UpdateDataInDB([FromBody] List<UpdatedPerson> updatePeople)
         {
-            if (persons == null)
+            if (updatePeople == null)
             {
                 return BadRequest(new CommandDataResult(false, ResultMessages.NullData));
             }
 
             try
             {
-                await _mediator.Send(new UpdatePeopleCommand(persons));
+                await _mediator.Send(new UpdatePeopleCommand(updatePeople));
 
                 return Ok(new CommandDataResult(true, ResultMessages.Success));
             }
@@ -116,8 +118,8 @@ namespace Server.Controllers
             }
         }
 
-        [HttpGet("GetAllDataFromDB")]
-        public async Task<IActionResult> GetAllDataFromDb()
+        [HttpGet("GetPeople")]
+        public async Task<IActionResult> GetPeople()
         {
             GetPeopleResult response = await _mediator.Send(new GetAllPeopleQuery());
 
@@ -128,6 +130,8 @@ namespace Server.Controllers
 
             return BadRequest(response);
         }
+
+        
 
         [HttpPost("ParseDataToExcleFile")]
         public async Task<IActionResult> ParseDataToExcleFile([FromBody] List<Person> people)
@@ -147,6 +151,19 @@ namespace Server.Controllers
             {
                 return BadRequest(ParsingResultMessages.InvalidFile);
             }
+        }
+
+
+        [HttpGet("GetLogs")]
+        public async Task<IActionResult> GetLogs()
+        {
+            GetLogsResult response = await _mediator.Send(new GetAllLogsQuery());
+
+            if (response.Result)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
         }
     }
 }

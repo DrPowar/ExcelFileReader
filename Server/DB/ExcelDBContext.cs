@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Server.Models.Log;
 using Server.Models.Person;
 
 namespace Server.DB

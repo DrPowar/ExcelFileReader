@@ -4,9 +4,9 @@ namespace Server.Models.Person.Commands
 {
     public class UpdatePeopleCommand : IRequest<PeopleCommandResult>
     {
-        public List<Person> People { get; private set; }
+        public List<UpdatedPerson> People { get; private set; }
 
-        public UpdatePeopleCommand(List<Person> people)
+        public UpdatePeopleCommand(List<UpdatedPerson> people)
         {
             People = people;
         }
