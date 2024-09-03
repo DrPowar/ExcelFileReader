@@ -13,9 +13,14 @@ namespace Server.Models.Log.Services
             _logRepository = logRepository;
         }
 
-        public async Task<LogsCommandResult> AddLogs(List<Log> people)
+        public async Task<LogsCommandResult> AddLogs(List<Log> logs)
         {
-            return await _logRepository.AddLogs(people);
+            return await _logRepository.AddLogs(logs);
+        }
+
+        public async Task<LogsCommandResult> DeleteLogs(List<Log> logs)
+        {
+            return await _logRepository.DeleteLogs(logs);
         }
 
         public async Task<GetLogsResult> GetAllLogs()

@@ -7,5 +7,5 @@ using System.Threading.Tasks;
 
 namespace ExcelFileReader.DataTransfer
 {
-    internal record GetLogsDataResponse(List<Log> Logs, string Message, bool Result);
+    public record GetLogsDataResponse(List<Log> Logs, string Message, bool Result);
 }

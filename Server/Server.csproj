@@ -28,9 +28,5 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
-    <Folder Include="Models\Log\Commands\" />
-    <Folder Include="Models\Log\Handelrs\" />
-    <Folder Include="Models\Log\Repositories\" />
-    <Folder Include="Models\Log\Services\" />
   </ItemGroup>
 </Project>

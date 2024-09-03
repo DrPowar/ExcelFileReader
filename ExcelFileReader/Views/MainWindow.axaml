@@ -348,7 +348,7 @@
 							</Grid.ColumnDefinitions>
 
 							<StackPanel Grid.Column="0" HorizontalAlignment="Center">
-								<Button IsEnabled="{Binding CanModifyLogs}" Command="{Binding GetLogsDataFromDBButton_Click}" Classes="big standard-font-size">
+								<Button IsEnabled="{Binding CanUploadFile}" Command="{Binding GetLogsDataFromDBButton_Click}" Classes="big standard-font-size">
 									<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
 										<Image Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='GetLogs'}" Width="40"/>
 										<TextBlock Text="Get Logs" HorizontalAlignment="Center" Margin="0,5,0,0" TextAlignment="Center" TextWrapping="Wrap" MaxWidth="50"/>
@@ -399,6 +399,7 @@
 				BeginningEdit="DataGrid_BeginningEdit"
 				VerticalAlignment="Stretch"
 				HorizontalAlignment="Stretch"
+				IsVisible="{Binding PeopleDataGridVisible}"
 				SelectionChanged="OnSelectionChanged">
 
 				<DataGrid.Styles>
@@ -448,24 +449,35 @@
 
 				</DataGrid.Columns>
 			</DataGrid>
+
 			<DataGrid
-					Name="LogsGrid"
-					IsVisible="False"
-					IsReadOnly="True"
-					AutoGenerateColumns="True"
-					GridLinesVisibility="All"
-					CanUserResizeColumns="True"
-					BorderBrush="{StaticResource DarkPlatinum}"
-					BorderThickness="1"
-					Background="White"
-					VerticalAlignment="Stretch"
-					HorizontalAlignment="Stretch">
+				Name="LogsGrid"
+				ItemsSource="{Binding Logs}"
+				IsReadOnly="True"
+				CanUserSortColumns="True"
+				GridLinesVisibility="All"
+				CanUserResizeColumns="True"
+				BorderBrush="{StaticResource DarkPlatinum}"
+				BorderThickness="1"
+				Background="White"
+				VerticalAlignment="Stretch"
+				HorizontalAlignment="Stretch"
+				IsVisible="{Binding LogsDataGridVisible}"
+				SelectionChanged="OnSelectionChanged">
+
+				<DataGrid.Styles>
+					<Style Selector="DataGridColumnHeader">
+						<Setter Property="FontSize" Value="{Binding #Root.((vm:MainWindowViewModel)DataContext).FontSize}" />
+					</Style>
+				</DataGrid.Styles>
 
 				<DataGrid.Columns>
-					<DataGridTextColumn Header="Type" FontSize="{Binding FontSize}" />
-					<DataGridTextColumn Header="Message" FontSize="{Binding FontSize}" />
-				</DataGrid.Columns>
+					<DataGridTextColumn Header="Id" Binding="{Binding Id}" FontSize="{Binding FontSize}" />
 
+					<DataGridTextColumn Header="New Value" Binding="{Binding Changes.NewValue}" FontSize="{Binding FontSize}"/>
+					<DataGridTextColumn Header="Old Value" Binding="{Binding Changes.OldValue}" FontSize="{Binding FontSize}"/>
+					<DataGridTextColumn Header="Date" Binding="{Binding Date}" FontSize="{Binding FontSize}"/>
+				</DataGrid.Columns>
 			</DataGrid>
 
 

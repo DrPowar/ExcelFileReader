@@ -5,7 +5,8 @@ namespace Server.Models.Log.Services
 {
     public interface ILogService
     {
-        public Task<LogsCommandResult> AddLogs(List<Log> people);
+        public Task<LogsCommandResult> AddLogs(List<Log> logs);
+        public Task<LogsCommandResult> DeleteLogs(List<Log> logs);
         public Task<GetLogsResult> GetAllLogs();
     }
 }

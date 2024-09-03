@@ -18,7 +18,10 @@ namespace ExcelFileReader.Models
 
         public IObservable<IChangeSet<T, TKey>> DataConnection() => _data.Connect();
 
-        public void LoadData(IEnumerable<T> items) => _data.AddOrUpdate(items);
+        public void LoadData(IEnumerable<T> items)
+        {
+            _data.AddOrUpdate(items);
+        }
 
         public void RemoveData(IEnumerable<T> items)
         {

@@ -30,18 +30,35 @@ namespace Server.Models.Log.Repositories
             }
         }
 
+        public async Task<LogsCommandResult> DeleteLogs(List<Log> logs)
+        {
+            try
+            {
+                _context.Logs.RemoveRange(logs);
+                await _context.SaveChangesAsync();
+
+                return new LogsCommandResult(true, ResultMessages.Success);
+            }
+            catch (Exception ex)
+            {
+                return new LogsCommandResult(false, ex.Message);
+            }
+        }
+
         public async Task<GetLogsResult> GetAllLogs()
         {
             try
             {
-                List<Log> logs = await _context.Logs.ToListAsync();
+                List<Log> logs = await _context.Logs
+                    .Include(log => log.Changes)
+                    .ToListAsync();
                 await _context.SaveChangesAsync();
 
                 return new GetLogsResult(logs, ResultMessages.Success, true);
             }
             catch (Exception ex)
             {
-                return new GetLogsResult(null!, ResultMessages.Success, false);
+                return new GetLogsResult(null!, ex.Message, false);
             }
         }
     }

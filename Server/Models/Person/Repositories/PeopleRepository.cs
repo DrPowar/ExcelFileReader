@@ -64,13 +64,11 @@ namespace Server.Models.Person.Repositories
             }
         }
 
-        public async Task<PeopleCommandResult> UpdatePeople(List<UpdatedPerson> updatedPeople)
+        public async Task<PeopleCommandResult> UpdatePeople(List<Person> updatedPeople)
         {
             try
             {
-                List<Person> people = updatedPeople.Select(up => up.Person).ToList();
-
-                _context.Persons.UpdateRange(people);
+                _context.Persons.UpdateRange(updatedPeople);
                 await _context.SaveChangesAsync();
 
                 return new PeopleCommandResult(true, ResultMessages.Success);

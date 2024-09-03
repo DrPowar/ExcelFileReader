@@ -95,7 +95,7 @@ namespace Server.Controllers
         }
 
         [HttpPost("UpdateDataInDB")]
-        public async Task<IActionResult> UpdateDataInDB([FromBody] List<UpdatedPerson> updatePeople)
+        public async Task<IActionResult> UpdateDataInDB([FromBody] List<Person> updatePeople)
         {
             if (updatePeople == null)
             {
@@ -151,19 +151,6 @@ namespace Server.Controllers
             {
                 return BadRequest(ParsingResultMessages.InvalidFile);
             }
-        }
-
-
-        [HttpGet("GetLogs")]
-        public async Task<IActionResult> GetLogs()
-        {
-            GetLogsResult response = await _mediator.Send(new GetAllLogsQuery());
-
-            if (response.Result)
-            {
-                return Ok(response);
-            }
-            return BadRequest(response);
         }
     }
 }

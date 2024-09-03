@@ -6,6 +6,7 @@ namespace Server.Models.Log.Repositories
     public interface ILogRepository
     {
         public Task<LogsCommandResult> AddLogs(List<Log> logs);
+        public Task<LogsCommandResult> DeleteLogs(List<Log> logs);
 
         public Task<GetLogsResult> GetAllLogs();
     }

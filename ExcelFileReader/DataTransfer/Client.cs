@@ -90,6 +90,22 @@ namespace ExcelFileReader.DataTransfer
             }
         }
 
+        internal async Task<SavingDataResponse> AddLogs(IEnumerable<Log> logs)
+        {
+            HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"http://localhost:{ServerData.ServerPort}/Log/AddLogs", logs);
+
+            SavingDataResponse? savingDataResponse = await response.Content.ReadFromJsonAsync<SavingDataResponse>();
+
+            if (savingDataResponse != null)
+            {
+                return savingDataResponse;
+            }
+            else
+            {
+                return new SavingDataResponse(false, ResponseMessages.ServerReturnInvalidData);
+            }
+        }
+
         internal async Task<GetPeopleDataResponse> GetPeople()
         {
             HttpResponseMessage response = await _httpClient.GetAsync($"http://localhost:{ServerData.ServerPort}/FileManagement/GetPeople");
@@ -101,7 +117,7 @@ namespace ExcelFileReader.DataTransfer
 
         internal async Task<GetLogsDataResponse> GetLogs()
         {
-            HttpResponseMessage response = await _httpClient.GetAsync($"http://localhost:{ServerData.ServerPort}/FileManagement/GetLogs");
+            HttpResponseMessage response = await _httpClient.GetAsync($"http://localhost:{ServerData.ServerPort}/Log/GetLogs");
 
             GetLogsDataResponse? getAllDataResponse = await response.Content.ReadFromJsonAsync<GetLogsDataResponse>();
 
@@ -110,7 +126,7 @@ namespace ExcelFileReader.DataTransfer
 
         internal async Task<SavingDataResponse> DeleteLogsOnServer(IEnumerable<Log> logs)
         {
-            HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"http://localhost:{ServerData.ServerPort}/FileManagement/DeleteLogsFromDB", logs);
+            HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"http://localhost:{ServerData.ServerPort}/Log/DeleteLogsFromDB", logs);
 
             SavingDataResponse? savingDataResponse = await response.Content.ReadFromJsonAsync<SavingDataResponse>();
 

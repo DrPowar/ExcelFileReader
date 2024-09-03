@@ -4,9 +4,13 @@ using System.Collections.Generic;
 
 namespace ExcelFileReader.Models
 {
-    internal sealed class Log
+    public sealed class Log
     {
-        internal Log(uint personNumber, List<OldNewValuePair> changes)
+        public Log()
+        {
+        }
+
+        public Log(uint personNumber, OldNewValuePair changes)
         {
             Id = Guid.NewGuid();
             PersonNumber = personNumber;
@@ -14,12 +18,19 @@ namespace ExcelFileReader.Models
             Date = DateTime.Now;
         }
 
-        internal Guid Id { get; set; }
+        public Log(Guid id, uint personNumber, OldNewValuePair changes, DateTime date)
+        {
+            Id = id;
+            PersonNumber = personNumber;
+            Changes = changes;
+            Date = date;
+        }
 
-        internal uint PersonNumber { get; set; }
-
-        internal List<OldNewValuePair> Changes { get; set; }
-
-        internal DateTime Date { get; set; }
+        public Guid Id { get; set; }
+        public uint PersonNumber { get; set; }
+        public OldNewValuePair Changes { get; set; }
+        public DateTime Date { get; set; }
     }
+
+
 }

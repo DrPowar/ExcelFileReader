@@ -31,7 +31,7 @@ namespace ExcelFileReader.ViewModels
         private readonly TopLevel _topLevel;
 
 
-        private readonly CacheService<Log, int> _logsCache;
+        private readonly CacheService<Log, Guid> _logsCache;
         private ObservableCollectionExtended<Log> _pagedLogs;
 
         private readonly CacheService<Person, int> _peopleCache;
@@ -54,6 +54,9 @@ namespace ExcelFileReader.ViewModels
         private int _fontSize = 16;
         private string _selectedItemType;
 
+        private bool _logsDataGridVisible;
+        private bool _peopleDataGridVisible = true;
+
         private string _searchField = string.Empty;
         private string _programStatus = ProgramStatusMessages.UploadingAllowed;
 
@@ -74,6 +77,18 @@ namespace ExcelFileReader.ViewModels
                 UpdatePagesFields();
                 _pager.OnNext(new PageRequest(CurrentPage, PageSize));
             }
+        }
+
+        internal bool LogsDataGridVisible
+        {
+            get => _logsDataGridVisible;
+            set => this.RaiseAndSetIfChanged(ref _logsDataGridVisible, value); 
+        }
+
+        internal bool PeopleDataGridVisible
+        {
+            get => _peopleDataGridVisible;
+            set => this.RaiseAndSetIfChanged(ref _peopleDataGridVisible, value);
         }
 
         internal string SelectedItemType
@@ -152,7 +167,7 @@ namespace ExcelFileReader.ViewModels
             set => this.RaiseAndSetIfChanged(ref _canModifyLogs, value);
         }
 
-        internal ObservableCollection<object> SelectedPeople
+        internal ObservableCollection<object> SelectedItems
         {
             get => _selectedRows;
             set => this.RaiseAndSetIfChanged(ref _selectedRows, value);
@@ -162,6 +177,12 @@ namespace ExcelFileReader.ViewModels
         {
             get => _pagedPeople;
             set => this.RaiseAndSetIfChanged(ref _pagedPeople, value);
+        }
+
+        internal ObservableCollectionExtended<Log> Logs
+        {
+            get => _pagedLogs;
+            set => this.RaiseAndSetIfChanged(ref _pagedLogs, value);
         }
 
         internal DelegateCommand OpenGetFilePicker { get; init; }
@@ -189,7 +210,7 @@ namespace ExcelFileReader.ViewModels
             _pagedPeople = new ObservableCollectionExtended<Person>();
             _pagedLogs = new ObservableCollectionExtended<Log>();
             _peopleCache = new CacheService<Person, int>(e => (int)e.Number);
-            _logsCache = new CacheService<Log, int>(e => (int)e.PersonNumber);
+            _logsCache = new CacheService<Log, Guid>(e => e.Id);
             LogCacheInit(_logsCache);
             PeopleCacheInit(_peopleCache);
             _client = new Client();
@@ -276,7 +297,6 @@ namespace ExcelFileReader.ViewModels
 
         }
 
-
         internal async void GetPeopleDataFromDBButton_Click()
         {
             CanSaveData = false;
@@ -292,6 +312,8 @@ namespace ExcelFileReader.ViewModels
                 UpdateItemsCountFields();
 
                 CanUploadFile = true;
+                LogsDataGridVisible = false;
+                PeopleDataGridVisible = true;
                 ProgramStatus = ProgramStatusMessages.UploadingAllowed;
             }
             else
@@ -306,6 +328,8 @@ namespace ExcelFileReader.ViewModels
             CanSaveData = false;
             CanUploadFile = false;
             CanModifyPeople = false;
+            LogsDataGridVisible = true;
+            PeopleDataGridVisible = false;
 
             GetLogsDataResponse getAllDataResponse = await _client.GetLogs();
             if (getAllDataResponse.Result)
@@ -449,6 +473,8 @@ namespace ExcelFileReader.ViewModels
 
                     CanSaveData = true;
                     CanUploadFile = true;
+                    LogsDataGridVisible = false;
+                    PeopleDataGridVisible = true;
                     ProgramStatus = ProgramStatusMessages.UploadingAllowed;
                 }
                 else
@@ -501,9 +527,11 @@ namespace ExcelFileReader.ViewModels
 
             if (_updatedPeople.Count > 0 && _updatedPeople.All(p => p.IsValid == true))
             {
-                SavingDataResponse response = await _client.UpdateData(_updatedPeople);
+                SavingDataResponse peopleResponse = await _client.UpdateData(_updatedPeople);
 
-                if (response.IsValid)
+                SavingDataResponse logsResponse = await _client.AddLogs(_logs);
+
+                if (peopleResponse.IsValid && logsResponse.IsValid)
                 {
                     ProgramStatus = ProgramStatusMessages.DataUpdateSuccess;
 
@@ -512,10 +540,11 @@ namespace ExcelFileReader.ViewModels
                 }
                 else
                 {
-                    ProgramStatus = response.Message;
+                    ProgramStatus = peopleResponse.Message;
                 }
 
                 _updatedPeople.Clear();
+                _logs.Clear();
             }
             else
             {
@@ -559,16 +588,15 @@ namespace ExcelFileReader.ViewModels
         internal bool SaveUpdatedPerson(Person oldPerson, Person updatedPerson)
         {
             updatedPerson.UpdateIsValidProperty();
-            var changes = GetChangedFields(oldPerson, updatedPerson);
-            if (CanModifyPeople && changes.Any())
+            KeyValuePair<string, OldNewValuePair> changes = GetChangedFields(oldPerson, updatedPerson).First();
+            if (CanModifyPeople)
             {
-                Log log = new(updatedPerson.Number, changes.Values.ToList());
+                Log log = new(updatedPerson.Number, new OldNewValuePair(changes.Value.OldValue, changes.Value.NewValue));
                 if (_updatedPeople.Any(p => p.Number == updatedPerson.Number))
                 {
                     _updatedPeople.RemoveAll(p => p.Number == updatedPerson.Number);
                     _updatedPeople.Add(updatedPerson);
-                    Log oldLog = _logs.First(l => l.PersonNumber == updatedPerson.Number);
-                    oldLog.Changes.AddRange(changes.Values.ToList());
+                    _logs.Add(log);
                 }
                 else
                 {
@@ -636,10 +664,10 @@ namespace ExcelFileReader.ViewModels
                 .Subscribe();
         }
 
-        private void LogCacheInit(CacheService<Log, int> logService)
+        private void LogCacheInit(CacheService<Log, Guid> logService)
         {
             logService.DataConnection()
-                .Sort(SortExpressionComparer<Log>.Ascending(e => e.PersonNumber))
+                .Sort(SortExpressionComparer<Log>.Ascending(e => e.Id))
                 .Page(_pager)
                 .Do(change => PagingUpdate(change.Response))
                 .Bind(_pagedLogs)

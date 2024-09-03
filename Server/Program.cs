@@ -1,6 +1,8 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Server.DB;
+using Server.Models.Log.Repositories;
+using Server.Models.Log.Services;
 using Server.Models.Person.Repositories;
 using Server.Models.Person.Services;
 
@@ -19,6 +21,8 @@ namespace Server
             });
 
             builder.Services.AddScoped<IPeopleRepository, PeopleRepository>();
+            builder.Services.AddScoped<ILogRepository, LogRepository>();
+            builder.Services.AddScoped<ILogService, LogService>();
             builder.Services.AddScoped<IPeopleService, PeopleService>();
 
             builder.Services.AddEndpointsApiExplorer();

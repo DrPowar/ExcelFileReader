@@ -11,6 +11,8 @@ namespace Server.DB
         {
         }
         internal virtual DbSet<Person> Persons { get; set; }
+
+        internal virtual DbSet<Log> Logs { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Person>(entity =>

@@ -1,4 +1,4 @@
 ﻿namespace Server.Models.Log.Queries
 {
-    internal record GetLogsResult(IEnumerable<Log> People, string Message, bool Result);
+    public record GetLogsResult(IEnumerable<Log> Logs, string Message, bool Result);
 }

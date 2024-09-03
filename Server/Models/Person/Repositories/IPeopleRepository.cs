@@ -10,7 +10,7 @@ namespace Server.Models.Person.Repositories
 
         public Task<PeopleCommandResult> DeletePeople(List<Person> people);
 
-        public Task<PeopleCommandResult> UpdatePeople(List<UpdatedPerson> people);
+        public Task<PeopleCommandResult> UpdatePeople(List<Person> people);
 
         public Task<GetPeopleResult> GetAllPeople();
     }

@@ -99,10 +99,10 @@ namespace ExcelFileReader.Views
         internal void OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
             DataGrid? dataGrid = sender as DataGrid;
-            _viewModel.SelectedPeople.Clear();
-            foreach (Person person in dataGrid!.SelectedItems)
+            _viewModel.SelectedItems.Clear();
+            foreach (object item in dataGrid!.SelectedItems)
             {
-                _viewModel.SelectedPeople.Add(person);
+                _viewModel.SelectedItems.Add(item);
             }
             _viewModel.UpdateItemsCountFields();
         }
