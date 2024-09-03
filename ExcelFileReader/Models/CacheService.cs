@@ -40,6 +40,15 @@ namespace ExcelFileReader.Models
             _tempData.AddOrUpdate(GetData());
         }
 
-        public void RestoreDataFromTemp() => LoadData(_tempData.Items);
+        public void RestoreDataFromTemp()
+        {
+            LoadData(_tempData.Items);
+        }
+
+        public void FullClear()
+        {
+            _tempData.Clear();
+            _data.Clear();
+        }
     }
 }

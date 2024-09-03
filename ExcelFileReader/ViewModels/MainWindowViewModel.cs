@@ -306,7 +306,7 @@ namespace ExcelFileReader.ViewModels
             if(getAllDataResponse.Result)
             {
                 CanModifyPeople = true;
-                _peopleCache.ClearData();
+                _peopleCache.FullClear();
                 _peopleCache.LoadData(getAllDataResponse.People);
 
                 UpdateItemsCountFields();
@@ -379,24 +379,26 @@ namespace ExcelFileReader.ViewModels
             const string valid = "valid";
             const string inValid = "invalid";
             const string total = "total";
-            if (query == total)
-            {
-                _peopleCache.RestoreDataFromTemp();
-            }
-            else
+
+            _peopleCache.RestoreDataFromTemp();
+
+            if (query != total)
             {
                 _peopleCache.SaveDataToTemp();
+
                 _peopleCache.ClearData();
-                if(query == valid)
+
+                if (query == valid)
                 {
                     _peopleCache.LoadData(_peopleCache.GetTempData().Where(p => p.IsValid));
                 }
-                else
+                else if (query == inValid)
                 {
                     _peopleCache.LoadData(_peopleCache.GetTempData().Where(p => !p.IsValid));
                 }
             }
         }
+
 
         internal void SearchDataButton_Click(string query)
         {
@@ -466,7 +468,7 @@ namespace ExcelFileReader.ViewModels
                 if (response.IsValid)
                 {
                     CanModifyPeople = false;
-                    _peopleCache.ClearData();
+                    _peopleCache.FullClear();
                     _peopleCache.LoadData(response.People);
 
                     UpdateItemsCountFields();
@@ -609,10 +611,20 @@ namespace ExcelFileReader.ViewModels
 
         internal void UpdateItemsCountFields()
         {
-            List<Person> people = _peopleCache.GetData();
-            InValidItems = people.Where(p => !p.IsValid).Count();
-            ValidItems = people.Where(p => p.IsValid).Count();
-            TotalItems = people.Count;
+            if(_peopleCache.GetTempData().Count == 0)
+            {
+                List<Person> people = _peopleCache.GetData();
+                InValidItems = people.Where(p => !p.IsValid).Count();
+                ValidItems = people.Where(p => p.IsValid).Count();
+                TotalItems = people.Count;
+            }
+            else
+            {
+                List<Person> people = _peopleCache.GetTempData();
+                InValidItems = people.Where(p => !p.IsValid).Count();
+                ValidItems = people.Where(p => p.IsValid).Count();
+                TotalItems = people.Count;
+            }
         }
 
 
