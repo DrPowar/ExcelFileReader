@@ -41,6 +41,30 @@ namespace Server.Controllers
             }
         }
 
+        [HttpPost("AddLog")]
+        public async Task<IActionResult> AddLog([FromBody] Log log)
+        {
+            if (log == null)
+            {
+                return BadRequest(new CommandDataResult(false, ResultMessages.NullData));
+            }
+
+            try
+            {
+                await _mediator.Send(new AddLogCommand(log));
+
+                return Ok(new CommandDataResult(true, ResultMessages.Success));
+            }
+            catch (OperationCanceledException ex)
+            {
+                return BadRequest(new CommandDataResult(false, ex.Message));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new CommandDataResult(false, ex.Message));
+            }
+        }
+
         [HttpGet("GetLogs")]
         public async Task<IActionResult> GetLogs()
         {

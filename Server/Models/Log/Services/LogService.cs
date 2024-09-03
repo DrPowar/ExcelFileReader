@@ -1,4 +1,5 @@
-﻿using Server.Models.Log.Commands;
+﻿using Server.Migrations;
+using Server.Models.Log.Commands;
 using Server.Models.Log.Queries;
 using Server.Models.Log.Repositories;
 
@@ -11,6 +12,11 @@ namespace Server.Models.Log.Services
         public LogService(ILogRepository logRepository)
         {
             _logRepository = logRepository;
+        }
+
+        public async Task<LogsCommandResult> AddLog(Log log)
+        {
+            return await _logRepository.AddLog(log);
         }
 
         public async Task<LogsCommandResult> AddLogs(List<Log> logs)

@@ -28,5 +28,11 @@ namespace ExcelFileReader.Models
                       Age > 0 &&
                       Birthday != default(DateTimeOffset);
         }
+
+        public override string ToString()
+        {
+            return $"Person [Id={Id}, Number={Number}, Name={FirstName} {LastName}, Gender={Gender}, Country={Country}, Age={Age}, Birthday={Birthday:yyyy-MM-dd}, IsValid={IsValid}]";
+        }
+
     }
 }

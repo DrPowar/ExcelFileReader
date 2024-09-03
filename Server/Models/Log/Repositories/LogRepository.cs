@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Server.DB;
+using Server.Migrations;
 using Server.Models.Log.Commands;
 using Server.Models.Log.Queries;
 using Server.Parser;
@@ -13,6 +14,21 @@ namespace Server.Models.Log.Repositories
         public LogRepository(ExcelDBContext excelDBContext)
         {
             _context = excelDBContext;
+        }
+
+        public async Task<LogsCommandResult> AddLog(Log log)
+        {
+            try
+            {
+                await _context.Logs.AddAsync(log);
+                await _context.SaveChangesAsync();
+
+                return new LogsCommandResult(true, ResultMessages.Success);
+            }
+            catch (Exception ex)
+            {
+                return new LogsCommandResult(false, ex.Message);
+            }
         }
 
         public async Task<LogsCommandResult> AddLogs(List<Log> logs)

@@ -79,13 +79,13 @@ namespace ExcelFileReader.ViewModels
             }
         }
 
-        internal bool LogsDataGridVisible
+        internal bool LogsDataGridActive
         {
             get => _logsDataGridVisible;
             set => this.RaiseAndSetIfChanged(ref _logsDataGridVisible, value); 
         }
 
-        internal bool PeopleDataGridVisible
+        internal bool PeopleDataGridActive
         {
             get => _peopleDataGridVisible;
             set => this.RaiseAndSetIfChanged(ref _peopleDataGridVisible, value);
@@ -312,8 +312,8 @@ namespace ExcelFileReader.ViewModels
                 UpdateItemsCountFields();
 
                 CanUploadFile = true;
-                LogsDataGridVisible = false;
-                PeopleDataGridVisible = true;
+                LogsDataGridActive = false;
+                PeopleDataGridActive = true;
                 ProgramStatus = ProgramStatusMessages.UploadingAllowed;
             }
             else
@@ -328,8 +328,8 @@ namespace ExcelFileReader.ViewModels
             CanSaveData = false;
             CanUploadFile = false;
             CanModifyPeople = false;
-            LogsDataGridVisible = true;
-            PeopleDataGridVisible = false;
+            LogsDataGridActive = true;
+            PeopleDataGridActive = false;
 
             GetLogsDataResponse getAllDataResponse = await _client.GetLogs();
             if (getAllDataResponse.Result)
@@ -402,7 +402,7 @@ namespace ExcelFileReader.ViewModels
 
         internal void SearchDataButton_Click(string query)
         {
-            if (LogsDataGridVisible)
+            if (LogsDataGridActive)
             {
                 if (string.IsNullOrWhiteSpace(query))
                 {
@@ -491,8 +491,8 @@ namespace ExcelFileReader.ViewModels
 
                     CanSaveData = true;
                     CanUploadFile = true;
-                    LogsDataGridVisible = false;
-                    PeopleDataGridVisible = true;
+                    LogsDataGridActive = false;
+                    PeopleDataGridActive = true;
                     ProgramStatus = ProgramStatusMessages.UploadingAllowed;
                 }
                 else
@@ -535,6 +535,16 @@ namespace ExcelFileReader.ViewModels
                 ProgramStatus = ProgramStatusMessages.SelectValidData;
             }
 
+        }
+
+        private async void SaveLog(Log log)
+        {
+            SavingDataResponse logResponse = await _client.AddLog(log);
+
+            if(!logResponse.IsValid)
+            {
+                ProgramStatus = logResponse.Message;
+            }
         }
 
         internal async void UpdateDataButton_Click()
@@ -589,6 +599,12 @@ namespace ExcelFileReader.ViewModels
                     _peopleCache.RemoveData(_selectedRows.Cast<Person>());
 
                     UpdateItemsCountFields();
+
+                    foreach(Person person in _selectedRows.Cast<Person>().ToList())
+                    {
+                        SaveLog(new Log(Guid.NewGuid(), person.Number, new OldNewValuePair(person.ToString(), null), DateTime.Now));
+                    }
+
                     CanModifyPeople = true;
                     CanUploadFile = true;
                 }
@@ -605,24 +621,32 @@ namespace ExcelFileReader.ViewModels
 
         internal bool SaveUpdatedPerson(Person oldPerson, Person updatedPerson)
         {
-            updatedPerson.UpdateIsValidProperty();
-            KeyValuePair<string, OldNewValuePair> changes = GetChangedFields(oldPerson, updatedPerson).First();
-            if (CanModifyPeople)
+
+            try
             {
-                Log log = new(updatedPerson.Number, new OldNewValuePair(changes.Value.OldValue, changes.Value.NewValue));
-                if (_updatedPeople.Any(p => p.Number == updatedPerson.Number))
+                KeyValuePair<string, OldNewValuePair> changes = GetChangedFields(oldPerson, updatedPerson).First();
+
+                if (CanModifyPeople)
                 {
-                    _updatedPeople.RemoveAll(p => p.Number == updatedPerson.Number);
-                    _updatedPeople.Add(updatedPerson);
+                    updatedPerson.UpdateIsValidProperty();
+                    Log log = new(updatedPerson.Number, new OldNewValuePair(changes.Value.OldValue, changes.Value.NewValue));
+                    if (_updatedPeople.Any(p => p.Number == updatedPerson.Number))
+                    {
+                        _updatedPeople.RemoveAll(p => p.Number == updatedPerson.Number);
+                        _updatedPeople.Add(updatedPerson);
+                    }
+                    else
+                    {
+                        _updatedPeople.Add(updatedPerson);
+                    }
                     _logs.Add(log);
                 }
-                else
-                {
-                    _updatedPeople.Add(updatedPerson);
-                    _logs.Add(log);
-                }
+                return updatedPerson!.IsValid;
             }
-            return updatedPerson!.IsValid;
+            catch
+            {
+                return updatedPerson!.IsValid;
+            }
         }
 
         internal void UpdateItemsCountFields()

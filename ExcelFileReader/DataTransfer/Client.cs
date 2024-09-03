@@ -106,6 +106,22 @@ namespace ExcelFileReader.DataTransfer
             }
         }
 
+        internal async Task<SavingDataResponse> AddLog(Log log)
+        {
+            HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"http://localhost:{ServerData.ServerPort}/Log/AddLog", log);
+
+            SavingDataResponse? savingDataResponse = await response.Content.ReadFromJsonAsync<SavingDataResponse>();
+
+            if (savingDataResponse != null)
+            {
+                return savingDataResponse;
+            }
+            else
+            {
+                return new SavingDataResponse(false, ResponseMessages.ServerReturnInvalidData);
+            }
+        }
+
         internal async Task<GetPeopleDataResponse> GetPeople()
         {
             HttpResponseMessage response = await _httpClient.GetAsync($"http://localhost:{ServerData.ServerPort}/FileManagement/GetPeople");

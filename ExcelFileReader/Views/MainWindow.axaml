@@ -399,7 +399,7 @@
 				BeginningEdit="DataGrid_BeginningEdit"
 				VerticalAlignment="Stretch"
 				HorizontalAlignment="Stretch"
-				IsVisible="{Binding PeopleDataGridVisible}"
+				IsVisible="{Binding PeopleDataGridActive}"
 				SelectionChanged="OnSelectionChanged">
 
 				<DataGrid.Styles>
@@ -462,7 +462,7 @@
 				Background="White"
 				VerticalAlignment="Stretch"
 				HorizontalAlignment="Stretch"
-				IsVisible="{Binding LogsDataGridVisible}"
+				IsVisible="{Binding LogsDataGridActive}"
 				SelectionChanged="OnSelectionChanged">
 
 				<DataGrid.Styles>
