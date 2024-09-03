@@ -402,15 +402,31 @@ namespace ExcelFileReader.ViewModels
 
         internal void SearchDataButton_Click(string query)
         {
-            if (string.IsNullOrWhiteSpace(query))
+            if (LogsDataGridVisible)
             {
-                _peopleCache.RestoreDataFromTemp();
+                if (string.IsNullOrWhiteSpace(query))
+                {
+                    _logsCache.RestoreDataFromTemp();
+                }
+                else
+                {
+                    _logsCache.SaveDataToTemp();
+                    _logsCache.ClearData();
+                    _logsCache.LoadData(SearchData(_logsCache.GetTempData(), query));
+                }
             }
             else
             {
-                _peopleCache.SaveDataToTemp();
-                _peopleCache.ClearData();
-                _peopleCache.LoadData(SearchData(_peopleCache.GetTempData(), query));
+                if (string.IsNullOrWhiteSpace(query))
+                {
+                    _peopleCache.RestoreDataFromTemp();
+                }
+                else
+                {
+                    _peopleCache.SaveDataToTemp();
+                    _peopleCache.ClearData();
+                    _peopleCache.LoadData(SearchData(_peopleCache.GetTempData(), query));
+                }
             }
         }
 
@@ -658,11 +674,11 @@ namespace ExcelFileReader.ViewModels
             }
         }
 
-        private IEnumerable<Person> SearchData(IEnumerable<Person> people, string query)
+        private IEnumerable<T> SearchData<T>(IEnumerable<T> items, string query)
         {
-            return people.Where(person =>
-                person.GetType().GetProperties()
-                .Any(prop => prop.GetValue(person)?.ToString().Contains(query) == true)
+            return items.Where(item =>
+                item.GetType().GetProperties()
+                .Any(prop => prop.GetValue(item)?.ToString().Contains(query) == true)
             ).ToList();
         }
 
