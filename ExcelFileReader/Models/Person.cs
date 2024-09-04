@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ExcelFileReader.Models
 {
-    internal class Person
+    internal class Person : ICloneable
     {
         public uint Number { get; set; }
         public uint Id { get; set; }
@@ -34,5 +34,20 @@ namespace ExcelFileReader.Models
             return $"Person [Id={Id}, Number={Number}, Name={FirstName} {LastName}, Gender={Gender}, Country={Country}, Age={Age}, Birthday={Birthday:yyyy-MM-dd}, IsValid={IsValid}]";
         }
 
+        public object Clone()
+        {
+            return new Person
+            {
+                Number = this.Number,
+                Id = this.Id,
+                FirstName = this.FirstName,
+                LastName = this.LastName,
+                Gender = this.Gender,
+                Country = this.Country,
+                Age = this.Age,
+                Birthday = this.Birthday,
+                IsValid = this.IsValid
+            };
+        }
     }
 }

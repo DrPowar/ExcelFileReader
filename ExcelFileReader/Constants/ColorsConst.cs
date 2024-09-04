@@ -9,7 +9,7 @@ namespace ExcelFileReader.Constants
     internal static class ColorsConst
     {
 
-        public const string Success = "#bce8c4";
-        public const string Error = "#f7cbd3";
+        public const string Success = "#68A490";
+        public const string Error = "#D65532";
     }
 }

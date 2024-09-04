@@ -314,6 +314,7 @@ namespace ExcelFileReader.ViewModels
                 CanUploadFile = true;
                 LogsDataGridActive = false;
                 PeopleDataGridActive = true;
+                CanSaveData = true;
                 ProgramStatus = ProgramStatusMessages.UploadingAllowed;
             }
             else
@@ -633,7 +634,6 @@ namespace ExcelFileReader.ViewModels
 
         internal bool SaveUpdatedPerson(Person oldPerson, Person updatedPerson)
         {
-
             try
             {
                 KeyValuePair<string, OldNewValuePair> changes = GetChangedFields(oldPerson, updatedPerson).First();

@@ -377,7 +377,7 @@
 			</TabItem>
 		</TabControl>
 
-		<Grid DockPanel.Dock="Bottom" Background="#ededed">
+		<Grid DockPanel.Dock="Bottom" Background="{StaticResource SecondWhite}">
 
 			<Grid.RowDefinitions>
 				<RowDefinition Height="*"/>
@@ -422,12 +422,14 @@
 										  HorizontalAlignment="Center"
 										  Background="Transparent"
 										  CornerRadius="0"
-										  Loaded="GenderComboBox_Loaded"
-										  Width="120">
+										  Width="120"
+										  SelectionChanged="GenderCombobox_SelectionChanged"
+										  TemplateApplied="GenderCombobox_TemplateApplied">
 								</ComboBox>
 							</DataTemplate>
 						</DataGridTemplateColumn.CellTemplate>
 					</DataGridTemplateColumn>
+
 
 					<DataGridTextColumn Header="Country" Binding="{Binding Country}" FontSize="{Binding FontSize}"/>
 					<DataGridTextColumn Header="Age" Binding="{Binding Age}" FontSize="{Binding FontSize}"/>
@@ -440,7 +442,8 @@
 											Background="Transparent"
 											CornerRadius="0"
 											FontSize="{Binding #Root.((vm:MainWindowViewModel)DataContext).FontSize}}"
-											Loaded="DatePicker_Loaded">
+											TemplateApplied="DatePicker_TemplateApplied"
+											SelectedDateChanged="DatePicker_SelectedDateChanged">
 								</DatePicker>
 
 							</DataTemplate>

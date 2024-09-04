@@ -1,25 +1,28 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
+using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using DynamicData;
 using ExcelFileReader.Constants;
 using ExcelFileReader.InterfaceConverters;
 using ExcelFileReader.Models;
 using ExcelFileReader.ViewModels;
 using System;
+using System.Linq;
 
 namespace ExcelFileReader.Views
 {
     public partial class MainWindow : Window
     {
         private MainWindowViewModel _viewModel;
-        private bool _datePickerIsLoading = true;
-        private bool _genderComboBoxIsLoading = true;
         private bool _isDataPickerOpen = false;
+        private bool _isGenderComboBoxOpen = false;
         private Person _originalPerson;
 
         public MainWindow()
@@ -29,15 +32,26 @@ namespace ExcelFileReader.Views
             DataContext = _viewModel;
             InitializeComponent();
         }
-
         public void RowsDataGrid_LoadingRow(object? sender, DataGridRowEventArgs e)
         {
             var row = e.Row;
-            row.Bind(DataGridRow.BackgroundProperty, new Binding("IsValid")
+
+            var dataGrid = sender as DataGrid;
+            if (dataGrid == null)
+                return;
+
+            var cell = dataGrid.Columns[1].GetCellContent(row)?.Parent as DataGridCell;
+            if (cell != null)
+            {
+                cell.BorderThickness = new Thickness(10, 0, 0, 0);
+            }
+
+            cell.Bind(DataGridRow.BorderBrushProperty, new Binding("IsValid")
             {
                 Converter = new BoolToColorConverter(),
             });
         }
+
 
         public void DataGrid_BeginningEdit(object? sender, DataGridBeginningEditEventArgs e)
         {
@@ -66,11 +80,11 @@ namespace ExcelFileReader.Views
                 bool isValidPerson = _viewModel.SaveUpdatedPerson(_originalPerson, editedPerson);
                 if (isValidPerson)
                 {
-                    e.Row.Background = new SolidColorBrush(Color.Parse(ColorsConst.Success));
+                    e.Row.BorderBrush = new SolidColorBrush(Color.Parse(ColorsConst.Success));
                 }
                 else
                 {
-                    e.Row.Background = new SolidColorBrush(Color.Parse(ColorsConst.Error));
+                    e.Row.BorderBrush = new SolidColorBrush(Color.Parse(ColorsConst.Error));
                 }
             }
         }
@@ -107,20 +121,79 @@ namespace ExcelFileReader.Views
             _viewModel.UpdateItemsCountFields();
         }
 
-        private void DatePicker_Loaded(object sender, RoutedEventArgs e)
+        private void DatePicker_TemplateApplied(object? sender, TemplateAppliedEventArgs e)
         {
-            if (_datePickerIsLoading)
+            if (sender is DatePicker datePicker)
             {
-                _datePickerIsLoading = false;
+                var popup = e.NameScope.Find<Popup>("PART_Popup");
+
+                if (popup != null)
+                {
+                    popup.Closed += DatePickerPopupClosed;
+                }
             }
         }
 
-        private void GenderComboBox_Loaded(object sender, RoutedEventArgs e)
+        private void GenderCombobox_TemplateApplied(object? sender, TemplateAppliedEventArgs e)
         {
-            if (_genderComboBoxIsLoading)
+            if (sender is ComboBox comboBox)
             {
-                _genderComboBoxIsLoading = false;
+                var popup = e.NameScope.Find<Popup>("PART_Popup");
+
+                if (popup != null)
+                {
+                    popup.LostFocus += GenderComboBoxPopupClosed;
+                }
             }
+        }
+
+        private void GenderComboBoxPopupClosed(object? sender, EventArgs e)
+        {
+            _isGenderComboBoxOpen = true;
+        }
+
+        private void GenderCombobox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+        {
+            if (!_isGenderComboBoxOpen)
+            {
+                return;
+            }
+
+            ComboBox comboBox = sender as ComboBox;
+            Person person = comboBox.DataContext as Person;
+
+            if (person != null)
+            {
+                Person oldPerson = (Person)person.Clone();
+                oldPerson.Gender = (Gender)e.RemovedItems[0];
+                _viewModel.SaveUpdatedPerson(oldPerson, person);
+            }
+
+            _isGenderComboBoxOpen = false;
+        }
+
+        private void DatePickerPopupClosed(object? sender, EventArgs e)
+        {
+            _isDataPickerOpen = true;
+        }
+
+        private void DatePicker_SelectedDateChanged(object? sender, DatePickerSelectedValueChangedEventArgs e)
+        {
+            if (!_isDataPickerOpen)
+            {
+                return;
+            }
+
+            DatePicker datePicker = sender as DatePicker;
+            Person person = datePicker.DataContext as Person;
+
+            if (person != null)
+            {
+                Person oldPerson = (Person)person.Clone();
+                person.Birthday = (DateTimeOffset)e.NewDate;
+                _viewModel.SaveUpdatedPerson(oldPerson, person);
+            }
+            _isDataPickerOpen = false;
         }
 
 
