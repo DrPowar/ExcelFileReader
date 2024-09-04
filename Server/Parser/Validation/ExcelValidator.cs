@@ -1,5 +1,8 @@
-﻿using IronXL;
+﻿using CommandLine;
+using IronXL;
+using PEFile;
 using Server.Constants;
+using Server.Models.Log;
 using Server.Models.Person;
 
 namespace Server.Parser.Validation
@@ -40,7 +43,7 @@ namespace Server.Parser.Validation
             }
         }
 
-        internal static DataValidationResult ValidateData(List<Person> people)
+        internal static DataValidationResult ValidatePeople(List<Person> people)
         {
             try
             {
@@ -60,7 +63,7 @@ namespace Server.Parser.Validation
 
                 Parallel.For(0, people.Count, i =>
                 {
-                    var person = people[i];
+                    Person person = people[i];
                     int rowIndex = i + 2;
 
                     lock(lockObj)
@@ -86,6 +89,44 @@ namespace Server.Parser.Validation
                 return new DataValidationResult(false, null, ParsingResultMessages.ParsingError);
             }
 
+        }
+
+        internal static DataValidationResult ValidateLogs(List<Log> logs)
+        {
+            try
+            {
+                WorkBook workBook = WorkBook.Create(ExcelFileFormat.XLSX);
+                WorkSheet workSheet = workBook.DefaultWorkSheet;
+
+                workSheet["A1"].Value = "Id";
+                workSheet["B1"].Value = "Person Number";
+                workSheet["C1"].Value = "Old Value";
+                workSheet["D1"].Value = "New Value";
+                workSheet["E1"].Value = "Date";
+
+                object lockObj = new object();
+
+                Parallel.For(0, logs.Count, i =>
+                {
+                    Log log = logs[i];
+                    int rowIndex = i + 2;
+
+                    lock (lockObj)
+                    {
+                        LogToDataRowParser.SetNumber(rowIndex, workSheet, log.PersonNumber);
+                        LogToDataRowParser.SetId(rowIndex, workSheet, log.Id);
+                        LogToDataRowParser.SetOldValue(rowIndex, workSheet, log.Changes.OldValue);
+                        LogToDataRowParser.SetNewValue(rowIndex, workSheet, log.Changes.NewValue);
+                        LogToDataRowParser.SetDate(rowIndex, workSheet, log.Date);
+                    }
+                });
+
+                return new DataValidationResult(true, workBook.ToByteArray(), ParsingResultMessages.Success);
+            }
+            catch (Exception ex)
+            {
+                return new DataValidationResult(false, null, ParsingResultMessages.ParsingError);
+            }
         }
     }
 }

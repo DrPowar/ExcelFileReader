@@ -9,14 +9,12 @@ using ExcelFileReader.Models;
 using Prism.Commands;
 using ReactiveUI;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace ExcelFileReader.ViewModels
@@ -82,7 +80,7 @@ namespace ExcelFileReader.ViewModels
         internal bool LogsDataGridActive
         {
             get => _logsDataGridVisible;
-            set => this.RaiseAndSetIfChanged(ref _logsDataGridVisible, value); 
+            set => this.RaiseAndSetIfChanged(ref _logsDataGridVisible, value);
         }
 
         internal bool PeopleDataGridActive
@@ -193,7 +191,7 @@ namespace ExcelFileReader.ViewModels
         internal DelegateCommand LastPageCommand { get; init; }
         internal DelegateCommand SaveDataCommand { get; init; }
         internal DelegateCommand<string> SearchDataCommand { get; init; }
-        internal DelegateCommand GetPeopleDataFromDBCommand { get; init; } 
+        internal DelegateCommand GetPeopleDataFromDBCommand { get; init; }
         internal DelegateCommand UpdateDataCommand { get; init; }
         internal DelegateCommand DeleteDataCommand { get; init; }
         internal DelegateCommand GetLogsDataFromDBCommand { get; init; }
@@ -303,8 +301,10 @@ namespace ExcelFileReader.ViewModels
             CanUploadFile = false;
             CanModifyLogs = false;
             GetPeopleDataResponse getAllDataResponse = await _client.GetPeople();
-            if(getAllDataResponse.Result)
+
+            if (getAllDataResponse.Result)
             {
+                _logsCache.FullClear();
                 CanModifyPeople = true;
                 _peopleCache.FullClear();
                 _peopleCache.LoadData(getAllDataResponse.People);
@@ -319,7 +319,7 @@ namespace ExcelFileReader.ViewModels
             else
             {
                 CanUploadFile = true;
-                ProgramStatus = ProgramStatusMessages.UploadingAllowed;
+                ProgramStatus = getAllDataResponse.Message;
             }
         }
 
@@ -334,6 +334,7 @@ namespace ExcelFileReader.ViewModels
             GetLogsDataResponse getAllDataResponse = await _client.GetLogs();
             if (getAllDataResponse.Result)
             {
+                _peopleCache.FullClear();
                 CanModifyLogs = true;
                 _logsCache.ClearData();
                 _logsCache.LoadData(getAllDataResponse.Logs);
@@ -341,12 +342,13 @@ namespace ExcelFileReader.ViewModels
                 UpdateItemsCountFields();
 
                 CanUploadFile = true;
+                CanSaveData = true;
                 ProgramStatus = ProgramStatusMessages.UploadingAllowed;
             }
             else
             {
                 CanUploadFile = true;
-                ProgramStatus = ProgramStatusMessages.UploadingAllowed;
+                ProgramStatus = getAllDataResponse.Message;
             }
         }
 
@@ -436,30 +438,39 @@ namespace ExcelFileReader.ViewModels
             CanSaveData = false;
             CanUploadFile = false;
 
-            if (_peopleCache.GetData().Count > 0 && _peopleCache.GetData().All(p => p.IsValid))
+            if (_peopleCache.GetData().Count > 0)
             {
-                ParseDataToExcleFileResponse response = await _client.ParseDataToExcelFile(_peopleCache.GetData());
-
-                if (response.Result)
-                {
-                    ProgramStatus = ProgramStatusMessages.DataParseToExcelSuccess;
-
-                    SaveFile(_topLevel, response.FileContent);
-
-                    UpdateItemsCountFields();
-                    CanSaveData = true;
-                    CanUploadFile = true;
-                }
-                else
-                {
-                    ProgramStatus = response.Message;
-                }
+                ParseDataToExcleFileResponse response = await _client.ParsePeopleToExcleFile(_peopleCache.GetData());
+                await SaveData(response);
+            }
+            else if(_logsCache.GetData().Count > 0)
+            {
+                ParseDataToExcleFileResponse response = await _client.ParseLogsToExcelFile(_logsCache.GetData());
+                await SaveData(response);
             }
             else
             {
+                ProgramStatus = ProgramStatusMessages.NoDataToSave;
+            }
+            CanUploadFile = true;
+            CanSaveData = true;
+        }
+
+        private async Task SaveData(ParseDataToExcleFileResponse response)
+        {
+            if (response.Result)
+            {
+                ProgramStatus = ProgramStatusMessages.DataParseToExcelSuccess;
+
+                SaveFile(_topLevel, response.FileContent);
+
+                UpdateItemsCountFields();
                 CanSaveData = true;
                 CanUploadFile = true;
-                ProgramStatus = ProgramStatusMessages.NoDataToSave;
+            }
+            else
+            {
+                ProgramStatus = response.Message;
             }
         }
 
@@ -483,6 +494,7 @@ namespace ExcelFileReader.ViewModels
 
                 if (response.IsValid)
                 {
+                    _logsCache.FullClear();
                     CanModifyPeople = false;
                     _peopleCache.FullClear();
                     _peopleCache.LoadData(response.People);
@@ -541,7 +553,7 @@ namespace ExcelFileReader.ViewModels
         {
             SavingDataResponse logResponse = await _client.AddLog(log);
 
-            if(!logResponse.IsValid)
+            if (!logResponse.IsValid)
             {
                 ProgramStatus = logResponse.Message;
             }
@@ -600,7 +612,7 @@ namespace ExcelFileReader.ViewModels
 
                     UpdateItemsCountFields();
 
-                    foreach(Person person in _selectedRows.Cast<Person>().ToList())
+                    foreach (Person person in _selectedRows.Cast<Person>().ToList())
                     {
                         SaveLog(new Log(Guid.NewGuid(), person.Number, new OldNewValuePair(person.ToString(), null), DateTime.Now));
                     }
@@ -651,7 +663,7 @@ namespace ExcelFileReader.ViewModels
 
         internal void UpdateItemsCountFields()
         {
-            if(_peopleCache.GetTempData().Count == 0)
+            if (_peopleCache.GetTempData().Count == 0)
             {
                 List<Person> people = _peopleCache.GetData();
                 InValidItems = people.Where(p => !p.IsValid).Count();

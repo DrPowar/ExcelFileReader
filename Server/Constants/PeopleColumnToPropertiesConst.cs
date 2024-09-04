@@ -1,6 +1,6 @@
 ﻿namespace Server.Constants
 {
-    public static class ColumnToPropertiesConst
+    public static class PeopleColumnToPropertiesConst
     {
         public const char Number = 'A';
         public const char Id = 'H';

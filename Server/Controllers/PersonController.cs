@@ -14,36 +14,12 @@ namespace Server.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class FileManagementController : Controller
+    public class PersonController : Controller
     {
         private readonly IMediator _mediator;
-        public FileManagementController(IMediator mediator)
+        public PersonController(IMediator mediator)
         {
             _mediator = mediator;
-        }
-
-        [HttpPost("UploadFile")]
-        public async Task<IActionResult> UploadFile([FromBody] FileUploadRequest fileUploadRequest)
-        {
-            if (fileUploadRequest.FileContent == null)
-            {
-                return BadRequest(new ParsingFileToDataResult(Guid.NewGuid(), false, fileUploadRequest.FileName, ParsingResultMessages.EmptyFile));
-            }
-
-            WorkBook book;
-
-            ParsingFileToDataResult parsingResult = XLSXFileParser.TryParseBook(fileUploadRequest, out book);
-
-            FileValidatinResult validationResult = ExcelValidator.ValidateFile(book);
-
-            if (validationResult.IsValid)
-            {
-                return Created("", validationResult);
-            }
-            else
-            {
-                return BadRequest(ParsingResultMessages.InvalidFile);
-            }
         }
 
         [HttpPost("SaveDataToDB")]
@@ -129,28 +105,6 @@ namespace Server.Controllers
             }
 
             return BadRequest(response);
-        }
-
-        
-
-        [HttpPost("ParseDataToExcleFile")]
-        public async Task<IActionResult> ParseDataToExcleFile([FromBody] List<Person> people)
-        {
-            if (people == null || people.Count == 0)
-            {
-                return BadRequest(new ParsingDataToFileResult(null, false, ParsingResultMessages.EmptyFile));
-            }
-
-            DataValidationResult validationResult = ExcelValidator.ValidateData(people);
-
-            if (validationResult.Result)
-            {
-                return Created("", validationResult);
-            }
-            else
-            {
-                return BadRequest(ParsingResultMessages.InvalidFile);
-            }
         }
     }
 }

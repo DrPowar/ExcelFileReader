@@ -23,7 +23,7 @@ namespace ExcelFileReader.DataTransfer
             {
                 FileUploadRequest fileUploadRequest = new FileUploadRequest(fileName, fileContent);
 
-                HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"http://localhost:{ServerData.ServerPort}/FileManagement/UploadFile", fileUploadRequest);
+                HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"http://localhost:{ServerData.ServerPort}/Parser/UploadFile", fileUploadRequest);
 
                 ParsingResponse? fileParsingResponse = await response.Content.ReadFromJsonAsync<ParsingResponse>();
                     
@@ -44,7 +44,7 @@ namespace ExcelFileReader.DataTransfer
 
         internal async Task<SavingDataResponse> SaveDataOnServer(IEnumerable<Person> persons)
         {
-            HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"http://localhost:{ServerData.ServerPort}/FileManagement/SaveDataToDB", persons);
+            HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"http://localhost:{ServerData.ServerPort}/Person/SaveDataToDB", persons);
 
             SavingDataResponse? savingDataResponse = await response.Content.ReadFromJsonAsync<SavingDataResponse>();
 
@@ -60,7 +60,7 @@ namespace ExcelFileReader.DataTransfer
 
         internal async Task<SavingDataResponse> DeletePeopleOnServer(IEnumerable<Person> persons)
         {
-            HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"http://localhost:{ServerData.ServerPort}/FileManagement/DeletePeopleFromDB", persons);
+            HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"http://localhost:{ServerData.ServerPort}/Person/DeletePeopleFromDB", persons);
 
             SavingDataResponse? savingDataResponse = await response.Content.ReadFromJsonAsync<SavingDataResponse>();
 
@@ -76,7 +76,7 @@ namespace ExcelFileReader.DataTransfer
 
         internal async Task<SavingDataResponse> UpdateData(IEnumerable<Person> persons)
         {
-            HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"http://localhost:{ServerData.ServerPort}/FileManagement/UpdateDataInDB", persons);
+            HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"http://localhost:{ServerData.ServerPort}/Person/UpdateDataInDB", persons);
 
             SavingDataResponse? savingDataResponse = await response.Content.ReadFromJsonAsync<SavingDataResponse>();
 
@@ -124,7 +124,7 @@ namespace ExcelFileReader.DataTransfer
 
         internal async Task<GetPeopleDataResponse> GetPeople()
         {
-            HttpResponseMessage response = await _httpClient.GetAsync($"http://localhost:{ServerData.ServerPort}/FileManagement/GetPeople");
+            HttpResponseMessage response = await _httpClient.GetAsync($"http://localhost:{ServerData.ServerPort}/Person/GetPeople");
 
             GetPeopleDataResponse? getAllDataResponse = await response.Content.ReadFromJsonAsync<GetPeopleDataResponse>();
 
@@ -156,9 +156,25 @@ namespace ExcelFileReader.DataTransfer
             }
         }
 
-        internal async Task<ParseDataToExcleFileResponse> ParseDataToExcelFile(IEnumerable<Person> persons)
+        internal async Task<ParseDataToExcleFileResponse> ParsePeopleToExcleFile(IEnumerable<Person> people)
         {
-            HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"http://localhost:{ServerData.ServerPort}/FileManagement/ParseDataToExcleFile", persons);
+            HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"http://localhost:{ServerData.ServerPort}/Parser/ParsePeopleToExcelFile", people);
+
+            ParseDataToExcleFileResponse? savingDataResponse = await response.Content.ReadFromJsonAsync<ParseDataToExcleFileResponse>();
+
+            if (savingDataResponse != null)
+            {
+                return savingDataResponse;
+            }
+            else
+            {
+                return new ParseDataToExcleFileResponse(null, false, ResponseMessages.ServerReturnInvalidData);
+            }
+        }
+
+        internal async Task<ParseDataToExcleFileResponse> ParseLogsToExcelFile(IEnumerable<Log> logs)
+        {
+            HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"http://localhost:{ServerData.ServerPort}/Parser/ParseLogsToExcelFile", logs);
 
             ParseDataToExcleFileResponse? savingDataResponse = await response.Content.ReadFromJsonAsync<ParseDataToExcleFileResponse>();
 
