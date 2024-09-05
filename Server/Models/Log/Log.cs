@@ -6,11 +6,12 @@
         {
         }
 
-        public Log(Guid id, uint personNumber, OldNewValuePair changes, DateTime date)
+        public Log(Guid id, uint personNumber, OldNewValuePair changes, LogActions action, DateTime date)
         {
             Id = id;
             PersonNumber = personNumber;
             Changes = changes;
+            Action = action;
             Date = date;
         }
 
@@ -19,6 +20,8 @@
         public uint PersonNumber { get; set; }
 
         public OldNewValuePair Changes { get; set; }
+
+        public LogActions Action { get; set; }
 
         public DateTime Date { get; set; }
     }

@@ -6,6 +6,8 @@ using DynamicData.Operators;
 using ExcelFileReader.Constants;
 using ExcelFileReader.DataTransfer;
 using ExcelFileReader.Models;
+using ExcelFileReader.Services;
+using ExcelFileReader.Views;
 using Prism.Commands;
 using ReactiveUI;
 using System;
@@ -43,6 +45,7 @@ namespace ExcelFileReader.ViewModels
         private bool _canModifyLogs;
         private bool _canUploadFile = true;
         private bool _canSaveData;
+        private bool _canAddPerson;
 
         private int _currentPage;
         private int _totalItems;
@@ -139,6 +142,12 @@ namespace ExcelFileReader.ViewModels
         {
             get => _canUploadFile;
             set => this.RaiseAndSetIfChanged(ref _canUploadFile, value);
+        }
+
+        internal bool CanAddPerson
+        {
+            get => _canAddPerson;
+            set => this.RaiseAndSetIfChanged(ref _canAddPerson, value);
         }
 
         internal bool CanSaveData
@@ -295,9 +304,19 @@ namespace ExcelFileReader.ViewModels
 
         }
 
+        internal void AddNewPerson(Person person)
+        {
+            var people = _peopleCache.GetData();
+            uint number = people.Max(p => p.Number);
+            person.Number = number + 1;
+            List<Person> list = new List<Person>() { person};
+            _peopleCache.LoadData(list);
+        }
+
         internal async void GetPeopleDataFromDBButton_Click()
         {
             CanSaveData = false;
+            CanAddPerson = true;
             CanUploadFile = false;
             CanModifyLogs = false;
             GetPeopleDataResponse getAllDataResponse = await _client.GetPeople();
@@ -327,6 +346,7 @@ namespace ExcelFileReader.ViewModels
         internal async void GetLogsDataFromDBButton_Click()
         {
             CanSaveData = false;
+            CanAddPerson = false;
             CanUploadFile = false;
             CanModifyPeople = false;
             LogsDataGridActive = true;
@@ -506,6 +526,7 @@ namespace ExcelFileReader.ViewModels
                     CanUploadFile = true;
                     LogsDataGridActive = false;
                     PeopleDataGridActive = true;
+                    CanAddPerson = true;
                     ProgramStatus = ProgramStatusMessages.UploadingAllowed;
                 }
                 else
@@ -615,7 +636,7 @@ namespace ExcelFileReader.ViewModels
 
                     foreach (Person person in _selectedRows.Cast<Person>().ToList())
                     {
-                        SaveLog(new Log(Guid.NewGuid(), person.Number, new OldNewValuePair(person.ToString(), null), DateTime.Now));
+                        SaveLog(new Log(Guid.NewGuid(), person.Number, new OldNewValuePair(person.ToString(), null), LogActions.Deleted, DateTime.Now));
                     }
 
                     CanModifyPeople = true;
@@ -641,7 +662,7 @@ namespace ExcelFileReader.ViewModels
                 if (CanModifyPeople)
                 {
                     updatedPerson.UpdateIsValidProperty();
-                    Log log = new(updatedPerson.Number, new OldNewValuePair(changes.Value.OldValue, changes.Value.NewValue));
+                    Log log = new(updatedPerson.Number, new OldNewValuePair(changes.Value.OldValue, changes.Value.NewValue), LogActions.Updated);
                     if (_updatedPeople.Any(p => p.Number == updatedPerson.Number))
                     {
                         _updatedPeople.RemoveAll(p => p.Number == updatedPerson.Number);

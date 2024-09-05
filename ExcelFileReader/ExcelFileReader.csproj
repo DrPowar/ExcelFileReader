@@ -13,6 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <AvaloniaResource Remove="Assets\AddPerson.png" />
+    <AvaloniaResource Remove="Assets\AddPersonDisabled.png" />
     <AvaloniaResource Remove="Assets\Delete.png" />
     <AvaloniaResource Remove="Assets\DeleteDisabled.png" />
     <AvaloniaResource Remove="Assets\Download.png" />
@@ -33,6 +35,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Assets\AddPerson.png" />
+    <None Remove="Assets\AddPersonDisabled.png" />
     <None Remove="Assets\Close.png" />
     <None Remove="Assets\Delete.png" />
     <None Remove="Assets\DeleteDisabled.png" />
@@ -94,6 +98,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Assets\AddPerson.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\AddPersonDisabled.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Assets\Delete.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

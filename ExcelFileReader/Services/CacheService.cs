@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ExcelFileReader.Models
+namespace ExcelFileReader.Services
 {
     internal class CacheService<T, TKey>
     {

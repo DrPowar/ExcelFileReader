@@ -1,0 +1,34 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="ExcelFileReader.Views.AddPersonWindow"
+        Title="Add New Person"
+		MaxWidth="400"
+		MaxHeight="450"
+        WindowStartupLocation="CenterScreen">
+
+	<StackPanel Margin="20">
+		<TextBlock Text="Id" />
+		<TextBox x:Name="IdTextBox" />
+
+		<TextBlock Text="First Name" />
+		<TextBox x:Name="FirstNameTextBox" />
+
+		<TextBlock Text="Last Name" Margin="0,10,0,0"/>
+		<TextBox x:Name="LastNameTextBox" />
+
+		<TextBlock Text="Country" Margin="0,10,0,0"/>
+		<TextBox x:Name="CountryTextBox" />
+
+		<TextBlock Text="Gender" Margin="0,10,0,0"/>
+		<ComboBox x:Name="GenderComboBox"/>
+
+		<TextBlock Text="Birthday" Margin="0,10,0,0"/>
+		<DatePicker x:Name="BirthdayDatePicker"/>
+
+		<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+			<Button Content="Cancel" Click="OnCancelClick" />
+			<Button Content="Confirm" Click="OnConfirmClick" Margin="10,0,0,0" />
+		</StackPanel>
+	</StackPanel>
+	
+</Window>

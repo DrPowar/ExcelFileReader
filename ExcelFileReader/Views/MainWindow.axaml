@@ -192,6 +192,31 @@
 					</StackPanel>
 
 					<Border VerticalAlignment="Stretch" Margin="0,4,0,4" Width="1" Background="#b5b5b5"/>
+					
+					<StackPanel>
+						<Grid Margin="5,5,5,0" HorizontalAlignment="Center">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="Auto"/>
+								<ColumnDefinition Width="Auto"/>
+							</Grid.ColumnDefinitions>
+
+							<StackPanel Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">
+								<Button
+									Classes="big standard-font-size"
+									IsEnabled="{Binding CanAddPerson}"
+									Content="Add Person"
+									Click="AddPersonButton_Click">
+									<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+										<Image Source="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource BoolToImageConverter}, ConverterParameter='AddPerson'}" Width="37"/>
+										<TextBlock TextWrapping="Wrap" MaxWidth="50" Text="Add Person" HorizontalAlignment="Center" Margin="0,5,0,0" TextAlignment="Center"/>
+									</StackPanel>
+								</Button>
+							</StackPanel>
+						</Grid>
+						<TextBlock FontSize="13" VerticalAlignment="Bottom" Foreground="#696969" Text="Collection action" HorizontalAlignment="Center" Margin="10,10,10,0"/>
+					</StackPanel>
+
+					<Border VerticalAlignment="Stretch" Margin="0,4,0,4" Width="1" Background="#b5b5b5"/>
 
 					<StackPanel>
 						<Grid Margin="5,5,5,0">
@@ -476,7 +501,7 @@
 
 				<DataGrid.Columns>
 					<DataGridTextColumn Header="Id" Binding="{Binding Id}" FontSize="{Binding FontSize}" />
-
+					<DataGridTextColumn Header="Action" Binding="{Binding Action}" FontSize="{Binding FontSize}"/>
 					<DataGridTextColumn Header="New Value" Binding="{Binding Changes.NewValue}" FontSize="{Binding FontSize}"/>
 					<DataGridTextColumn Header="Old Value" Binding="{Binding Changes.OldValue}" FontSize="{Binding FontSize}"/>
 					<DataGridTextColumn Header="Date" Binding="{Binding Date}" FontSize="{Binding FontSize}"/>

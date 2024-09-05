@@ -71,7 +71,18 @@ namespace ExcelFileReader.Views
             }
         }
 
+        private async void AddPersonButton_Click(object? sender, RoutedEventArgs e)
+        {
+            AddPersonWindow addPersonWindow = new AddPersonWindow();
 
+            await addPersonWindow.ShowDialog(this);
+
+            if (addPersonWindow.NewPerson != null)
+            {
+                Person newPerson = addPersonWindow.NewPerson;
+                _viewModel.AddNewPerson(newPerson);
+            }
+        }
 
         public void RowDataGrid_EditingRow(object? sender, DataGridRowEditEndedEventArgs e)
         {

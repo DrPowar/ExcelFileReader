@@ -58,6 +58,10 @@ namespace ExcelFileReader.InterfaceConverters
                     ? $"{baseDirectory}Assets\\Upload.png"
                     : $"{baseDirectory}Assets\\UploadDisabled.png",
 
+                "AddPerson" => isEnabled
+                    ? $"{baseDirectory}Assets\\AddPerson.png"
+                    : $"{baseDirectory}Assets\\AddPersonDisabled.png",
+
                 _ => throw new ArgumentException("Unknown image type"),
             };
             Bitmap bitmap = new Bitmap(imagePath);

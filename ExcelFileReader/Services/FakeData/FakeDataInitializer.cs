@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ExcelFileReader.FakeData
+namespace ExcelFileReader.Services.FakeData
 {
     internal class FakeDataInitializer : IFakeDataInitializer
     {
@@ -22,7 +22,7 @@ namespace ExcelFileReader.FakeData
                 people.Add(new Person
                 {
                     Number = (uint)i + 1,
-                    Id = (uint)(_random.Next(1, 10000)),
+                    Id = (uint)_random.Next(1, 10000),
                     FirstName = _firstNames[_random.Next(_firstNames.Length)],
                     LastName = _lastNames[_random.Next(_lastNames.Length)],
                     Gender = (Gender)_random.Next(2),

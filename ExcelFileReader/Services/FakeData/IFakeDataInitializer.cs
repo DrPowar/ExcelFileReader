@@ -1,7 +1,7 @@
 ﻿using ExcelFileReader.Models;
 using System.Collections.Generic;
 
-namespace ExcelFileReader.FakeData
+namespace ExcelFileReader.Services.FakeData
 {
     internal interface IFakeDataInitializer
     {

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ExcelFileReader.Models
 {
@@ -18,6 +17,35 @@ namespace ExcelFileReader.Models
         public void UpdateIsValidProperty()
         {
             IsValid = UpdateIsValidField();
+        }
+        public Person()
+        {
+
+        }
+
+        public Person(uint id, string firstName, string lastName, Gender gender, string country, DateTimeOffset birthday)
+        {
+            Id = id;
+            FirstName = firstName;
+            LastName = lastName;
+            Gender = gender;
+            Country = country;
+            Birthday = birthday;
+            SetAge();
+            UpdateIsValidProperty();
+        }
+
+        private void SetAge()
+        {
+            if (Birthday.Year > DateTime.Now.Year)
+            {
+                Age = 0;
+                return;
+            }
+            else
+            {
+                Age = (byte)(DateTime.Now.Year - Birthday.Year);
+            }
         }
 
         private bool UpdateIsValidField()
